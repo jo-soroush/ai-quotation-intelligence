@@ -58,6 +58,7 @@ NOT YET RECORDED — complete only from actual implementation evidence.
 - COMPLETE requires exact Exit Gate proof and actual evidence.
 - READY_FOR_DELIVERY means implementation, validation, evidence, learning, and quality/Exit Gates are complete while Git delivery is pending.
 - One GIT_DELIVERY_APPROVAL covers normal commit, push, PR creation, and merge for the exact validated Card state.
+- FINAL_CARD_STATE_CONSISTENCY_GATE must PASS after final reconciliation before a Card may become COMPLETE.
 - The next Card requires separate approval.
 
 The Roadmap currently contains no explicit dependency declarations. No dependency is invented in this file.

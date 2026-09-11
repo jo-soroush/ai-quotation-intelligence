@@ -591,6 +591,7 @@ Contract satisfied
 → one GIT_DELIVERY_APPROVAL for the exact validated Card state
 → commit → push → PR → merge
 → PROJECT_CONTROL reconciled
+→ FINAL_CARD_STATE_CONSISTENCY_GATE PASS
 → Card COMPLETE
 → Active Card NONE
 → STOP
@@ -681,7 +682,7 @@ PROVIDER OBJECTS STAY OUTSIDE CORE
 ```
 Application Implementation: V1-C01 BASELINE IMPLEMENTED
 Active Card: NONE
-C01 Authorized: YES
+C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C01 State: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Git Repository: YES

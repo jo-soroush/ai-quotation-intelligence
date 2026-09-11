@@ -19,7 +19,7 @@ Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 Git Repository: YES
 .git Present: YES
 Current Branch: main
-HEAD: 693e17be652cdd4f82cdfe6da2bef89f6529103c
+HEAD: 0af07c84c1d64b83afa57a516699a90110b5ec4c
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
 Upstream: origin/main
 Working Tree: CLEAN
@@ -32,7 +32,7 @@ This is policy for future Git use. It does not initialize Git or authorize any G
 
 ## 3. Core Delivery Principle
 
-One Card → One Branch → Bounded Changes → Validation → Evidence → READY_FOR_DELIVERY → one GIT_DELIVERY_APPROVAL → git add → commit → push → PR → merge → final reconciliation → Card COMPLETE → Active Card NONE → STOP
+One Card → One Branch → Bounded Changes → Validation → Evidence → READY_FOR_DELIVERY → one GIT_DELIVERY_APPROVAL → git add → commit → push → PR → merge → final reconciliation → FINAL_CARD_STATE_CONSISTENCY_GATE PASS → Card COMPLETE → Active Card NONE → STOP
 
 Each transition is explicit. Do not automatically perform the next Git action.
 
@@ -247,7 +247,7 @@ After merge, verify the actual merged state and record evidence. Do not infer me
 
 READY_FOR_DELIVERY means implementation and validation are complete, Evidence and Learning are current, ROADMAP_ALIGNMENT_GATE and CARD_QUALITY_GATE are PASS, the Exit Gate is PROVEN, and normal Git delivery is pending.
 
-A Card is complete only when its contract is satisfied, required validations pass, the Exit Gate is proven, evidence is current, the Learning Record is complete, CARD_QUALITY_GATE is PASS, PROJECT_CONTROL.md is reconciled, one valid GIT_DELIVERY_APPROVAL covered the exact delivery state, and the normal commit/push/PR/merge chain completed successfully.
+A Card is complete only when its contract is satisfied, required validations pass, the Exit Gate is proven, evidence is current, the Learning Record is complete, CARD_QUALITY_GATE is PASS, PROJECT_CONTROL.md is reconciled, one valid GIT_DELIVERY_APPROVAL covered the exact delivery state, the normal commit/push/PR/merge chain completed successfully, and FINAL_CARD_STATE_CONSISTENCY_GATE is PASS.
 
 Then:
 Card COMPLETE
@@ -364,7 +364,7 @@ Verified current posture:
 Git Repository: YES
 Implementation: V1-C01 BASELINE IMPLEMENTED
 Active Card: NONE
-C01 Authorized: YES
+C01 Start Authorization: GRANTED (historical; Card complete)
 
 V1-C01 is COMPLETE after PR #1 merged into main. Active Card is NONE. V1-C02 remains unauthorized.
 
