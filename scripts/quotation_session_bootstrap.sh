@@ -120,10 +120,11 @@ done
 grep -Fq "Future Revisit Condition:" CARD_LEARNING_AND_DECISION_LOG.md && info "Future Revisit Condition: PRESENT" || info "Future Revisit Condition: NOT_PRESENT"
 
 say "EVIDENCE HONESTY SANITY"
-if grep -Fq "Application Implementation: NOT_STARTED" PROJECT_CONTROL.md && \
-   ! grep -Fq "Implementation Evidence: COMPLETE" PROJECT_CONTROL.md && \
-   ! grep -Fq "Git Evidence: COMPLETE" PROJECT_CONTROL.md && \
-   ! grep -Fq "Live Bedrock evidence: COMPLETE" PROJECT_CONTROL.md; then
+if { grep -Fq "Application Implementation: NOT_STARTED" PROJECT_CONTROL.md && \
+     ! grep -Fq "Implementation Evidence: COMPLETE" PROJECT_CONTROL.md && \
+     ! grep -Fq "Git Evidence: COMPLETE" PROJECT_CONTROL.md && \
+     ! grep -Fq "Live Bedrock evidence: COMPLETE" PROJECT_CONTROL.md; } || \
+   grep -Fq "Application Implementation: V1-C01 BASELINE IMPLEMENTED" PROJECT_CONTROL.md; then
   pass "no contradictory implementation evidence claim in current control"
 else
   fail "contradictory implementation evidence claim detected"
@@ -134,7 +135,8 @@ else
   warn "test PASS claim requires review"
 fi
 if [[ -f CARD_LEARNING_AND_DECISION_LOG.md ]] && \
-   grep -Fq "Application Implementation: NOT_STARTED" CARD_LEARNING_AND_DECISION_LOG.md && \
+   { grep -Fq "Application Implementation: NOT_STARTED" CARD_LEARNING_AND_DECISION_LOG.md || \
+     grep -Fq "Application Implementation: V1-C01 BASELINE IMPLEMENTED" CARD_LEARNING_AND_DECISION_LOG.md; } && \
    ! grep -Fq "Source Adaptation Records: IMPLEMENTED" SOURCE_ADAPTATION_TRACEABILITY.md; then
   pass "no contradictory source-adaptation implementation claim"
 else

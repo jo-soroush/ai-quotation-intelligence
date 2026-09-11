@@ -1,7 +1,7 @@
 # AI Quotation Intelligence System — V1 Card Evidence Map
 
 Status: CANONICAL EVIDENCE LEDGER
-Implementation State: NOT_STARTED
+Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 Authorization: V1-C01 only
 
@@ -77,12 +77,12 @@ Never fabricate command output, test results, Git commits, AWS state, Bedrock re
 ~~~
 Project: AI Quotation Intelligence System
 Target: V1
-Application Implementation: NOT_STARTED
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 Completed Cards: NONE
-Implementation Evidence: NONE
+Implementation Evidence: PRESENT — C01 baseline
 Git Repository: YES
-Tests: NOT_CREATED
+Tests: C01 BASELINE TESTS PRESENT / PASS
 AWS Implementation: NOT_STARTED
 Bedrock Integration: NOT_STARTED
 S3 Integration: NOT_STARTED
@@ -286,7 +286,7 @@ Known Limitations Recorded:
 CARD_QUALITY_GATE:
 PASS | BLOCKED | NOT_RUN
 
-Current value for every Card: NOT_RUN.
+Current value for unstarted Cards: NOT_RUN. V1-C01 values are recorded in its Card record below.
 
 ## 14. Completion Rule
 
@@ -338,7 +338,7 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-AUTHORIZED / NOT_STARTED
+READY_FOR_DELIVERY
 
 ### 4. Human Start Approval
 
@@ -346,23 +346,41 @@ YES
 
 ### 5. Files Changed
 
-NONE
+pyproject.toml
+src/ai_quotation_intelligence/__init__.py
+src/ai_quotation_intelligence/config.py
+src/ai_quotation_intelligence/logging_config.py
+tests/test_baseline.py
+.gitignore
+.env.example
+README.md
 
 ### 6. Commands Run
 
-NONE
+git switch -c card/v1-c01-repository-baseline
+./.venv/bin/pip install -e '.[dev]'
+./.venv/bin/python -c 'import ai_quotation_intelligence; from ai_quotation_intelligence.config import load_settings; assert load_settings().environment == "local"'
+./.venv/bin/pytest
+git ls-files / secret-pattern checks
+provider dependency and future-Card leakage checks
+git status --short --branch
+git log -1 --format='%H%n%s'
+git show --stat --oneline HEAD
+git remote -v
+git rev-parse --abbrev-ref --symbolic-full-name '@{u}'
+git rev-list --left-right --count HEAD...@{u}
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — 3 passed in 0.01s
 
 ### 8. Relevant Regression
 
-NOT_RUN
+NOT_RUN / NOT_APPLICABLE — no prior application implementation existed
 
 ### 9. Card Evaluation
 
-NOT_RUN
+PASS — applicable C01 validation set passed
 
 ### 10. Commercial / Data Invariants
 
@@ -374,7 +392,7 @@ NOT_RUN / NOT_APPLICABLE_YET
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS — secret files/patterns not tracked; environment files remain protected
 
 ### 13. Failures / Blockers
 
@@ -382,37 +400,46 @@ NONE RECORDED FOR IMPLEMENTATION
 
 ### 14. Exit Gate Evidence
 
-NONE
+PASS — package imports successfully; pytest executes successfully; configuration loads successfully; Core source contains no AWS/provider dependency; repository/package structure and secret-safe baseline checks passed.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: PROVEN
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PASS — evidence and learning records updated with actual implementation decisions and validation results; no completion claim made.
 
 ### 16. Git Evidence
 
-9e44dac3d69740b2f415d9ec728626553bc4e933 — governance baseline commit; pushed to origin/main. C01 implementation evidence remains NONE.
+Branch: card/v1-c01-repository-baseline
+Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
+Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
+Remote/Upstream: origin / origin/card/v1-c01-repository-baseline
+Commit: COMPLETED — human-approved
+Push: COMPLETED — human-approved to origin/card/v1-c01-repository-baseline
+Working Tree at delivery: CLEAN; current reconciliation files modified
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
+PR: NOT_CREATED — covered by GIT_DELIVERY_APPROVAL
+Merge: NOT_PERFORMED — covered by GIT_DELIVERY_APPROVAL
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+The validated Card is READY_FOR_DELIVERY. The prior commit/push exists, but the new normal delivery approval has not been granted; PR and merge remain unperformed. CI, Docker, domain logic, and future-Card dependencies remain intentionally absent.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+Recorded in CARD_LEARNING_AND_DECISION_LOG.md → V1-C01.
 
 ### 19. Completion Evidence
 
-NONE
+Exit Gate is proven. The Card is READY_FOR_DELIVERY pending one valid GIT_DELIVERY_APPROVAL and completion of the normal delivery chain; Card remains not complete.
 
 ### 20. Recommended State
 
-NOT_STARTED
+READY_FOR_DELIVERY
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C01
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C02 — Domain Models
 
@@ -2151,11 +2178,11 @@ NOT_STARTED
 
 ## 18. Current Summary
 
-All 20 Cards are NOT_STARTED.
-No Card is active.
-No Card is authorized.
+V1-C01 is READY_FOR_DELIVERY; later Cards are NOT_STARTED.
+V1-C01 is active.
+V1-C01 is authorized; later Cards are not authorized.
 No Card is COMPLETE.
-No implementation evidence exists.
-All Recommended State values are NOT_STARTED.
-All CARD_QUALITY_GATE values are NOT_RUN.
-All Exit Gate Evidence values are NONE with status NOT_PROVEN.
+V1-C01 implementation evidence is present; later Card evidence is NONE.
+V1-C01 Recommended State is READY_FOR_DELIVERY; later Cards are NOT_STARTED.
+V1-C01 CARD_QUALITY_GATE is PASS; later Card quality gates are NOT_RUN.
+V1-C01 Exit Gate Evidence is PROVEN; later Card Exit Gates are NOT_PROVEN.
