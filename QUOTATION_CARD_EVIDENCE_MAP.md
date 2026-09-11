@@ -2,8 +2,8 @@
 
 Status: CANONICAL EVIDENCE LEDGER
 Implementation State: NOT_STARTED
-Active Card: NONE
-Authorization: NONE
+Active Card: V1-C01 — Repository Baseline
+Authorization: V1-C01 only
 
 ## 0. Role and Ownership
 
@@ -78,10 +78,10 @@ Never fabricate command output, test results, Git commits, AWS state, Bedrock re
 Project: AI Quotation Intelligence System
 Target: V1
 Application Implementation: NOT_STARTED
-Active Card: NONE
+Active Card: V1-C01 — Repository Baseline
 Completed Cards: NONE
 Implementation Evidence: NONE
-Git Repository: NO
+Git Repository: YES
 Tests: NOT_CREATED
 AWS Implementation: NOT_STARTED
 Bedrock Integration: NOT_STARTED
@@ -338,11 +338,11 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+AUTHORIZED / NOT_STARTED
 
 ### 4. Human Start Approval
 
-NO
+YES
 
 ### 5. Files Changed
 
@@ -392,7 +392,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+9e44dac3d69740b2f415d9ec728626553bc4e933 — governance baseline commit; pushed to origin/main. C01 implementation evidence remains NONE.
 
 ### 17. Known Limitations
 
@@ -482,7 +482,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -572,7 +572,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -662,7 +662,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -752,7 +752,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -842,7 +842,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -932,7 +932,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1022,7 +1022,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1112,7 +1112,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1202,7 +1202,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1292,7 +1292,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1382,7 +1382,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1472,7 +1472,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1562,7 +1562,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1652,7 +1652,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1742,7 +1742,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1832,7 +1832,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -1922,7 +1922,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -2012,7 +2012,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 
@@ -2102,7 +2102,7 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_AVAILABLE — repository is not yet initialized
+NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
 
 ### 17. Known Limitations
 

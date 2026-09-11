@@ -2,8 +2,8 @@
 
 Status: CANONICAL EDUCATIONAL ENGINEERING RECORD
 Implementation State: NOT_STARTED
-Active Card: NONE
-Authorization: NONE
+Active Card: V1-C01 — Repository Baseline
+Authorization: V1-C01 only
 
 ## Role and Ownership
 
@@ -84,9 +84,13 @@ This file alone does not mark a Card COMPLETE. Card completion remains governed 
 ## Current Project State
 
 Application Implementation: NOT_STARTED
-Active Card: NONE
-V1-C01 Authorized: NO
-Git Repository: NO
+Active Card: V1-C01 — Repository Baseline
+V1-C01 Authorized: YES
+Git Repository: YES
+Current branch: main
+HEAD: 9e44dac3d69740b2f415d9ec728626553bc4e933
+Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
+Tracking: main → origin/main
 
 No Card learning record may contain implementation claims before implementation begins.
 

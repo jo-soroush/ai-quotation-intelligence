@@ -525,7 +525,7 @@ Do not start the next Card without separate explicit human approval.
 ## 20. Current Migration State
 
 ~~~
-Project Phase: READY_FOR_V1_C01_AUTHORIZATION
+Project Phase: V1_C01_AUTHORIZED
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance: COMPLETE
@@ -545,9 +545,13 @@ GIT_WORKFLOW.md: MIGRATED / CANONICAL
 .agents/skills/quotation-card-execution/SKILL.md: MIGRATED / CANONICAL
 scripts/quotation_session_bootstrap.sh: MIGRATED / CANONICAL
 Application Implementation: NOT_STARTED
-Active Card: NONE
-C01 Authorized: NO
-Git repository: NO
+Active Card: V1-C01 — Repository Baseline
+C01 Authorized: YES
+Git repository: YES
+Current branch: main
+HEAD: 9e44dac3d69740b2f415d9ec728626553bc4e933
+Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
+Tracking: main → origin/main
 Current source adaptation records: NONE
 Historical source/template material is not canonical project authority.
 Proof cases executed: 0
@@ -599,7 +603,7 @@ Additional constraints:
 
 - Do not use legacy domain terminology.
 - Do not claim any application implementation exists.
-- Do not claim Git exists.
+- Do not treat the existing Git baseline as evidence that application implementation exists.
 - Do not claim tests passed.
 - Do not create future canonical files.
 - Do not rename legacy files yet.
