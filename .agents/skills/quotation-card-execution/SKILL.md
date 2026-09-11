@@ -680,10 +680,10 @@ PROVIDER OBJECTS STAY OUTSIDE CORE
 
 ```
 Application Implementation: V1-C01 BASELINE IMPLEMENTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 C01 Authorized: YES
-V1-C01 State: READY_FOR_DELIVERY
-GIT_DELIVERY_APPROVAL: NOT_GRANTED
+V1-C01 State: COMPLETE
+GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Git Repository: YES
 Current source records: NONE
 ```

@@ -2,7 +2,7 @@
 
 Status: CANONICAL EVIDENCE LEDGER
 Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 Authorization: V1-C01 only
 
 ## 0. Role and Ownership
@@ -78,8 +78,8 @@ Never fabricate command output, test results, Git commits, AWS state, Bedrock re
 Project: AI Quotation Intelligence System
 Target: V1
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: V1-C01 — Repository Baseline
-Completed Cards: NONE
+Active Card: NONE
+Completed Cards: V1-C01 — Repository Baseline
 Implementation Evidence: PRESENT — C01 baseline
 Git Repository: YES
 Tests: C01 BASELINE TESTS PRESENT / PASS
@@ -410,20 +410,20 @@ PASS — evidence and learning records updated with actual implementation decisi
 
 ### 16. Git Evidence
 
-Branch: card/v1-c01-repository-baseline
+Branch: card/v1-c01-repository-baseline (delivered)
 Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
 Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
 Remote/Upstream: origin / origin/card/v1-c01-repository-baseline
 Commit: COMPLETED — human-approved
 Push: COMPLETED — human-approved to origin/card/v1-c01-repository-baseline
-Working Tree at delivery: CLEAN; current reconciliation files modified
-GIT_DELIVERY_APPROVAL: NOT_GRANTED
-PR: NOT_CREATED — covered by GIT_DELIVERY_APPROVAL
-Merge: NOT_PERFORMED — covered by GIT_DELIVERY_APPROVAL
+Working Tree at delivery: CLEAN; final main tree CLEAN
+GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
+PR: MERGED — #1
+Merge: COMPLETED — 693e17be652cdd4f82cdfe6da2bef89f6529103c
 
 ### 17. Known Limitations
 
-The validated Card is READY_FOR_DELIVERY. The prior commit/push exists, but the new normal delivery approval has not been granted; PR and merge remain unperformed. CI, Docker, domain logic, and future-Card dependencies remain intentionally absent.
+The validated Card is COMPLETE. The approved normal delivery chain completed through PR #1 and merge. CI, Docker, domain logic, and future-Card dependencies remain intentionally absent.
 
 ### 18. What We Learned
 
@@ -431,11 +431,11 @@ Recorded in CARD_LEARNING_AND_DECISION_LOG.md → V1-C01.
 
 ### 19. Completion Evidence
 
-Exit Gate is proven. The Card is READY_FOR_DELIVERY pending one valid GIT_DELIVERY_APPROVAL and completion of the normal delivery chain; Card remains not complete.
+Exit Gate is proven. The Card is COMPLETE after valid GIT_DELIVERY_APPROVAL, PR #1, merge, and final reconciliation.
 
 ### 20. Recommended State
 
-READY_FOR_DELIVERY
+COMPLETE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C01
 Learning Documentation Status:
@@ -2178,11 +2178,11 @@ NOT_STARTED
 
 ## 18. Current Summary
 
-V1-C01 is READY_FOR_DELIVERY; later Cards are NOT_STARTED.
-V1-C01 is active.
+V1-C01 is COMPLETE; later Cards are NOT_STARTED.
+No Card is active.
 V1-C01 is authorized; later Cards are not authorized.
-No Card is COMPLETE.
+V1-C01 is COMPLETE.
 V1-C01 implementation evidence is present; later Card evidence is NONE.
-V1-C01 Recommended State is READY_FOR_DELIVERY; later Cards are NOT_STARTED.
+V1-C01 Recommended State is COMPLETE; later Cards are NOT_STARTED.
 V1-C01 CARD_QUALITY_GATE is PASS; later Card quality gates are NOT_RUN.
 V1-C01 Exit Gate Evidence is PROVEN; later Card Exit Gates are NOT_PROVEN.

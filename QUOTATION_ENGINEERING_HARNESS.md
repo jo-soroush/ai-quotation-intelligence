@@ -2,7 +2,7 @@
 
 Status: CANONICAL GOVERNANCE HARNESS
 Implementation State: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 Authorization: V1-C01 only
 
 ## 1. Role of This File
@@ -1002,11 +1002,11 @@ Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
 Application Implementation: V1-C01 BASELINE IMPLEMENTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 C01 Authorization: YES
 Git Repository: YES
-V1-C01 State: READY_FOR_DELIVERY
-GIT_DELIVERY_APPROVAL: NOT_GRANTED
+V1-C01 State: COMPLETE
+GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Current source records: NONE
 ~~~
 

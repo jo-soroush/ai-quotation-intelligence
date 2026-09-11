@@ -466,10 +466,10 @@ Proof Cases Executed: 0
 Proof Cases PASS: 0
 Proof Cases NOT_EXECUTED: 20
 Application: V1-C01 BASELINE IMPLEMENTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 V1-C01 Authorized: YES
-V1-C01 State: READY_FOR_DELIVERY
-GIT_DELIVERY_APPROVAL: NOT_GRANTED
+V1-C01 State: COMPLETE
+GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Git: YES
 ```
 

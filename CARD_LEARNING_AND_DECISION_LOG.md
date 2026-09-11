@@ -2,7 +2,7 @@
 
 Status: CANONICAL EDUCATIONAL ENGINEERING RECORD
 Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 Authorization: V1-C01 only
 
 ## Role and Ownership
@@ -84,15 +84,15 @@ This file alone does not mark a Card COMPLETE. Card completion remains governed 
 ## Current Project State
 
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: V1-C01 — Repository Baseline
+Active Card: NONE
 V1-C01 Authorized: YES
-V1-C01 State: READY_FOR_DELIVERY
-GIT_DELIVERY_APPROVAL: NOT_GRANTED
+V1-C01 State: COMPLETE
+GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Git Repository: YES
-Current branch: card/v1-c01-repository-baseline
-HEAD: 93d6bdbdc074687f366658c4ebddc43912b7571e
+Current branch: main
+HEAD: 693e17be652cdd4f82cdfe6da2bef89f6529103c
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: origin/card/v1-c01-repository-baseline; base main tracks origin/main
+Tracking: origin/main; Card branch delivered through PR #1
 
 V1-C01 implementation learning is recorded below. No later Card learning record contains implementation claims.
 
@@ -156,7 +156,7 @@ Declared pytest as a bounded development dependency and installed the project’
 
 ### 15. Tradeoffs and Limitations
 
-The baseline uses simple environment variables rather than a settings library, so richer validation belongs to a later contract. The human-approved C01 commit and push are complete. PR and merge remain pending under the single GIT_DELIVERY_APPROVAL delivery step. CI, Docker, and business behavior remain absent by design.
+The baseline uses simple environment variables rather than a settings library, so richer validation belongs to a later contract. The human-approved C01 commit, push, PR #1, and merge are complete under the single GIT_DELIVERY_APPROVAL delivery step. CI, Docker, and business behavior remain absent by design.
 
 ### 16. What We Learned
 
