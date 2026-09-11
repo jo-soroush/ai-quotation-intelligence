@@ -35,7 +35,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C01_VALIDATED_PENDING_DELIVERY
+Project Phase: READY_FOR_DELIVERY
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -46,7 +46,7 @@ Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
-Active Card State: VALIDATED / NOT_COMPLETE
+Active Card State: READY_FOR_DELIVERY
 Last COMPLETE Card: NONE
 Next Roadmap Card: V1-C01 — Repository Baseline
 Next Card Authorized: NO — V1-C01 is active; later Cards remain unauthorized
@@ -95,10 +95,10 @@ Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 Git repository: YES
 .git present: YES
 Current branch: card/v1-c01-repository-baseline
-HEAD commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1 (chore: reconcile C01 governance state)
+HEAD commit: 93d6bdbdc074687f366658c4ebddc43912b7571e (feat: establish V1 C01 repository baseline)
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: base main → origin/main; C01 branch has no remote tracking branch
-Working tree status: MODIFIED: C01 implementation and governance evidence files (uncommitted)
+Tracking: origin/card/v1-c01-repository-baseline
+Working tree status: MODIFIED: governance reconciliation files (uncommitted)
 Application package: C01 BASELINE CREATED
 tests/: C01 BASELINE CREATED / PASS
 pyproject.toml: CREATED
@@ -127,9 +127,10 @@ Do not infer external AWS setup into repository implementation state.
 ```
 Card ID: V1-C01
 Title: Repository Baseline
-State: VALIDATED / NOT_COMPLETE
+State: DELIVERED / NOT_COMPLETE
 Branch: card/v1-c01-repository-baseline
 Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
+Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e
 Human Start Approval: GRANTED
 Authorized Scope: V1-C01 — Repository Baseline only
 ROADMAP_ALIGNMENT_GATE: PASS
@@ -138,7 +139,7 @@ CARD_QUALITY_GATE: PASS
 
 Safe Checkpoint:
 
-V1-C01 baseline implementation and applicable validation are complete. Domain/application business implementation has not started. No C01 commit or push was authorized.
+V1-C01 baseline implementation, validation, and human-approved commit/push delivery are complete. Domain/application business implementation has not started. PR and merge delivery steps remain pending.
 
 ## 6. Authorization Ledger
 
@@ -151,10 +152,11 @@ Material Scope Change: NOT_GRANTED
 Significant Technology Addition: NOT_GRANTED
 Sensitive Credential Use: NOT_GRANTED
 External Write/Action Capability: NOT_GRANTED
-Commit: AVAILABLE (explicit human approval required; not performed)
-Push: AVAILABLE (explicit human approval required; not performed)
-PR: NOT_AVAILABLE
-Merge: NOT_AVAILABLE
+Commit: COMPLETED — 93d6bdbdc074687f366658c4ebddc43912b7571e
+Push: COMPLETED — origin/card/v1-c01-repository-baseline
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
+PR: NOT_CREATED — covered by GIT_DELIVERY_APPROVAL
+Merge: NOT_PERFORMED — covered by GIT_DELIVERY_APPROVAL
 Deployment/Release: NOT_GRANTED
 Read-only inspection: ALLOWED
 Governance final audit: COMPLETE / READ_ONLY
@@ -178,7 +180,7 @@ V1-C01 is authorized as the only active Card. Being next in sequence does not au
 
 ## 8. Current Blockers and Pending Control
 
-No validation blocker remains for V1-C01. The baseline is implemented and validated; approved Git delivery remains pending and no completion claim is made.
+No implementation or validation blocker remains for V1-C01. The Card is READY_FOR_DELIVERY; one GIT_DELIVERY_APPROVAL is pending for the exact validated state. No completion claim is made.
 
 Governance remaining actions: NONE.
 
@@ -269,10 +271,12 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: NONE
+Implementation Evidence: V1-C01 PRESENT; later Cards NONE
 Completed Cards: NONE
-All Card Quality Gates: NOT_RUN
-All Exit Gates: NOT_PROVEN
+V1-C01 CARD_QUALITY_GATE: PASS
+Later Card Quality Gates: NOT_RUN
+V1-C01 Exit Gate: PROVEN
+Later Card Exit Gates: NOT_PROVEN
 ```
 
 Governance migration validation is not V1 implementation evidence.
@@ -290,7 +294,7 @@ Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
 Application implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
-Git checkpoint: Start Commit af47e98d6170551a5446b45c4dadf7f17f9e0ad1; no C01 commit created
+Git checkpoint: Delivery Commit 93d6bdbdc074687f366658c4ebddc43912b7571e — pushed to origin/card/v1-c01-repository-baseline; final delivery approval pending
 ```
 
 ## 17. Decision Ledger
@@ -314,7 +318,7 @@ These are governance decisions, not implementation claims.
 
 | Card | Title | State | Start Approved | Quality Gate | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| V1-C01 | Repository Baseline | VALIDATED / NOT_COMPLETE | YES | PASS | PRESENT |
+| V1-C01 | Repository Baseline | READY_FOR_DELIVERY | YES | PASS | PRESENT |
 | V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C03 | Synthetic Historical Data | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C04 | Quote Calculation Engine | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -335,7 +339,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-No Card is COMPLETE. V1-C01 is validated but not complete pending approved Git delivery; later Cards are not authorized.
+No Card is COMPLETE. V1-C01 is READY_FOR_DELIVERY pending GIT_DELIVERY_APPROVAL and the normal delivery chain; later Cards are not authorized.
 
 ## 19. Resume Protocol
 
@@ -371,11 +375,11 @@ Active Card: V1-C01 — Repository Baseline
 Next Roadmap Card: V1-C01 — Repository Baseline
 V1-C01 Authorization: GRANTED
 Git Repository: YES
-Git checkpoint: Start Commit af47e98d6170551a5446b45c4dadf7f17f9e0ad1; no C01 commit created
-Working tree: C01 implementation and governance evidence files modified; no other modifications observed
+Git checkpoint: Delivery Commit 93d6bdbdc074687f366658c4ebddc43912b7571e — pushed to origin/card/v1-c01-repository-baseline; final delivery approval pending
+Working tree: governance reconciliation files modified; delivery commit itself was clean
 ```
 
-Safe next action: Review the validated C01 diff and obtain separate approval for Git delivery if required.
+Safe next action: Obtain one GIT_DELIVERY_APPROVAL for the exact validated C01 state, without authorizing V1-C02.
 
 Do not start any later Card automatically.
 

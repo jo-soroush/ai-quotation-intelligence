@@ -464,10 +464,7 @@ significant technology addition
 destructive/sensitive operation
 secret/credential-sensitive action
 external write/action capability
-commit
-push
-PR
-merge
+GIT_DELIVERY_APPROVAL for the normal commit/push/PR/merge chain
 release/deploy
 ~~~
 
@@ -515,17 +512,23 @@ PROJECT_CONTROL reconciled
 Then:
 
 ~~~
-Card = COMPLETE
-Active Card = NONE
-STOP
+READY_FOR_DELIVERY
+→ GIT_DELIVERY_APPROVAL
+→ commit → push → PR → merge
+→ final reconciliation
+→ Card = COMPLETE
+→ Active Card = NONE
+→ STOP
 ~~~
+
+GIT_DELIVERY_APPROVAL is valid only for the exact validated Card state. A material post-approval change invalidates it and requires STOP, revalidation, and new approval.
 
 Do not start the next Card without separate explicit human approval.
 
 ## 20. Current Migration State
 
 ~~~
-Project Phase: V1_C01_AUTHORIZED
+Project Phase: READY_FOR_DELIVERY
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance: COMPLETE
@@ -544,14 +547,16 @@ QUOTATION_ENGINEERING_HARNESS.md: MIGRATED / CANONICAL
 GIT_WORKFLOW.md: MIGRATED / CANONICAL
 .agents/skills/quotation-card-execution/SKILL.md: MIGRATED / CANONICAL
 scripts/quotation_session_bootstrap.sh: MIGRATED / CANONICAL
-Application Implementation: NOT_STARTED
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 C01 Authorized: YES
 Git repository: YES
-Current branch: main
-HEAD: 9e44dac3d69740b2f415d9ec728626553bc4e933
+Current branch: card/v1-c01-repository-baseline
+HEAD: 93d6bdbdc074687f366658c4ebddc43912b7571e
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: main → origin/main
+Tracking: origin/card/v1-c01-repository-baseline
+V1-C01 State: READY_FOR_DELIVERY
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
 Current source adaptation records: NONE
 Historical source/template material is not canonical project authority.
 Proof cases executed: 0
@@ -604,11 +609,11 @@ Additional constraints:
 - Do not use legacy domain terminology.
 - Do not claim any application implementation exists.
 - Do not treat the existing Git baseline as evidence that application implementation exists.
-- Do not claim tests passed.
+- Do not claim tests passed without actual execution evidence.
 - Do not create future canonical files.
 - Do not rename legacy files yet.
 - Do not modify PROJECT_PROFILE.md.
-- Do not modify PROJECT_CONTROL.md.
+- Do not modify PROJECT_CONTROL.md outside an evidence-supported state reconciliation.
 - Do not modify the Roadmap.
 - Do not modify PROJECT_MIGRATION_STATUS.md.
-- Modify AGENTS.md only.
+- Modify canonical governance files only when the active governance change requires it.

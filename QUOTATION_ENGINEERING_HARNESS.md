@@ -1,9 +1,9 @@
 # AI Quotation Intelligence System — V1 Engineering Harness
 
 Status: CANONICAL GOVERNANCE HARNESS
-Implementation State: NOT_STARTED
-Active Card: NONE
-Authorization: NONE
+Implementation State: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
+Active Card: V1-C01 — Repository Baseline
+Authorization: V1-C01 only
 
 ## 1. Role of This File
 
@@ -99,7 +99,10 @@ Instructions
 → Accept / Fix / Rollback
 → Prove Exit Gate
 → CARD_QUALITY_GATE
-→ Approved Git Delivery
+→ READY_FOR_DELIVERY
+→ GIT_DELIVERY_APPROVAL
+→ Commit / Push / PR / Merge
+→ Final Reconciliation
 → Card COMPLETE
 → Active Card NONE
 → STOP
@@ -870,7 +873,9 @@ A Card may become COMPLETE only if:
 - the Learning Record is complete;
 - CARD_QUALITY_GATE is PASS;
 - PROJECT_CONTROL is reconciled;
-- approved Git delivery is complete where applicable.
+- READY_FOR_DELIVERY is reached;
+- one valid GIT_DELIVERY_APPROVAL covers the exact validated delivery state;
+- the normal commit/push/PR/merge chain is complete.
 
 Then:
 
@@ -895,10 +900,7 @@ significant technology addition
 sensitive/destructive action
 credential-sensitive action
 external write/action capability
-commit
-push
-PR
-merge
+GIT_DELIVERY_APPROVAL for the normal commit/push/PR/merge chain
 deployment/release
 ~~~
 
@@ -921,6 +923,32 @@ no automatic next Card
 ~~~
 
 If Git is not initialized, record NOT_AVAILABLE.
+
+## 26A. GIT_DELIVERY_APPROVAL
+
+READY_FOR_DELIVERY is the state after implementation, required validation,
+Evidence Map, Learning Log, ROADMAP_ALIGNMENT_GATE, CARD_QUALITY_GATE, and
+Exit Gate proof are complete, with normal Git delivery still pending.
+
+One explicit GIT_DELIVERY_APPROVAL authorizes `git add`, commit, push, PR
+creation, and merge for the exact validated Card state. Record the Card,
+branch, validated file set/diff, tests, gate results, and working-tree state
+before approval.
+
+The approval does not cover force push, destructive history actions,
+architecture or scope changes outside the Card contract, sensitive
+credentials, unrelated external actions, or deployment/release unless
+separately authorized and owned by the Card.
+
+If implementation files, governance evidence, staged diff, tests, gate
+results, branch, or delivery file set materially changes after approval:
+
+~~~text
+GIT_DELIVERY_APPROVAL: INVALIDATED
+STOP
+REVALIDATE
+NEW HUMAN APPROVAL REQUIRED
+~~~
 
 ## 26. Security Check
 
@@ -973,10 +1001,12 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: NOT_STARTED
-Active Card: NONE
-C01 Authorization: NO
-Git Repository: NO
+Application Implementation: V1-C01 BASELINE IMPLEMENTED
+Active Card: V1-C01 — Repository Baseline
+C01 Authorization: YES
+Git Repository: YES
+V1-C01 State: READY_FOR_DELIVERY
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
 Current source records: NONE
 ~~~
 
@@ -1010,6 +1040,10 @@ FAILURE → RECORD + STOP.
 EVIDENCE BEFORE CLAIM.
 PROVE EXIT GATE.
 PASS CARD_QUALITY_GATE.
+READY_FOR_DELIVERY.
+GIT_DELIVERY_APPROVAL.
+COMMIT → PUSH → PR → MERGE.
+FINAL RECONCILIATION.
 COMPLETE CARD.
 ACTIVE CARD → NONE.
 STOP.

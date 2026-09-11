@@ -86,11 +86,13 @@ This file alone does not mark a Card COMPLETE. Card completion remains governed 
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 V1-C01 Authorized: YES
+V1-C01 State: READY_FOR_DELIVERY
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
 Git Repository: YES
 Current branch: card/v1-c01-repository-baseline
-HEAD: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
+HEAD: 93d6bdbdc074687f366658c4ebddc43912b7571e
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: branch has no remote branch; base main tracks origin/main
+Tracking: origin/card/v1-c01-repository-baseline; base main tracks origin/main
 
 V1-C01 implementation learning is recorded below. No later Card learning record contains implementation claims.
 
@@ -146,15 +148,15 @@ Pytest had not yet been installed into the pre-existing environment; `.gitignore
 
 ### 13. How We Fixed It
 
-Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch with the approved Git operation.
+Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch, then recorded the human-approved commit `93d6bdbdc074687f366658c4ebddc43912b7571e` and push to its remote branch.
 
 ### 14. Validation / Evidence References
 
-`QUOTATION_CARD_EVIDENCE_MAP.md` V1-C01: import/configuration check PASS; pytest PASS with 3 tests; structure PASS; secret tracking PASS; provider dependency boundary PASS; future-Card leakage PASS; `git diff --check` PASS.
+`QUOTATION_CARD_EVIDENCE_MAP.md` V1-C01: import/configuration check PASS; pytest PASS with 3 tests; structure PASS; secret tracking PASS; provider dependency boundary PASS; future-Card leakage PASS; `git diff --check` PASS; delivery commit and remote/upstream verification recorded.
 
 ### 15. Tradeoffs and Limitations
 
-The baseline uses simple environment variables rather than a settings library, so richer validation belongs to a later contract. The branch is local and unpushed because commit/push were not authorized. CI, Docker, and business behavior remain absent by design.
+The baseline uses simple environment variables rather than a settings library, so richer validation belongs to a later contract. The human-approved C01 commit and push are complete. PR and merge remain pending under the single GIT_DELIVERY_APPROVAL delivery step. CI, Docker, and business behavior remain absent by design.
 
 ### 16. What We Learned
 

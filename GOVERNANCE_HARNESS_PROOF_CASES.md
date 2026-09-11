@@ -299,9 +299,47 @@ Every proof case uses exactly these 16 fields:
 15. Result: NOT_PROVEN
 16. Evidence Reference: NONE
 
+### PC-14 — Single GIT_DELIVERY_APPROVAL permits normal delivery
+
+1. Proof Case ID: PC-14
+2. Name: Single GIT_DELIVERY_APPROVAL for unchanged validated Card
+3. Purpose: Prove one delivery approval covers the normal commit/push/PR/merge chain for the same validated state.
+4. Preconditions: Card is READY_FOR_DELIVERY; required validation, Evidence, Learning, ROADMAP_ALIGNMENT_GATE, CARD_QUALITY_GATE, and Exit Gate are PASS/PROVEN; exact branch and delivery diff are recorded.
+5. Active Card State: One authorized active Card is READY_FOR_DELIVERY.
+6. Human Authorization State: One explicit GIT_DELIVERY_APPROVAL is granted for the recorded state.
+7. Input / Requested Work: Execute git add, commit, push, PR creation, and merge without changing the validated state.
+8. Canonical Contract Context: GIT_WORKFLOW.md defines the single-approval normal delivery chain.
+9. Expected Gate: GIT_DELIVERY_APPROVAL and final reconciliation.
+10. Expected Result: ALLOW the normal delivery chain; COMPLETE only after successful verification and reconciliation.
+11. Expected Stop / Allow Reason: One valid approval covers normal delivery; separate Card-start approval remains unrelated and later Cards remain unauthorized.
+12. Forbidden Behavior: Treating delivery approval as authorization for scope changes, force push, destructive history actions, deployment, or the next Card.
+13. Evidence Required: Approval, exact delivery snapshot, each actual Git/PR/merge result, final reconciliation, and no material diff change.
+14. Execution Status: NOT_EXECUTED
+15. Result: NOT_PROVEN
+16. Evidence Reference: NONE
+
+### PC-15 — GIT_DELIVERY_APPROVAL invalidated after material change
+
+1. Proof Case ID: PC-15
+2. Name: Delivery approval invalidated by post-approval change
+3. Purpose: Prove a material post-approval change stops delivery and requires revalidation and new approval.
+4. Preconditions: Card is READY_FOR_DELIVERY and one GIT_DELIVERY_APPROVAL has been granted for an exact validated state.
+5. Active Card State: Authorized Card remains active; approved delivery snapshot exists.
+6. Human Authorization State: GIT_DELIVERY_APPROVAL is valid before the change.
+7. Input / Requested Work: Change an implementation file, governance evidence, staged diff, branch, validation result, or delivery file set after approval.
+8. Canonical Contract Context: GIT_WORKFLOW.md invalidates approval when the exact validated state changes.
+9. Expected Gate: GIT_DELIVERY_APPROVAL invalidation check.
+10. Expected Result: BLOCK delivery and stop immediately.
+11. Expected Stop / Allow Reason: `GIT_DELIVERY_APPROVAL: INVALIDATED`; revalidate the Card and obtain new approval.
+12. Forbidden Behavior: Continuing commit/push/PR/merge using the superseded approval or silently accepting unrelated files.
+13. Evidence Required: Original approval snapshot, observed material change, invalidation result, STOP, and new approval requirement.
+14. Execution Status: NOT_EXECUTED
+15. Result: NOT_PROVEN
+16. Evidence Reference: NONE
+
 ## 5. Source Adaptation Extension Cases
 
-These five cases extend the core suite and are not counted among the 13 core
+These five cases extend the core suite and are not counted among the 15 core
 cases. They use the same 16-field format.
 
 ### SA-PC-01 — ADAPT with UNKNOWN/UNVERIFIED license
@@ -421,16 +459,18 @@ No testing library is prescribed here.
 ## 7. Current Project State
 
 ```text
-Core Proof Cases Defined: 13
+Core Proof Cases Defined: 15
 Source Adaptation Extension Cases Defined: 5
 Executable Proof Suite: NOT_CREATED
 Proof Cases Executed: 0
 Proof Cases PASS: 0
-Proof Cases NOT_EXECUTED: 18
-Application: NOT_STARTED
-Active Card: NONE
-V1-C01 Authorized: NO
-Git: NO
+Proof Cases NOT_EXECUTED: 20
+Application: V1-C01 BASELINE IMPLEMENTED
+Active Card: V1-C01 — Repository Baseline
+V1-C01 Authorized: YES
+V1-C01 State: READY_FOR_DELIVERY
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
+Git: YES
 ```
 
 ## 8. Relationship to Canonical Files

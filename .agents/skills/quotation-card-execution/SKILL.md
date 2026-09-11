@@ -587,7 +587,9 @@ Contract satisfied
 → Evidence Map current
 → Learning & Decision Log current
 → CARD_QUALITY_GATE PASS
-→ approved delivery where applicable
+→ READY_FOR_DELIVERY
+→ one GIT_DELIVERY_APPROVAL for the exact validated Card state
+→ commit → push → PR → merge
 → PROJECT_CONTROL reconciled
 → Card COMPLETE
 → Active Card NONE
@@ -606,7 +608,9 @@ Never start the next Card automatically.
 
 ## 16. Git Handoff and Approval
 
-Only after validation and quality evidence are ready, follow GIT_WORKFLOW.md. Separate human approval is required for commit, push, PR, merge, deployment, and other consequential actions. Do not force push by default. Merge is not Card completion.
+Only after validation and quality evidence are ready, set READY_FOR_DELIVERY and follow GIT_WORKFLOW.md. One explicit GIT_DELIVERY_APPROVAL covers the normal commit, push, PR, and merge chain for the exact validated Card state. Do not force push by default. Merge is not Card completion.
+
+If implementation files, governance evidence, staged diff, validation result, branch, or delivery file set materially changes after approval, set GIT_DELIVERY_APPROVAL: INVALIDATED, STOP, revalidate, and require a new approval.
 
 ## 17. Resume After Interruption
 
@@ -675,10 +679,12 @@ PROVIDER OBJECTS STAY OUTSIDE CORE
 ## 20. Current Project State
 
 ```
-Application Implementation: NOT_STARTED
-Active Card: NONE
-C01 Authorized: NO
-Git Repository: NO
+Application Implementation: V1-C01 BASELINE IMPLEMENTED
+Active Card: V1-C01 — Repository Baseline
+C01 Authorized: YES
+V1-C01 State: READY_FOR_DELIVERY
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
+Git Repository: YES
 Current source records: NONE
 ```
 
@@ -706,7 +712,10 @@ RESOLVE CARD
 → PROVE EXIT GATE
 → LEARNING RECORD
 → CARD_QUALITY_GATE
-→ HUMAN-APPROVED GIT DELIVERY
+→ READY_FOR_DELIVERY
+→ GIT_DELIVERY_APPROVAL
+→ COMMIT → PUSH → PR → MERGE
+→ FINAL RECONCILIATION
 → CARD COMPLETE
 → ACTIVE CARD NONE
 → STOP

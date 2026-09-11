@@ -18,13 +18,13 @@ Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 
 Git Repository: YES
 .git Present: YES
-Current Branch: main
-HEAD: 9e44dac3d69740b2f415d9ec728626553bc4e933
+Current Branch: card/v1-c01-repository-baseline
+HEAD: 93d6bdbdc074687f366658c4ebddc43912b7571e
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Upstream: origin/main
-Working Tree: PROJECT_CONTROL.md modified; no other modifications observed
-Commits: governance baseline commit present
-Push: governance baseline pushed; future pushes require explicit approval
+Upstream: origin/card/v1-c01-repository-baseline
+Working Tree: governance reconciliation files modified; no application changes
+Commits: V1-C01 delivery commit present
+Push: V1-C01 branch pushed; PR and merge not performed
 PR: NONE
 Merge: NONE
 
@@ -32,7 +32,7 @@ This is policy for future Git use. It does not initialize Git or authorize any G
 
 ## 3. Core Delivery Principle
 
-One Card → One Branch → Bounded Changes → Validation → Evidence → Human Approval → Commit → Human Approval → Push → Human Approval → PR → Human Approval → Merge → Reconcile PROJECT_CONTROL → Card COMPLETE → STOP
+One Card → One Branch → Bounded Changes → Validation → Evidence → READY_FOR_DELIVERY → one GIT_DELIVERY_APPROVAL → git add → commit → push → PR → merge → final reconciliation → Card COMPLETE → Active Card NONE → STOP
 
 Each transition is explicit. Do not automatically perform the next Git action.
 
@@ -67,7 +67,7 @@ By default:
 - do not rewrite default-branch history
 - do not force push the default branch
 - do not merge unvalidated Card work
-- do not bypass human merge approval
+- do not merge without a valid GIT_DELIVERY_APPROVAL and required checks
 
 Repository initialization and default-branch setup belong to the authorized repository-baseline Card. They must not be performed during governance migration.
 
@@ -126,7 +126,7 @@ Do not commit first and clean later.
 
 ## 9. Diff Review
 
-Before requesting commit approval, review:
+Before requesting GIT_DELIVERY_APPROVAL, review:
 - git diff
 - git diff --staged
 - git status
@@ -137,9 +137,9 @@ If the diff does not match authorized scope:
 CARD_SCOPE_MISMATCH
 STOP
 
-## 10. Validation Before Commit
+## 10. Validation Before GIT_DELIVERY_APPROVAL
 
-Commit is not a substitute for validation. Before requesting commit approval, required focused validation must have run and Card evidence must be current.
+Git delivery is not a substitute for validation. Before requesting GIT_DELIVERY_APPROVAL, required focused validation must have run, Evidence and Learning must be current, ROADMAP_ALIGNMENT_GATE must PASS, CARD_QUALITY_GATE must PASS, and the Exit Gate must be PROVEN.
 
 Applicable evidence includes focused tests, relevant regression, Card evaluation, Exit Gate progress, known failures, known limitations, and an Evidence Map update.
 
@@ -149,13 +149,21 @@ STOP
 
 Do not commit a falsely claimed passing state.
 
-## 11. Commit Approval
+## 11. GIT_DELIVERY_APPROVAL
 
-Explicit human approval is required before every commit.
+After the Card reaches READY_FOR_DELIVERY, one explicit human GIT_DELIVERY_APPROVAL authorizes the normal delivery chain for the exact validated Card state:
 
-An agent may prepare proposed files, a diff summary, a validation summary, and a proposed commit message, but must not commit without explicit approval.
+- `git add`
+- commit
+- push
+- PR creation
+- merge
 
-Without approval:
+Before requesting approval, report the Card, branch, HEAD/start commit, validated file set and diff, validation results, Evidence Map and Learning Log state, ROADMAP_ALIGNMENT_GATE, CARD_QUALITY_GATE, Exit Gate, and unrelated-file check.
+
+GIT_DELIVERY_APPROVAL does not authorize force push, history rewrite, destructive Git actions, architecture or scope changes outside the Card contract, sensitive credential use, unrelated external actions, or deployment/release unless separately authorized and owned by the Card.
+
+Without GIT_DELIVERY_APPROVAL:
 REQUIRED_APPROVAL_MISSING
 STOP
 
@@ -176,34 +184,35 @@ After an approved commit, verify HEAD changed as expected, the commit exists, it
 
 When the active process permits updates, record the actual commit hash in PROJECT_CONTROL.md and QUOTATION_CARD_EVIDENCE_MAP.md. Never fabricate a hash.
 
-## 14. Push Approval and Rules
+## 14. GIT_DELIVERY_APPROVAL Invalidation and Delivery Rules
 
-Commit approval does not imply push approval.
+GIT_DELIVERY_APPROVAL is valid only for the exact validated delivery state.
 
-Before push, report:
-Branch:
-Commit:
-Remote:
-Upstream:
-Working Tree:
-Validation State:
-Known Limitations:
+If any of the following occurs after approval, the approval is invalidated immediately and execution stops:
 
-Explicit human approval is required. Without it:
-REQUIRED_APPROVAL_MISSING
-STOP
+- implementation files change;
+- governance evidence materially changes;
+- the staged diff changes materially;
+- tests are rerun and fail;
+- CARD_QUALITY_GATE becomes FAIL;
+- the Exit Gate becomes NOT_PROVEN;
+- the branch changes unexpectedly; or
+- unrelated files enter the delivery set.
+
+Record `GIT_DELIVERY_APPROVAL: INVALIDATED`, preserve the reason, revalidate the Card state, and obtain a new approval before delivery.
 
 By default:
 - push only the active Card branch
 - never use force push, --force, or --force-with-lease unless explicitly approved for justified recovery
 - do not push secrets or unrelated branches
 - verify the remote target
+- do not implement or edit after approval without invalidation and re-approval
 
-After push, verify upstream state where possible and record actual push evidence.
+After each normal delivery action, verify the actual result. A failed check, changed diff, wrong branch, hidden unrelated file, or merge conflict is a STOP condition; do not continue automatically.
 
-## 15. Pull-Request Approval and Content
+## 15. Pull-Request Content
 
-Push approval does not imply pull-request approval. Explicit human approval is required to create a PR.
+PR creation is covered by the single GIT_DELIVERY_APPROVAL when the exact validated delivery state remains unchanged.
 
 Before creating one, Card scope must be stable, required validation and evidence must be current, and the diff must be reviewable.
 
@@ -224,9 +233,9 @@ Human Approval Requirements:
 
 Do not claim a passing result that was not executed. A PR does not make a Card complete.
 
-## 16. Merge Approval and Rule
+## 16. Merge Rule
 
-PR creation does not imply merge approval. Explicit human approval is required for merge; auto-merge is not enabled by default.
+Merge is covered by the single GIT_DELIVERY_APPROVAL when the exact validated delivery state remains unchanged. Auto-merge is not enabled by default.
 
 Before merge, verify review state, CI state if CI exists, required Card validation, Evidence Map, Exit Gate, CARD_QUALITY_GATE, known limitations, and conflicts.
 
@@ -236,7 +245,9 @@ After merge, verify the actual merged state and record evidence. Do not infer me
 
 ## 17. Card Completion and Git
 
-Merge alone is not Card completion. A Card is complete only when its contract is satisfied, required validations pass, the Exit Gate is proven, evidence is current, the Learning Record is complete, CARD_QUALITY_GATE is PASS, PROJECT_CONTROL.md is reconciled, and required approved Git delivery is complete.
+READY_FOR_DELIVERY means implementation and validation are complete, Evidence and Learning are current, ROADMAP_ALIGNMENT_GATE and CARD_QUALITY_GATE are PASS, the Exit Gate is PROVEN, and normal Git delivery is pending.
+
+A Card is complete only when its contract is satisfied, required validations pass, the Exit Gate is proven, evidence is current, the Learning Record is complete, CARD_QUALITY_GATE is PASS, PROJECT_CONTROL.md is reconciled, one valid GIT_DELIVERY_APPROVAL covered the exact delivery state, and the normal commit/push/PR/merge chain completed successfully.
 
 Then:
 Card COMPLETE
@@ -336,10 +347,7 @@ Evidence and PROJECT_CONTROL.md remain authoritative for project state.
 Explicit human approval is required for:
 - Git initialization when Card scope requires it
 - creating or changing the default branch where consequential
-- commit
-- push
-- PR creation
-- merge
+- GIT_DELIVERY_APPROVAL for normal Card delivery
 - force push
 - history rewrite
 - destructive reset or clean
@@ -354,22 +362,20 @@ Read-only Git inspection does not require approval. Routine non-destructive edit
 Verified current posture:
 
 Git Repository: YES
-Implementation: NOT_STARTED
+Implementation: V1-C01 BASELINE IMPLEMENTED
 Active Card: V1-C01 — Repository Baseline
 C01 Authorized: YES
 
-Therefore no commit, push, PR, merge, or other consequential Git delivery action is currently authorized. GIT_WORKFLOW.md remains governance policy while C01 implementation has not started.
+V1-C01 is READY_FOR_DELIVERY under the one-approval delivery model. GIT_DELIVERY_APPROVAL has not been granted for the current reconciliation state. GIT_WORKFLOW.md remains governance policy; no delivery action is authorized without that approval.
 
 ## 27. Final Git Rule
 
 ONE CARD → ONE BRANCH.
 INSPECT BEFORE WRITE.
 REVIEW DIFF BEFORE STAGE.
-VALIDATE BEFORE COMMIT.
-COMMIT REQUIRES APPROVAL.
-PUSH REQUIRES NEW APPROVAL.
-PR REQUIRES NEW APPROVAL.
-MERGE REQUIRES NEW APPROVAL.
+VALIDATE BEFORE READY_FOR_DELIVERY.
+ONE GIT_DELIVERY_APPROVAL → COMMIT → PUSH → PR → MERGE.
+INVALIDATED APPROVAL → STOP → REVALIDATE → NEW APPROVAL.
 NO SECRETS.
 NO FORCE PUSH BY DEFAULT.
 NO UNRELATED WORK.
@@ -391,7 +397,8 @@ Check this policy for:
 - diff and narrow staging review
 - secret protection
 - validation before commit
-- separate approval for commit, push, PR, and merge
+- one GIT_DELIVERY_APPROVAL for the normal commit/push/PR/merge chain
+- approval invalidation on material post-approval change
 - no force push by default
 - safe recovery
 - protection of unrelated user work
@@ -399,6 +406,6 @@ Check this policy for:
 - merge not equaling Card completion
 - Card completion stopping the workflow
 - separate approval for the next Card
-- C01 authorized; implementation remains not started
+- C01 READY_FOR_DELIVERY; GIT_DELIVERY_APPROVAL remains NOT_GRANTED
 
 No checklist item authorizes a Git write action.

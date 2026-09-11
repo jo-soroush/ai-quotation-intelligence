@@ -80,7 +80,7 @@ Target: V1
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 Completed Cards: NONE
-Implementation Evidence: NONE
+Implementation Evidence: PRESENT — C01 baseline
 Git Repository: YES
 Tests: C01 BASELINE TESTS PRESENT / PASS
 AWS Implementation: NOT_STARTED
@@ -286,7 +286,7 @@ Known Limitations Recorded:
 CARD_QUALITY_GATE:
 PASS | BLOCKED | NOT_RUN
 
-Current value for every Card: NOT_RUN.
+Current value for unstarted Cards: NOT_RUN. V1-C01 values are recorded in its Card record below.
 
 ## 14. Completion Rule
 
@@ -338,7 +338,7 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-IMPLEMENTED / VALIDATED / NOT_COMPLETE
+READY_FOR_DELIVERY
 
 ### 4. Human Start Approval
 
@@ -363,6 +363,12 @@ git switch -c card/v1-c01-repository-baseline
 ./.venv/bin/pytest
 git ls-files / secret-pattern checks
 provider dependency and future-Card leakage checks
+git status --short --branch
+git log -1 --format='%H%n%s'
+git show --stat --oneline HEAD
+git remote -v
+git rev-parse --abbrev-ref --symbolic-full-name '@{u}'
+git rev-list --left-right --count HEAD...@{u}
 
 ### 7. Focused Tests
 
@@ -406,14 +412,18 @@ PASS — evidence and learning records updated with actual implementation decisi
 
 Branch: card/v1-c01-repository-baseline
 Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
-Remote/Upstream: origin / origin/main
-Commit: NOT_CREATED — human did not authorize commit
-Push: NOT_PERFORMED — human did not authorize push
-Working Tree: C01 files and governance records modified; ignored .venv remains local-only
+Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
+Remote/Upstream: origin / origin/card/v1-c01-repository-baseline
+Commit: COMPLETED — human-approved
+Push: COMPLETED — human-approved to origin/card/v1-c01-repository-baseline
+Working Tree at delivery: CLEAN; current reconciliation files modified
+GIT_DELIVERY_APPROVAL: NOT_GRANTED
+PR: NOT_CREATED — covered by GIT_DELIVERY_APPROVAL
+Merge: NOT_PERFORMED — covered by GIT_DELIVERY_APPROVAL
 
 ### 17. Known Limitations
 
-No commit, push, PR, or merge was performed. CI, Docker, domain logic, and future-Card dependencies remain intentionally absent.
+The validated Card is READY_FOR_DELIVERY. The prior commit/push exists, but the new normal delivery approval has not been granted; PR and merge remain unperformed. CI, Docker, domain logic, and future-Card dependencies remain intentionally absent.
 
 ### 18. What We Learned
 
@@ -421,11 +431,11 @@ Recorded in CARD_LEARNING_AND_DECISION_LOG.md → V1-C01.
 
 ### 19. Completion Evidence
 
-Exit Gate is proven, but approved Git delivery was not performed; Card remains not complete.
+Exit Gate is proven. The Card is READY_FOR_DELIVERY pending one valid GIT_DELIVERY_APPROVAL and completion of the normal delivery chain; Card remains not complete.
 
 ### 20. Recommended State
 
-VALIDATED / NOT_COMPLETE
+READY_FOR_DELIVERY
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C01
 Learning Documentation Status:
@@ -2168,11 +2178,11 @@ NOT_STARTED
 
 ## 18. Current Summary
 
-All 20 Cards are NOT_STARTED.
-No Card is active.
-No Card is authorized.
+V1-C01 is READY_FOR_DELIVERY; later Cards are NOT_STARTED.
+V1-C01 is active.
+V1-C01 is authorized; later Cards are not authorized.
 No Card is COMPLETE.
-No implementation evidence exists.
-All Recommended State values are NOT_STARTED.
-All CARD_QUALITY_GATE values are NOT_RUN.
-All Exit Gate Evidence values are NONE with status NOT_PROVEN.
+V1-C01 implementation evidence is present; later Card evidence is NONE.
+V1-C01 Recommended State is READY_FOR_DELIVERY; later Cards are NOT_STARTED.
+V1-C01 CARD_QUALITY_GATE is PASS; later Card quality gates are NOT_RUN.
+V1-C01 Exit Gate Evidence is PROVEN; later Card Exit Gates are NOT_PROVEN.
