@@ -3,7 +3,7 @@
 Status: CANONICAL GOVERNANCE HARNESS
 Implementation State: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: NONE
-Authorization: V1-C01 only
+Authorization: C01 start approval recorded historically; no active Card
 
 ## 1. Role of This File
 
@@ -103,6 +103,7 @@ Instructions
 → GIT_DELIVERY_APPROVAL
 → Commit / Push / PR / Merge
 → Final Reconciliation
+→ FINAL_CARD_STATE_CONSISTENCY_GATE PASS
 → Card COMPLETE
 → Active Card NONE
 → STOP
@@ -876,6 +877,7 @@ A Card may become COMPLETE only if:
 - READY_FOR_DELIVERY is reached;
 - one valid GIT_DELIVERY_APPROVAL covers the exact validated delivery state;
 - the normal commit/push/PR/merge chain is complete.
+- FINAL_CARD_STATE_CONSISTENCY_GATE is PASS across all current Card-state representations.
 
 Then:
 
@@ -950,6 +952,35 @@ REVALIDATE
 NEW HUMAN APPROVAL REQUIRED
 ~~~
 
+## 26B. FINAL_CARD_STATE_CONSISTENCY_GATE
+
+Run the deterministic `scripts/final_card_state_consistency.sh` validator
+after final reconciliation and before marking a Card COMPLETE. It compares
+PROJECT_CONTROL.md, the detailed Card record and Current Card Table and
+Current Summary in QUOTATION_CARD_EVIDENCE_MAP.md, the Learning Log current
+state and completion record, the active Card and authorization state, the
+CARD_QUALITY_GATE, Exit Gate, tests/evidence, Git delivery state,
+Recommended State, and Completed Cards list.
+
+The validator must return zero only when all current representations agree.
+On mismatch:
+
+~~~text
+FINAL_CARD_STATE_CONSISTENCY_GATE: FAIL
+STATE_RECONCILIATION_REQUIRED
+STOP
+~~~
+
+The completion chain is therefore:
+
+~~~text
+implementation → validation → evidence / learning
+→ ROADMAP_ALIGNMENT_GATE → CARD_QUALITY_GATE → Exit Gate PROVEN
+→ delivery → final reconciliation
+→ FINAL_CARD_STATE_CONSISTENCY_GATE PASS
+→ COMPLETE → Active Card NONE → STOP
+~~~
+
 ## 26. Security Check
 
 For every Card, where applicable inspect:
@@ -1003,7 +1034,7 @@ Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
 Application Implementation: V1-C01 BASELINE IMPLEMENTED
 Active Card: NONE
-C01 Authorization: YES
+C01 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 V1-C01 State: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged

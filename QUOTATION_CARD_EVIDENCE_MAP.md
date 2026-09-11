@@ -3,7 +3,7 @@
 Status: CANONICAL EVIDENCE LEDGER
 Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
 Active Card: NONE
-Authorization: V1-C01 only
+Authorization: C01 start approval recorded historically; no active Card
 
 ## 0. Role and Ownership
 
@@ -22,6 +22,7 @@ It owns:
 - known limitations;
 - learning records;
 - Card completion proof.
+- FINAL_CARD_STATE_CONSISTENCY_GATE result and cross-section consistency evidence.
 
 It does not own:
 
@@ -301,6 +302,7 @@ Card COMPLETE requires:
 - evidence map current;
 - What We Learned recorded;
 - CARD_QUALITY_GATE PASS;
+- FINAL_CARD_STATE_CONSISTENCY_GATE PASS after final reconciliation;
 - Git evidence current where applicable;
 - PROJECT_CONTROL reconciled;
 - approved delivery complete where required.
@@ -338,7 +340,7 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-READY_FOR_DELIVERY
+COMPLETE
 
 ### 4. Human Start Approval
 
@@ -369,6 +371,10 @@ git show --stat --oneline HEAD
 git remote -v
 git rev-parse --abbrev-ref --symbolic-full-name '@{u}'
 git rev-list --left-right --count HEAD...@{u}
+bash scripts/final_card_state_consistency.sh
+bash scripts/final_card_state_consistency.sh /private/tmp/c01-table-mismatch
+bash scripts/final_card_state_consistency.sh /private/tmp/c01-exit-mismatch
+bash scripts/final_card_state_consistency.sh /private/tmp/c01-active-mismatch
 
 ### 7. Focused Tests
 
@@ -406,7 +412,7 @@ Exit Gate Status: PROVEN
 
 ### 15. CARD_QUALITY_GATE
 
-PASS — evidence and learning records updated with actual implementation decisions and validation results; no completion claim made.
+PASS — evidence and learning records updated with actual implementation decisions and validation results; completion delivery and reconciliation are recorded.
 
 ### 16. Git Evidence
 
@@ -420,6 +426,7 @@ Working Tree at delivery: CLEAN; final main tree CLEAN
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 PR: MERGED — #1
 Merge: COMPLETED — 693e17be652cdd4f82cdfe6da2bef89f6529103c
+Final Reconciliation Commit: 0af07c84c1d64b83afa57a516699a90110b5ec4c
 
 ### 17. Known Limitations
 
@@ -432,6 +439,8 @@ Recorded in CARD_LEARNING_AND_DECISION_LOG.md → V1-C01.
 ### 19. Completion Evidence
 
 Exit Gate is proven. The Card is COMPLETE after valid GIT_DELIVERY_APPROVAL, PR #1, merge, and final reconciliation.
+FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — current-state representations and Git state agree.
+Validator result: PASS; table, Exit Gate, and active-Card negative fixtures returned non-zero with STATE_RECONCILIATION_REQUIRED.
 
 ### 20. Recommended State
 
@@ -2155,7 +2164,7 @@ NOT_STARTED
 
 | Card | Title | State | Start Approval | Focused Tests | Exit Gate | Quality Gate | Evidence | Recommended State |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| V1-C01 | Repository Baseline | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C01 | Repository Baseline | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C03 | Synthetic Historical Data | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C04 | Quote Calculation Engine | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2180,7 +2189,7 @@ NOT_STARTED
 
 V1-C01 is COMPLETE; later Cards are NOT_STARTED.
 No Card is active.
-V1-C01 is authorized; later Cards are not authorized.
+V1-C01 start authorization is historical; later Cards are not authorized.
 V1-C01 is COMPLETE.
 V1-C01 implementation evidence is present; later Card evidence is NONE.
 V1-C01 Recommended State is COMPLETE; later Cards are NOT_STARTED.

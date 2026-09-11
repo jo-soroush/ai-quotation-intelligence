@@ -3,7 +3,7 @@
 Status: CANONICAL EDUCATIONAL ENGINEERING RECORD
 Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
 Active Card: NONE
-Authorization: V1-C01 only
+Authorization: C01 start approval recorded historically; no active Card
 
 ## Role and Ownership
 
@@ -85,12 +85,12 @@ This file alone does not mark a Card COMPLETE. Card completion remains governed 
 
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: NONE
-V1-C01 Authorized: YES
+V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C01 State: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Git Repository: YES
 Current branch: main
-HEAD: 693e17be652cdd4f82cdfe6da2bef89f6529103c
+HEAD: 0af07c84c1d64b83afa57a516699a90110b5ec4c
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
 Tracking: origin/main; Card branch delivered through PR #1
 
@@ -161,6 +161,8 @@ The baseline uses simple environment variables rather than a settings library, s
 ### 16. What We Learned
 
 The existing repository already had a pushed governance baseline, but that does not satisfy the C01 application baseline. A minimal standard-library Core is sufficient for package/configuration/logging ownership, while pytest can remain development-only.
+
+The final C01 reconciliation exposed that detailed Card state and aggregate Current Card Table state had been updated independently. The root cause was the absence of a deterministic cross-section completion check. The repair added FINAL_CARD_STATE_CONSISTENCY_GATE and a dependency-free validator; its negative fixtures stop on contradictory state and the corrected repository passes.
 
 ### 17. What Should Be Remembered Later
 

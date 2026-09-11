@@ -62,6 +62,10 @@ For Card implementation or resume, read in this order:
     → read-only session baseline verification
     Status now: MIGRATED / CANONICAL
 
+13. scripts/final_card_state_consistency.sh
+    → deterministic cross-section completion-state verification
+    Status now: CREATED / CANONICAL
+
 13. SOURCE_ADAPTATION_TRACEABILITY.md
     → external-source study, adaptation/reuse decision, license awareness,
       what was and was not taken, risks, Card linkage, and evidence/learning
@@ -516,6 +520,7 @@ READY_FOR_DELIVERY
 → GIT_DELIVERY_APPROVAL
 → commit → push → PR → merge
 → final reconciliation
+→ FINAL_CARD_STATE_CONSISTENCY_GATE: PASS
 → Card = COMPLETE
 → Active Card = NONE
 → STOP
@@ -549,10 +554,10 @@ GIT_WORKFLOW.md: MIGRATED / CANONICAL
 scripts/quotation_session_bootstrap.sh: MIGRATED / CANONICAL
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: NONE
-C01 Authorized: YES
+C01 Start Authorization: GRANTED (historical; Card complete)
 Git repository: YES
 Current branch: main
-HEAD: 693e17be652cdd4f82cdfe6da2bef89f6529103c
+HEAD: 0af07c84c1d64b83afa57a516699a90110b5ec4c
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
 Tracking: origin/main
 V1-C01 State: COMPLETE
@@ -561,7 +566,7 @@ Current source adaptation records: NONE
 Historical source/template material is not canonical project authority.
 Proof cases executed: 0
 Proof cases PASS: 0
-Proof cases NOT_EXECUTED: 20
+Proof cases NOT_EXECUTED: 24
 Executable proof suite: NOT_CREATED
 ~~~
 

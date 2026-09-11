@@ -337,9 +337,85 @@ Every proof case uses exactly these 16 fields:
 15. Result: NOT_PROVEN
 16. Evidence Reference: NONE
 
+### PC-16 — Detailed state and Current Card Table conflict
+
+1. Proof Case ID: PC-16
+2. Name: Complete detailed Card with stale Current Card Table
+3. Purpose: Prove cross-section state mismatch blocks completion.
+4. Preconditions: Detailed V1-C01 is COMPLETE, but its Current Card Table row is NOT_STARTED.
+5. Active Card State: Card completion is being reconciled.
+6. Human Authorization State: Historical start approval exists; no new Card start is inferred.
+7. Input / Requested Work: Run FINAL_CARD_STATE_CONSISTENCY_GATE.
+8. Canonical Contract Context: Detailed record and Current Card Table must agree.
+9. Expected Gate: FINAL_CARD_STATE_CONSISTENCY_GATE.
+10. Expected Result: FAIL.
+11. Expected Stop / Allow Reason: `STATE_RECONCILIATION_REQUIRED`; STOP.
+12. Forbidden Behavior: Marking the Card COMPLETE from only the detailed record.
+13. Evidence Required: Contradictory records and non-zero validator result.
+14. Execution Status: NOT_EXECUTED
+15. Result: NOT_PROVEN
+16. Evidence Reference: NONE
+
+### PC-17 — Exit Gate summary conflict
+
+1. Proof Case ID: PC-17
+2. Name: Proven detailed Exit Gate with stale NOT_PROVEN summary
+3. Purpose: Prove contradictory Exit Gate states block completion.
+4. Preconditions: Detailed V1-C01 Exit Gate is PROVEN, but a current summary reports NOT_PROVEN.
+5. Active Card State: Card completion is being reconciled.
+6. Human Authorization State: Historical start approval exists; no new Card start is inferred.
+7. Input / Requested Work: Run FINAL_CARD_STATE_CONSISTENCY_GATE.
+8. Canonical Contract Context: Exit Gate state must agree across current representations.
+9. Expected Gate: FINAL_CARD_STATE_CONSISTENCY_GATE.
+10. Expected Result: FAIL.
+11. Expected Stop / Allow Reason: `STATE_RECONCILIATION_REQUIRED`; STOP.
+12. Forbidden Behavior: Treating detailed PROVEN evidence as sufficient despite a contradictory summary.
+13. Evidence Required: Contradictory Exit Gate values and non-zero validator result.
+14. Execution Status: NOT_EXECUTED
+15. Result: NOT_PROVEN
+16. Evidence Reference: NONE
+
+### PC-18 — Completed Card remains active/currently authorized
+
+1. Proof Case ID: PC-18
+2. Name: Completed Card represented as active
+3. Purpose: Prove a completed Card cannot remain the live active authorized Card.
+4. Preconditions: V1-C01 is COMPLETE, but a current representation says Active Card is V1-C01 or authorization is current for that active Card.
+5. Active Card State: Contradictory active/completed state.
+6. Human Authorization State: Historical C01 start approval exists.
+7. Input / Requested Work: Run FINAL_CARD_STATE_CONSISTENCY_GATE.
+8. Canonical Contract Context: Completion requires Active Card NONE and no misleading live authorization.
+9. Expected Gate: FINAL_CARD_STATE_CONSISTENCY_GATE.
+10. Expected Result: FAIL.
+11. Expected Stop / Allow Reason: `STATE_RECONCILIATION_REQUIRED`; STOP.
+12. Forbidden Behavior: Starting V1-C02 or treating historical approval as active authorization.
+13. Evidence Required: Contradictory active/authorization metadata and non-zero validator result.
+14. Execution Status: NOT_EXECUTED
+15. Result: NOT_PROVEN
+16. Evidence Reference: NONE
+
+### PC-19 — Fully reconciled completed Card
+
+1. Proof Case ID: PC-19
+2. Name: Consistent completed V1-C01 state
+3. Purpose: Prove the final consistency gate passes only when all current representations agree.
+4. Preconditions: V1-C01 is COMPLETE; Active Card is NONE; C01 table, detailed record, summary, Learning Log, PROJECT_CONTROL, Git delivery, quality, Exit Gate, tests, evidence, and Recommended State agree.
+5. Active Card State: NONE.
+6. Human Authorization State: C01 start approval is historical; V1-C02 remains unauthorized.
+7. Input / Requested Work: Run FINAL_CARD_STATE_CONSISTENCY_GATE.
+8. Canonical Contract Context: Final consistency is required before completion.
+9. Expected Gate: FINAL_CARD_STATE_CONSISTENCY_GATE.
+10. Expected Result: PASS.
+11. Expected Stop / Allow Reason: Allow completion state; no next Card starts automatically.
+12. Forbidden Behavior: Authorizing V1-C02 from the PASS result.
+13. Evidence Required: Zero-exit validator result and matching current-state records.
+14. Execution Status: NOT_EXECUTED
+15. Result: NOT_PROVEN
+16. Evidence Reference: NONE
+
 ## 5. Source Adaptation Extension Cases
 
-These five cases extend the core suite and are not counted among the 15 core
+These five cases extend the core suite and are not counted among the 19 core
 cases. They use the same 16-field format.
 
 ### SA-PC-01 — ADAPT with UNKNOWN/UNVERIFIED license
@@ -459,15 +535,15 @@ No testing library is prescribed here.
 ## 7. Current Project State
 
 ```text
-Core Proof Cases Defined: 15
+Core Proof Cases Defined: 19
 Source Adaptation Extension Cases Defined: 5
 Executable Proof Suite: NOT_CREATED
 Proof Cases Executed: 0
 Proof Cases PASS: 0
-Proof Cases NOT_EXECUTED: 20
+Proof Cases NOT_EXECUTED: 24
 Application: V1-C01 BASELINE IMPLEMENTED
 Active Card: NONE
-V1-C01 Authorized: YES
+V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C01 State: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Git: YES
