@@ -35,7 +35,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C01_AUTHORIZED
+Project Phase: V1_C01_VALIDATED_PENDING_DELIVERY
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -44,12 +44,12 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: NOT_STARTED
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
-Active Card State: AUTHORIZED / NOT_STARTED
+Active Card State: VALIDATED / NOT_COMPLETE
 Last COMPLETE Card: NONE
 Next Roadmap Card: V1-C01 — Repository Baseline
-Next Card Authorized: YES — V1-C01 only
+Next Card Authorized: NO — V1-C01 is active; later Cards remain unauthorized
 Implementation Authorization: V1-C01 bounded scope only
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
@@ -94,15 +94,15 @@ Governance migration and Learning Governance are fully complete. No governance b
 Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 Git repository: YES
 .git present: YES
-Current branch: main
-HEAD commit: 9e44dac3d69740b2f415d9ec728626553bc4e933 (chore: establish project governance baseline)
+Current branch: card/v1-c01-repository-baseline
+HEAD commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1 (chore: reconcile C01 governance state)
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: main → origin/main
-Working tree status: MODIFIED: PROJECT_CONTROL.md only (uncommitted reconciliation)
-Application package: NOT_CREATED
-tests/: NOT_CREATED
-pyproject.toml: NOT_CREATED
-requirements: NOT_CREATED
+Tracking: base main → origin/main; C01 branch has no remote tracking branch
+Working tree status: MODIFIED: C01 implementation and governance evidence files (uncommitted)
+Application package: C01 BASELINE CREATED
+tests/: C01 BASELINE CREATED / PASS
+pyproject.toml: CREATED
+requirements: pyproject.toml dev extra only
 CI: NOT_CREATED
 ```
 
@@ -127,18 +127,18 @@ Do not infer external AWS setup into repository implementation state.
 ```
 Card ID: V1-C01
 Title: Repository Baseline
-State: AUTHORIZED / NOT_STARTED
-Branch: main
-Start Commit: NOT_AVAILABLE
+State: VALIDATED / NOT_COMPLETE
+Branch: card/v1-c01-repository-baseline
+Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
 Human Start Approval: GRANTED
 Authorized Scope: V1-C01 — Repository Baseline only
-ROADMAP_ALIGNMENT_GATE: NOT_RUN
-CARD_QUALITY_GATE: NOT_RUN
+ROADMAP_ALIGNMENT_GATE: PASS
+CARD_QUALITY_GATE: PASS
 ```
 
 Safe Checkpoint:
 
-Governance migration and Learning Governance integration are complete. Strict governance audit and Learning Governance final audit passed. Application implementation has not started.
+V1-C01 baseline implementation and applicable validation are complete. Domain/application business implementation has not started. No C01 commit or push was authorized.
 
 ## 6. Authorization Ledger
 
@@ -151,8 +151,8 @@ Material Scope Change: NOT_GRANTED
 Significant Technology Addition: NOT_GRANTED
 Sensitive Credential Use: NOT_GRANTED
 External Write/Action Capability: NOT_GRANTED
-Commit: AVAILABLE (explicit human approval required)
-Push: AVAILABLE (explicit human approval required)
+Commit: AVAILABLE (explicit human approval required; not performed)
+Push: AVAILABLE (explicit human approval required; not performed)
 PR: NOT_AVAILABLE
 Merge: NOT_AVAILABLE
 Deployment/Release: NOT_GRANTED
@@ -178,7 +178,7 @@ V1-C01 is authorized as the only active Card. Being next in sequence does not au
 
 ## 8. Current Blockers and Pending Control
 
-No authorization blocker remains for V1-C01. Implementation has not started; required inspect-only pre-write gates remain pending.
+No validation blocker remains for V1-C01. The baseline is implemented and validated; approved Git delivery remains pending and no completion claim is made.
 
 Governance remaining actions: NONE.
 
@@ -197,16 +197,16 @@ Resolved migration blockers:
 ## 9. Roadmap Alignment State
 
 ```
-ROADMAP_ALIGNMENT_GATE: NOT_RUN
-Reason: No active authorized implementation Card.
+ROADMAP_ALIGNMENT_GATE: PASS
+Reason: C01 scope, ownership, dependencies, boundaries, validation, and authorization were verified before implementation.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: NOT_RUN
-Risk Map: NOT_RUN
-Reason: No active implementation Card.
+Contract Map: COMPLETE / INSPECTION RECORDED IN SESSION
+Risk Map: COMPLETE / INSPECTION RECORDED IN SESSION
+Reason: C01 pre-write inspection completed before implementation.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -280,7 +280,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: GOVERNANCE_BASELINE_COMMIT
+Checkpoint Type: V1_C01_VALIDATED
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -288,9 +288,9 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: NOT_STARTED
+Application implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
-Git checkpoint: 9e44dac3d69740b2f415d9ec728626553bc4e933 — pushed to origin/main
+Git checkpoint: Start Commit af47e98d6170551a5446b45c4dadf7f17f9e0ad1; no C01 commit created
 ```
 
 ## 17. Decision Ledger
@@ -314,7 +314,7 @@ These are governance decisions, not implementation claims.
 
 | Card | Title | State | Start Approved | Quality Gate | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| V1-C01 | Repository Baseline | AUTHORIZED / NOT_STARTED | YES | NOT_RUN | PENDING |
+| V1-C01 | Repository Baseline | VALIDATED / NOT_COMPLETE | YES | PASS | PRESENT |
 | V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C03 | Synthetic Historical Data | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C04 | Quote Calculation Engine | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -335,7 +335,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-No Card is COMPLETE. V1-C01 is the only authorized Card; later Cards are not authorized.
+No Card is COMPLETE. V1-C01 is validated but not complete pending approved Git delivery; later Cards are not authorized.
 
 ## 19. Resume Protocol
 
@@ -366,16 +366,16 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: NOT_STARTED
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 Next Roadmap Card: V1-C01 — Repository Baseline
 V1-C01 Authorization: GRANTED
 Git Repository: YES
-Git checkpoint: 9e44dac3d69740b2f415d9ec728626553bc4e933 — pushed to origin/main
-Working tree: PROJECT_CONTROL.md modified; no other modifications observed
+Git checkpoint: Start Commit af47e98d6170551a5446b45c4dadf7f17f9e0ad1; no C01 commit created
+Working tree: C01 implementation and governance evidence files modified; no other modifications observed
 ```
 
-Safe next action: Execute the authorized V1-C01 inspect-only baseline gates, then implement only within the V1-C01 contract.
+Safe next action: Review the validated C01 diff and obtain separate approval for Git delivery if required.
 
 Do not start any later Card automatically.
 

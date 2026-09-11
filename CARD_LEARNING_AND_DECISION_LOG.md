@@ -1,7 +1,7 @@
 # AI Quotation Intelligence System — V1 Card Learning and Decision Log
 
 Status: CANONICAL EDUCATIONAL ENGINEERING RECORD
-Implementation State: NOT_STARTED
+Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 Authorization: V1-C01 only
 
@@ -83,16 +83,16 @@ This file alone does not mark a Card COMPLETE. Card completion remains governed 
 
 ## Current Project State
 
-Application Implementation: NOT_STARTED
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: V1-C01 — Repository Baseline
 V1-C01 Authorized: YES
 Git Repository: YES
-Current branch: main
-HEAD: 9e44dac3d69740b2f415d9ec728626553bc4e933
+Current branch: card/v1-c01-repository-baseline
+HEAD: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
 Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: main → origin/main
+Tracking: branch has no remote branch; base main tracks origin/main
 
-No Card learning record may contain implementation claims before implementation begins.
+V1-C01 implementation learning is recorded below. No later Card learning record contains implementation claims.
 
 ## V1-C01 — Repository Baseline
 
@@ -110,63 +110,63 @@ A clean ownership, configuration, packaging, and testing boundary is needed befo
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Created the C01 repository baseline: `pyproject.toml`, a `src/ai_quotation_intelligence/` package with version, configuration, and standard-library logging boundaries, a three-test pytest baseline, README setup instructions, a trackable secret-free `.env.example`, and a `.gitignore` exception that preserves protection for real `.env` files. No quotation business logic or future-Card integration was added.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Used a `src/` layout and `pyproject.toml` with no runtime dependencies. Pytest is a development-only dependency. Configuration is environment-backed through a small dataclass, and logging uses the Python standard library. `.env.example` is explicitly unignored while `.env` remains ignored.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+This keeps Core local-first and provider-neutral, establishes import/test/configuration ownership without inventing domain contracts, and keeps the dependency surface minimal. The `.env.example` exception was necessary because the existing `.env.*` rule otherwise ignored the safe example file.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered adding Pydantic, FastAPI, boto3, openpyxl, or an external settings/logging framework; these were not needed for C01 and belong to later Card scope or would add unnecessary coupling.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those additions would introduce future-Card dependencies or provider/API behavior before their contracts exist. Standard-library configuration and logging satisfy the C01 boundary with fewer dependencies.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python 3.13.12 in the existing ignored `.venv`, `pyproject.toml`, setuptools editable packaging, pytest 8.4.2 for development tests, and Python standard-library `dataclasses`, `os`, and `logging`.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+They provide the required package, configuration, logging, and test baseline while preserving provider neutrality and local execution. No AWS SDK, API framework, spreadsheet library, or agent framework is required by C01.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The existing local `.venv` did not contain pytest. The existing `.env.*` ignore rule also matched `.env.example`. Creating the dedicated branch initially failed in the sandbox because Git ref writes required escalation.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+Pytest had not yet been installed into the pre-existing environment; `.gitignore` intentionally used a broad environment-file pattern; and the workspace sandbox did not permit writing `.git/refs` without escalation.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch with the approved Git operation.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+`QUOTATION_CARD_EVIDENCE_MAP.md` V1-C01: import/configuration check PASS; pytest PASS with 3 tests; structure PASS; secret tracking PASS; provider dependency boundary PASS; future-Card leakage PASS; `git diff --check` PASS.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The baseline uses simple environment variables rather than a settings library, so richer validation belongs to a later contract. The branch is local and unpushed because commit/push were not authorized. CI, Docker, and business behavior remain absent by design.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+The existing repository already had a pushed governance baseline, but that does not satisfy the C01 application baseline. A minimal standard-library Core is sufficient for package/configuration/logging ownership, while pytest can remain development-only.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Keep `.venv/` and real `.env` files ignored. Review any future configuration dependency against the provider-neutral Core boundary. Do not treat this baseline as evidence that domain, AI, AWS, Excel, API, or evaluation work exists.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+V1-C02 can add typed domain contracts inside the established package without changing the C01 configuration/logging boundary. Later Cards must add their own dependencies and validation only within their authorized scope.
 
 ## V1-C02 — Domain Models
 
