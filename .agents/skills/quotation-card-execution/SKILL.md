@@ -750,3 +750,8 @@ final consistency state; Card validation runs separately.
 Run `bash scripts/test_governance_harness.sh` for executable governance
 regression checks. Its temporary fixtures must not mutate the canonical
 repository and its results do not replace Card-specific validation.
+
+Governance regression fixture independence is mandatory: temporary fixtures
+must explicitly construct their own Card lifecycle state and must not infer
+semantics from the live repository or current HEAD. Fixture Git diagnostics
+must never be used as path or control data.

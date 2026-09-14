@@ -62,6 +62,21 @@ FINAL_CARD_STATE_CONSISTENCY_GATE proof.
 runner. It uses temporary fixture copies and does not replace Card validation,
 the Exit Gate, or the formal proof-case contract.
 
+`scripts/governance_fixture_builder.py` constructs explicit temporary
+governance scenarios for those tests. It may reuse current script
+implementations, but never uses the live repository lifecycle or current HEAD
+as fixture semantic truth.
+
+### Governance Regression Fixture Independence
+
+Governance regression fixtures may reuse the current implementation of the
+governance scripts, but each fixture must explicitly construct its own
+Roadmap-aligned lifecycle state. Fixtures must not infer completed Cards,
+Active Card, authorization, or semantic state from the live repository,
+current HEAD, PR number, or merge commit. Fixture Git setup must keep all
+diagnostics separate from path/control values and must fail immediately when
+required initialization fails.
+
 For active Card execution, context-loss recovery, and safe resume, read the canonical files in this order:
 
 ~~~text

@@ -239,7 +239,7 @@ The currency fixture was corrected to use the explicit contract form. The govern
 
 ### 14. Validation / Evidence References
 
-Evidence is recorded in the V1-C02 section of QUOTATION_CARD_EVIDENCE_MAP.md. Historical validation events include the initial 9-test run and the post-repair 14-test run; the governance regression suite completed with 23 passed cases before the generated-view cases were added. The Evidence Map is authoritative for the latest observed result. Git delivery remains pending.
+Evidence is recorded in the V1-C02 section of QUOTATION_CARD_EVIDENCE_MAP.md. Historical validation events include the initial 9-test run and the post-repair 14-test run; the governance regression suite completed with 23 passed cases before the generated-view cases were added. The Evidence Map is authoritative for the latest observed result. C02 was delivered through commit `0dfd38a5b3d201052b4dea930becc96c6927225e`, PR #4, and merge commit `164ae7c3982009025ec16de72cd0d4ad1efc646d`.
 
 ### 15. Tradeoffs and Limitations
 
@@ -248,6 +248,8 @@ Decimal and explicit currency/unit wrappers improve safety but leave arithmetic 
 ### 16. What We Learned
 
 C02 demonstrated that stable contracts should encode boundaries without embedding use-case behavior. Keeping estimates, actuals, provenance, and evidence links explicit prevents later services or models from silently inventing commercial truth. Field-by-field validity is insufficient: nested state and cross-model provenance must also be checked. Governance views that can change must be generated from PROJECT_CONTROL.md and exact Card evidence sections; mutable latest results belong in the Evidence Map, while this log preserves historical events and learning.
+
+The governance suite later exposed that fixture setup had been inheriting the live Card lifecycle from `HEAD`. The permanent repair introduced an explicit temporary-repository fixture builder and isolated Git initialization; HF-01 through HF-08 now prove that scenario state, filesystem paths, and Git diagnostics remain independent of the live repository.
 
 ### 17. What Should Be Remembered Later
 
