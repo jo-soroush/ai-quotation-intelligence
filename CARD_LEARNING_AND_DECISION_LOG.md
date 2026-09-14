@@ -311,7 +311,7 @@ The root cause was an incorrect pair of deterministic template values combined w
 
 ### 13. How We Fixed It
 
-The repaired generator uses actual-hours values above estimated hours for under-estimate and overrun patterns, below estimates for over-estimate, and within five hours for near-estimate. Five focused C03 tests now prove these relationships, alongside 40 unique valid records, multi-item structure, synthetic provenance, deterministic repeatability, and estimated/actual separation.
+The repaired generator uses actual-hours values above estimated hours for under-estimate and overrun patterns, below estimates for over-estimate, and within five hours for near-estimate. Five focused C03 tests now prove these relationships, alongside 40 unique valid records, multi-item structure, synthetic provenance, deterministic repeatability, and estimated/actual separation. The implementation was delivered in commit `2041479` through PR #7 and merged to `main` as `9fd7673bbb31167857f8d8f5f468d5631cde302d`; the outcome-only reconciliation recorded C03 as complete without changing the validated dataset.
 
 ### 14. Validation / Evidence References
 
@@ -331,7 +331,7 @@ Synthetic provenance is a cross-model invariant: both the historical record and 
 
 ### 18. Impact on Later Cards
 
-C04 can consume the estimated item hours and rates without inheriting a calculation engine. C05 and later Cards can use the controlled labels and outcome fields for comparison and evidence work, while C06+ behavior remains outside this Card.
+C04 can consume the estimated item hours and rates without inheriting a calculation engine. C05 and later Cards can use the controlled labels and outcome fields for comparison and evidence work, while C06+ behavior remains outside this Card. C04 still requires separate human authorization.
 
 ## V1-C04 — Quote Calculation Engine
 
