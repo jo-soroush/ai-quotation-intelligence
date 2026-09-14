@@ -566,7 +566,46 @@ depending on the live repository lifecycle. They are executed by
 | HF-07 | No-op generated-view setup is deterministic | PASS | PASS |
 | HF-08 | Fixture preparation failure stops cleanly | PASS | PASS |
 
-## 9. Recorded C01 Context (Not Live State)
+## 9. C02 Complete-State Contract Cases
+
+These cases exercise the generic COMPLETE-state validator against the
+contract representations exposed by C02. They are executed by
+`scripts/test_governance_harness.sh` using isolated fixtures.
+
+| Case | Scenario | Expected Result | Observed Result |
+| --- | --- | --- | --- |
+| FC-01 | Multiple completed Cards; requested Card is complete | PASS | PASS |
+| FC-02 | Requested completed Card is not first in the list | PASS | PASS |
+| FC-03 | Requested Card missing from completed-card membership | FAIL | PASS |
+| FC-04 | Learning Documentation Status is CURRENT | PASS | PASS |
+| FC-05 | Learning Documentation Status is COMPLETE | PASS | PASS |
+| FC-06 | Learning Documentation Status is PARTIAL | FAIL | PASS |
+| FC-07 | Explicit PR/Merge labels | PASS | PASS |
+| FC-08 | Semantic PR, merged, and commit evidence | PASS | PASS |
+| FC-09 | PR mentioned without merge evidence | FAIL | PASS |
+| FC-10 | Merge evidence absent | FAIL | PASS |
+| FC-11 | Realistic C02 COMPLETE representation | PASS | PASS |
+| FC-12 | Later-Card COMPLETE fixture with prior completions | PASS | PASS |
+
+## 10. PROJECT_CONTROL Internal Consistency Cases
+
+These cases verify that a completed Card cannot retain a stale transitional
+Active Card Record or unpopulated delivery fields. They invoke the real final
+consistency validator against isolated fixtures.
+
+| Case | Scenario | Expected Result | Observed Result |
+| --- | --- | --- | --- |
+| PC-STATE-01 | Reconciled COMPLETE Active Card Record | PASS | PASS |
+| PC-STATE-02 | COMPLETE Card with READY_FOR_DELIVERY record | FAIL | PASS |
+| PC-STATE-03 | COMPLETE Card with missing delivery commit | FAIL | PASS |
+| PC-STATE-04 | COMPLETE Card with missing PR evidence | FAIL | PASS |
+| PC-STATE-05 | COMPLETE Card with missing merge evidence | FAIL | PASS |
+| PC-STATE-06 | C01 COMPLETE representation | PASS | PASS |
+| PC-STATE-07 | Realistic C02 COMPLETE representation | PASS | PASS |
+| PC-STATE-08 | Later Card COMPLETE with prior completions | PASS | PASS |
+| PC-STATE-09 | Later Card with stale transitional record | FAIL | PASS |
+
+## 11. Recorded C01 Context (Not Live State)
 
 ```text
 Core Proof Cases Defined: 19
@@ -583,7 +622,7 @@ GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Recorded Git Context at completion: YES
 ```
 
-## 10. Relationship to Canonical Files
+## 12. Relationship to Canonical Files
 
 ```text
 GOVERNANCE_HARNESS_PROOF_CASES.md → formal governance proof scenarios
@@ -594,7 +633,7 @@ CARD_LEARNING_AND_DECISION_LOG.md → learning/rationale from actual implementat
 PROJECT_CONTROL.md → live state and authorization
 ```
 
-## 11. Final Principle
+## 13. Final Principle
 
 ```text
 A GOVERNANCE RULE IS NOT PROVEN BECAUSE IT IS WRITTEN.

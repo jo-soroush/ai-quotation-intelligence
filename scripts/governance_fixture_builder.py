@@ -50,6 +50,33 @@ def replace_field_in_section(text: str, heading: str, label: str, value: str) ->
     return replace_section_value(text, start, end, label, value)
 
 
+def normalize_active_card_record(path: Path, cards: list[tuple[str, str]], completed: list[str], active: str, active_state: str) -> None:
+    text = path.read_text()
+    record_card = active or (completed[-1] if completed else "NONE")
+    record_title = dict(cards).get(record_card, "")
+    record_state = active_state if active else "COMPLETE" if completed else "NOT_STARTED"
+    number = int(record_card.split("-C", 1)[1]) if record_card != "NONE" else 0
+    delivery = f"fixture-{number:02d}-delivery" if completed and not active else "NOT_CREATED"
+    pr = f"MERGED — #{number}" if completed and not active else "NOT_CREATED"
+    merge = (f"{number:02x}" * 40)[:40] if completed and not active else "NOT_CREATED"
+    heading = "## 5. Active Card Record"
+    start, end = section_bounds(text, heading)
+    block = text[start:end]
+    replacements = [
+        (r"^Card ID:.*$", f"Card ID: {record_card}"),
+        (r"^Title:.*$", f"Title: {record_title}"),
+        (r"^State:.*$", f"State: {record_state}"),
+        (r"^Delivery Commit:.*$", f"Delivery Commit: {delivery}"),
+        (r"^PR:.*$", f"PR: {pr}"),
+        (r"^Merge Commit:.*$", f"Merge Commit: {merge}"),
+    ]
+    for pattern, replacement in replacements:
+        block, count = re.subn(pattern, replacement, block, count=1, flags=re.MULTILINE)
+        if count != 1:
+            raise ValueError(f"missing Active Card Record field: {pattern}")
+    path.write_text(text[:start] + block + text[end:])
+
+
 def control_state(active: str, active_state: str, completed: list[str], next_card: str) -> str:
     if active:
         return f"{active.replace('-', '_')}_{active_state}"
@@ -116,7 +143,7 @@ def card_sections(text: str) -> dict[str, tuple[int, int]]:
     return result
 
 
-def normalize_evidence(path: Path, cards: list[tuple[str, str]], completed: list[str], active: str, active_state: str) -> None:
+def normalize_evidence(path: Path, cards: list[tuple[str, str]], completed: list[str], active: str, active_state: str, learning_status: str) -> None:
     text = path.read_text()
     # Work from the end so section offsets remain stable.
     for card, _ in reversed(cards):
@@ -130,6 +157,8 @@ def normalize_evidence(path: Path, cards: list[tuple[str, str]], completed: list
         exit_status = "PROVEN" if is_complete or is_active else "NOT_PROVEN"
         quality = "PASS" if is_complete or is_active else "NOT_RUN"
         recommendation = "COMPLETE" if is_complete else active_state if is_active else "NOT_STARTED"
+        card_number = int(card.split("-C", 1)[1])
+        fixture_hash = (f"{card_number:02x}" * 40)[:40]
         replacements = [
             (r"(### 5\. Files Changed\n\n)[^\n]+", rf"\1{'PRESENT — fixture implementation evidence' if is_complete or is_active else 'NONE'}"),
             (r"(### 3\. State\n\n)[^\n]+", rf"\1{state}"),
@@ -138,7 +167,13 @@ def normalize_evidence(path: Path, cards: list[tuple[str, str]], completed: list
             (r"(Exit Gate Status:\s*)[^\n]+", rf"\1{exit_status}"),
             (r"(### 15\. CARD_QUALITY_GATE\n\n)[^\n]+", rf"\1{quality}"),
             (r"(### 20\. Recommended State\n\n)[^\n]+", rf"\1{recommendation}"),
+            (r"(Learning Documentation Status:\n)[^\n]+", rf"\1{learning_status if is_complete or is_active else 'NOT_STARTED'}"),
         ]
+        if is_complete:
+            replacements.extend([
+                (r"(### 19\. Completion Evidence\n\n)[^\n]+", rf"\1COMPLETE — fixture completion evidence recorded."),
+                (r"(### 16\. Git Evidence\n\n)[\s\S]*?(?=\n### 17\.)", rf"\1Fixture delivery evidence: PR #{card_number} merged to main at merge commit {fixture_hash}.\n"),
+            ])
         for pattern, replacement in replacements:
             block, count = re.subn(pattern, replacement, block, count=1)
             if count != 1:
@@ -147,7 +182,7 @@ def normalize_evidence(path: Path, cards: list[tuple[str, str]], completed: list
     path.write_text(text)
 
 
-def build(source_root: Path, target_root: Path, completed: list[str], active: str, active_state: str, next_card: str, next_state: str) -> None:
+def build(source_root: Path, target_root: Path, completed: list[str], active: str, active_state: str, next_card: str, next_state: str, learning_status: str) -> None:
     if target_root.exists() and any(target_root.iterdir()):
         raise ValueError(f"fixture target is not empty: {target_root}")
     target_root.mkdir(parents=True, exist_ok=True)
@@ -171,7 +206,8 @@ def build(source_root: Path, target_root: Path, completed: list[str], active: st
     if active and active_state not in {"ACTIVE", "READY_FOR_DELIVERY"}:
         raise ValueError("active fixture state must be ACTIVE or READY_FOR_DELIVERY")
     normalize_control(target_root / "PROJECT_CONTROL.md", cards, completed, active, active_state, next_card, next_state)
-    normalize_evidence(target_root / "QUOTATION_CARD_EVIDENCE_MAP.md", cards, completed, active, active_state)
+    normalize_active_card_record(target_root / "PROJECT_CONTROL.md", cards, completed, active, active_state)
+    normalize_evidence(target_root / "QUOTATION_CARD_EVIDENCE_MAP.md", cards, completed, active, active_state, learning_status)
     print(str(target_root))
 
 
@@ -184,8 +220,9 @@ def main() -> int:
     parser.add_argument("--active-state", default="ACTIVE")
     parser.add_argument("--next", dest="next_card", default="NONE")
     parser.add_argument("--next-state", default="NOT_STARTED")
+    parser.add_argument("--learning-status", choices={"CURRENT", "COMPLETE"}, default="COMPLETE")
     args = parser.parse_args()
-    build(args.source_root.resolve(), args.root.resolve(), parse_cards(args.completed), "" if args.active == "NONE" else args.active, args.active_state, "" if args.next_card == "NONE" else args.next_card, args.next_state)
+    build(args.source_root.resolve(), args.root.resolve(), parse_cards(args.completed), "" if args.active == "NONE" else args.active, args.active_state, "" if args.next_card == "NONE" else args.next_card, args.next_state, args.learning_status)
     return 0
 
 

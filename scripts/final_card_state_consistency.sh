@@ -83,6 +83,30 @@ has_text() {
   grep -Fq -- "$expected" <<<"$text"
 }
 
+completed_cards_contains() {
+  local text="$1"
+  local card="$2"
+  local completed_line
+  completed_line="$(awk 'index($0, "Completed Cards:") == 1 { print; exit }' <<<"$text")"
+  [[ -n "$completed_line" ]] || return 1
+  grep -Eq "(^|[[:space:];])${card}([[:space:];—]|$)" <<<"$completed_line"
+}
+
+git_delivery_evidence_complete() {
+  local text="$1"
+  local has_pr=0
+  local has_merge=0
+  if grep -Eiq 'PR:[[:space:]]*MERGED' <<<"$text" || grep -Eiq 'PR[[:space:]#]+[0-9]+' <<<"$text"; then
+    has_pr=1
+  fi
+  if grep -Eiq 'Merge:[[:space:]]*COMPLETED' <<<"$text"; then
+    has_merge=1
+  elif grep -Eiq 'merged.*[0-9a-f]{7,40}' <<<"$text"; then
+    has_merge=1
+  fi
+  [[ "$has_pr" -eq 1 && "$has_merge" -eq 1 ]]
+}
+
 table_matches() {
   local text="$1"
   local expected_state="$2"
@@ -120,6 +144,7 @@ control_section="$(section PROJECT_CONTROL.md "## 2. Current Project State")"
 roadmap_position_section="$(section PROJECT_CONTROL.md "## 7. Roadmap Position")"
 evidence_summary_section="$(section QUOTATION_CARD_EVIDENCE_MAP.md "## 18. Current Summary")"
 evidence_table_section="$(section QUOTATION_CARD_EVIDENCE_MAP.md "## 17. Current Card Table")"
+active_card_record_section="$(section PROJECT_CONTROL.md "## 5. Active Card Record")"
 
 [[ -n "$roadmap_section" ]] && pass "Card exists in Roadmap" || fail "Card missing from Roadmap"
 [[ -n "$spec_section" ]] && pass "Card exists in Card Specifications" || fail "Card missing from Card Specifications"
@@ -137,13 +162,23 @@ active_line="$(awk 'index($0, "Active Card:") == 1 { print; exit }' <<<"$control
 
 case "$EXPECTED_STATE" in
   COMPLETE)
-    expected_phase="Project Phase: ${CARD_ID//-/_}_COMPLETE"
-    has_prefixed_line "$control_section" "$expected_phase" && pass "Project Control records completed Card phase" || fail "Project Control completed phase mismatch"
+    project_phase="$(awk '/^Project Phase:/{print; exit}' <<<"$control_section")"
+    [[ "$project_phase" =~ _COMPLETE$ ]] && pass "Project Control records a completed project phase" || fail "Project Control completed phase mismatch"
     [[ "$active_line" == "Active Card: NONE" ]] && pass "Active Card is NONE" || fail "Active Card is not NONE"
-    has_prefixed_line "$control_section" "Last COMPLETE Card: $CARD_ID" && pass "Project Control records requested Card as last complete" || fail "Completed Card is not recorded in Project Control"
-    has_prefixed_line "$roadmap_position_section" "Completed Cards: $CARD_ID" && pass "Project Control completed-card list contains requested Card" || fail "Completed-card list does not contain requested Card"
+    has_prefixed_line "$control_section" "Last COMPLETE Card:" && pass "Project Control records a last complete Card" || fail "Project Control has no last complete Card"
+    completed_cards_contains "$roadmap_position_section" "$CARD_ID" && pass "Project Control completed-card list contains requested Card" || fail "Completed-card list does not contain requested Card"
     has_prefixed_line "$control_section" "Next Card Authorized: NO" && pass "No later Card is authorized" || fail "Later Card authorization is not explicitly NO"
     has_text "$control_section" "Implementation Authorization:" && has_text "$control_section" "authorization consumed by completion" && has_text "$control_section" "later Cards not authorized" && pass "Completed Card is not currently authorized" || fail "Completed Card remains currently authorized"
+    record_card_id="$(awk '/^Card ID:/{print $3; exit}' <<<"$active_card_record_section")"
+    record_state="$(awk '/^State:/{print $2; exit}' <<<"$active_card_record_section")"
+    record_delivery="$(awk '/^Delivery Commit:/{sub(/^Delivery Commit: /, ""); print; exit}' <<<"$active_card_record_section")"
+    record_pr="$(awk '/^PR:/{sub(/^PR: /, ""); print; exit}' <<<"$active_card_record_section")"
+    record_merge="$(awk '/^Merge Commit:/{sub(/^Merge Commit: /, ""); print; exit}' <<<"$active_card_record_section")"
+    [[ "$record_card_id" =~ ^V1-C[0-9][0-9]$ ]] && completed_cards_contains "$roadmap_position_section" "$record_card_id" && pass "Active Card Record identifies a completed Card" || fail "Active Card Record Card is not a completed Card"
+    [[ "$record_state" == "COMPLETE" ]] && pass "Active Card Record is terminal COMPLETE" || fail "Active Card Record retains a non-terminal state"
+    [[ -n "$record_delivery" && "$record_delivery" != NOT_CREATED* ]] && pass "Active Card Record has delivery commit evidence" || fail "Active Card Record delivery commit is not reconciled"
+    [[ -n "$record_pr" && "$record_pr" != NOT_CREATED* ]] && pass "Active Card Record has PR evidence" || fail "Active Card Record PR is not reconciled"
+    [[ -n "$record_merge" && "$record_merge" != NOT_CREATED* ]] && pass "Active Card Record has merge evidence" || fail "Active Card Record merge is not reconciled"
     ;;
   READY_FOR_DELIVERY|ACTIVE)
     [[ "$active_line" == "Active Card: $CARD_ID" ]] && pass "Project Control active Card matches request" || fail "Project Control active Card mismatch"
@@ -173,8 +208,9 @@ case "$EXPECTED_STATE" in
     has_text "$evidence_section" "Exit Gate Status: PROVEN" && pass "Exit Gate evidence is PROVEN" || fail "Exit Gate evidence is not PROVEN"
     has_text "$completion_section" "COMPLETE" && pass "Completion evidence is present" || fail "Completion evidence is missing"
     has_exact_line "$recommended_section" "COMPLETE" && pass "Recommended State is COMPLETE" || fail "Recommended State is not COMPLETE"
-    has_text "$evidence_section" "Learning Documentation Status:" && has_text "$evidence_section" "CURRENT" && pass "Learning documentation evidence is current" || fail "Learning documentation evidence is not current"
-    has_text "$git_section" "PR: MERGED" && has_text "$git_section" "Merge: COMPLETED" && pass "Historical Git delivery evidence is complete" || fail "Historical Git delivery evidence is incomplete"
+    learning_status="$(awk '/^Learning Documentation Status:/{getline; print; exit}' <<<"$evidence_section")"
+    [[ "$learning_status" == "CURRENT" || "$learning_status" == "COMPLETE" ]] && pass "Learning documentation evidence is current/complete" || fail "Learning documentation evidence is not current/complete"
+    git_delivery_evidence_complete "$git_section" && pass "Historical Git delivery evidence is complete" || fail "Historical Git delivery evidence is incomplete"
     table_matches "$evidence_table_section" COMPLETE YES PASS PROVEN PASS PRESENT COMPLETE && pass "Evidence Map status table agrees with completed Card" || fail "Evidence Map status table contradicts completed Card"
     has_text "$evidence_summary_section" "$CARD_ID: COMPLETE" && has_text "$evidence_summary_section" "Active Card: NONE" && pass "Evidence Map summary agrees with completed Card" || fail "Evidence Map summary contradicts completed Card"
     ;;

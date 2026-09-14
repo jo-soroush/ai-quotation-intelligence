@@ -134,12 +134,12 @@ Do not infer external AWS setup into repository implementation state.
 ```
 Card ID: V1-C02
 Title: Domain Models
-State: READY_FOR_DELIVERY
+State: COMPLETE
 Branch: card/v1-c02-domain-models
 Start Commit: 4b3d8b8615b148c91454ff298a76d0140035c92a
-Delivery Commit: NOT_CREATED — pending approved Git delivery
-PR: NOT_CREATED — pending approved Git delivery
-Merge Commit: NOT_CREATED
+Delivery Commit: 0dfd38a5b3d201052b4dea930becc96c6927225e — feat: deliver C02 domain models and governance reconciliation
+PR: MERGED — #4
+Merge Commit: 164ae7c3982009025ec16de72cd0d4ad1efc646d
 Human Start Approval: GRANTED — explicit human authorization for V1-C02
 Authorized Scope: V1-C02 — Domain Models only
 ROADMAP_ALIGNMENT_GATE: PASS — pre-write inspection complete

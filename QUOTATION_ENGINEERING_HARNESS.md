@@ -715,6 +715,14 @@ TECHNOLOGY_CHANGE_REQUEST
 
 After meaningful implementation or validation, update QUOTATION_CARD_EVIDENCE_MAP.md incrementally. Record mutable/latest validation evidence in the Evidence Map; the Learning Log may preserve validation results only as dated or explicitly historical events and must not act as a current status dashboard. Before final quality proof or READY_FOR_DELIVERY, run `python scripts/reconcile_governance_views.py --write` followed by `python scripts/reconcile_governance_views.py --check`. Only explicitly generated Evidence Map blocks may be changed by the reconciliation tool; detailed Card evidence remains manual and authoritative for observed facts.
 
+During OUTCOME_ONLY_RECONCILIATION, reconcile every state-bearing field for
+the delivered Card in PROJECT_CONTROL.md, including lifecycle state, Active
+Card, Completed Cards, delivery commit, PR result, merge result, and the
+terminal Active Card Record. While a Card is active, that record is current
+operational state; after completion it must be terminal COMPLETE with observed
+delivery evidence, or be explicitly labeled historical. It must not retain
+READY_FOR_DELIVERY or NOT_CREATED delivery fields after delivery.
+
 Record only:
 
 ~~~text
