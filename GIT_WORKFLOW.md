@@ -12,21 +12,18 @@ Ownership:
 - QUOTATION_CARD_EVIDENCE_MAP.md: actual Git evidence
 - GIT_WORKFLOW.md: Git/GitHub delivery policy
 
-## 2. Current Git State
+## 2. Runtime Git State and Historical Evidence
 
 Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 
-Git Repository: YES
-.git Present: YES
-Current Branch: main
-HEAD: 6ed41e3be169390a98f30114973595d91250d982
-Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Upstream: origin/main
-Working Tree: CLEAN
-Commits: V1-C01 delivery commit present
-Push: V1-C01 branch pushed; PR and merge not performed
-PR: #2 MERGED (governance hardening)
-Merge: 6ed41e3be169390a98f30114973595d91250d982
+Current branch, HEAD, remote, upstream, synchronization, and working-tree
+state are runtime Git facts. Query Git directly; PROJECT_CONTROL.md is the
+sole owner of live operational state.
+
+Historical C01 delivery evidence is recorded in the Evidence Map:
+C01 implementation commit, PR #1, and its merge commit. Governance hardening
+was delivered through PR #2. These are historical events, not a current
+delivery-status ledger.
 
 This is policy for future Git use. It does not initialize Git or authorize any Git write action.
 
@@ -182,7 +179,9 @@ These are guidance, not authorization or a mandatory format. Avoid vague message
 
 After an approved commit, verify HEAD changed as expected, the commit exists, it contains intended files, and the working-tree state is understood.
 
-When the active process permits updates, record the actual commit hash in PROJECT_CONTROL.md and QUOTATION_CARD_EVIDENCE_MAP.md. Never fabricate a hash.
+Record immutable event hashes in the Evidence Map when observed. Do not record
+mutable current HEAD, current branch, or current working-tree values as live
+state in tracked governance files; query those facts from Git.
 
 ## 14. GIT_DELIVERY_APPROVAL Invalidation and Delivery Rules
 
@@ -198,6 +197,13 @@ If any of the following occurs after approval, the approval is invalidated immed
 - the Exit Gate becomes NOT_PROVEN;
 - the branch changes unexpectedly; or
 - unrelated files enter the delivery set.
+
+Outcome-only final reconciliation is an exception after the approved delivery:
+it may record only observed delivery results, historical hashes, completion
+evidence, completed-card state, and the Active Card transition to NONE. It must
+not change implementation, scope, contract, validated payload, or unrelated
+policy, and does not invalidate the consumed approval. Any other governance
+evidence change remains material and invalidates approval.
 
 Record `GIT_DELIVERY_APPROVAL: INVALIDATED`, preserve the reason, revalidate the Card state, and obtain a new approval before delivery.
 
@@ -247,7 +253,7 @@ After merge, verify the actual merged state and record evidence. Do not infer me
 
 READY_FOR_DELIVERY means implementation and validation are complete, Evidence and Learning are current, ROADMAP_ALIGNMENT_GATE and CARD_QUALITY_GATE are PASS, the Exit Gate is PROVEN, and normal Git delivery is pending.
 
-A Card is complete only when its contract is satisfied, required validations pass, the Exit Gate is proven, evidence is current, the Learning Record is complete, CARD_QUALITY_GATE is PASS, PROJECT_CONTROL.md is reconciled, one valid GIT_DELIVERY_APPROVAL covered the exact delivery state, the normal commit/push/PR/merge chain completed successfully, and FINAL_CARD_STATE_CONSISTENCY_GATE is PASS.
+A Card is complete only when its contract is satisfied, required validations pass, the Exit Gate is proven, evidence is current, the Learning Record is complete, CARD_QUALITY_GATE is PASS, PROJECT_CONTROL.md is reconciled through outcome-only final reconciliation, one valid GIT_DELIVERY_APPROVAL covered the exact delivery state, the normal commit/push/PR/merge chain completed successfully, any required reconciliation commit/push completed, runtime Git state is verified, and FINAL_CARD_STATE_CONSISTENCY_GATE is PASS.
 
 Then:
 Card COMPLETE
@@ -340,7 +346,8 @@ PR merged != Card COMPLETE
 issue closed != implementation verified
 remote branch exists != local branch clean
 
-Evidence and PROJECT_CONTROL.md remain authoritative for project state.
+PROJECT_CONTROL.md is authoritative for live project state. The Evidence Map
+is authoritative for verified implementation and delivery evidence.
 
 ## 25. Approval Matrix
 
@@ -359,14 +366,9 @@ Read-only Git inspection does not require approval. Routine non-destructive edit
 
 ## 26. Current Project Posture
 
-Verified current posture:
-
-Git Repository: YES
-Implementation: V1-C01 BASELINE IMPLEMENTED
-Active Card: NONE
-C01 Start Authorization: GRANTED (historical; Card complete)
-
-V1-C01 is COMPLETE after PR #1 merged into main. Active Card is NONE. V1-C02 remains unauthorized.
+Current posture is owned by PROJECT_CONTROL.md. This file defines the policy
+and process only. Historical C01 completion evidence remains in the Evidence
+Map; V1-C02 requires separate human authorization.
 
 ## 27. Final Git Rule
 
@@ -406,6 +408,6 @@ Check this policy for:
 - merge not equaling Card completion
 - Card completion stopping the workflow
 - separate approval for the next Card
-- C01 COMPLETE; GIT_DELIVERY_APPROVAL consumed by PR #1 merge
+- C01 completion and consumed GIT_DELIVERY_APPROVAL are historical Evidence Map facts
 
 No checklist item authorizes a Git write action.

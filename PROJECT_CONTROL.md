@@ -2,7 +2,7 @@
 
 ## 0. Purpose
 
-This file is the compact operational state ledger. It records current phase, active Card, authorization, blockers, checkpoints, quality gates, evidence status, and safe resume point.
+This file is the compact operational state ledger and the sole canonical owner of live operational state. It records current phase, active Card, authorization, blockers, checkpoints, quality gates, evidence status, and safe resume point.
 
 It does not redefine PROJECT_PROFILE.md, the Roadmap, Card contracts, Evidence, Git reality, or implementation reality.
 
@@ -18,6 +18,20 @@ QUOTATION_CARD_SPECIFICATIONS.md
 QUOTATION_CARD_EVIDENCE_MAP.md
 PROJECT_PROFILE.md
 explicit human authorization
+```
+
+Ownership boundaries:
+
+```
+PROJECT_CONTROL.md = live operational state and authorization
+Git commands = current runtime Git facts
+QUOTATION_CARD_EVIDENCE_MAP.md = verified implementation and delivery evidence
+CARD_LEARNING_AND_DECISION_LOG.md = rationale and historical learning
+PROJECT_MIGRATION_STATUS.md = frozen historical migration snapshot
+AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md = Card identity and order
+QUOTATION_CARD_SPECIFICATIONS.md = Card contract
+GIT_WORKFLOW.md = Git policy and process
+QUOTATION_ENGINEERING_HARNESS.md / Card Skill = execution procedure
 ```
 
 Conflict:
@@ -53,11 +67,8 @@ Next Card Authorized: NO — V1-C01 is complete; later Cards remain unauthorized
 Implementation Authorization: C01 scope authorization consumed by completion; later Cards not authorized
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
-Bootstrap PASS: 126
-Bootstrap WARN: 1
-Bootstrap FAIL: 0
-Known Bootstrap Warning: Safe Resume field not reliably parsed
-Bootstrap Warning Classification: NON_BLOCKING WARNING
+Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
+Bootstrap Role: SESSION / REPOSITORY SMOKE CHECK only; not Card completion or gate proof
 ```
 
 This is a control checkpoint, not implementation evidence.
@@ -77,7 +88,7 @@ GIT_WORKFLOW.md: MIGRATED / CANONICAL
 .agents/skills/quotation-card-execution/SKILL.md: MIGRATED / CANONICAL
 scripts/quotation_session_bootstrap.sh: MIGRATED / CANONICAL
 PROJECT_CONTROL.md: CURRENT / FINAL RECONCILIATION COMPLETE
-PROJECT_MIGRATION_STATUS.md: CURRENT / RECONCILED
+PROJECT_MIGRATION_STATUS.md: HISTORICAL MIGRATION SNAPSHOT / NOT CURRENT STATE AUTHORITY
 Legacy source artifacts: RETIRED FROM CANONICAL AUTHORITY
 Historical source/template material: NOT CANONICAL
 Strict governance audit: PASS
@@ -94,11 +105,7 @@ Governance migration and Learning Governance are fully complete. No governance b
 Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 Git repository: YES
 .git present: YES
-Current branch: main
-HEAD commit: 6ed41e3be169390a98f30114973595d91250d982 (Merge pull request #2 from jo-soroush/governance/final-card-state-consistency)
-Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: origin/main
-Working tree status: CLEAN
+Current Git branch, HEAD, upstream, remote, synchronization, and working-tree state: query Git at runtime; do not treat values embedded in this tracked file as current Git truth
 Application package: C01 BASELINE CREATED
 tests/: C01 BASELINE CREATED / PASS
 pyproject.toml: CREATED
@@ -260,11 +267,11 @@ Do not infer account configuration or credentials from local tools or external s
 ## 14. Test / Evaluation State
 
 ```
-tests/: NOT_CREATED
-pytest project baseline: NOT_ESTABLISHED
+tests/: C01 BASELINE CREATED
+pytest project baseline: ESTABLISHED
 Evaluation Harness implementation: NOT_STARTED
 Golden Case: NOT_STARTED
-Card tests: NOT_RUN
+Card tests: C01 BASELINE — 3 PASSED (observed)
 ```
 
 Bootstrap inspection is not V1 Card test evidence.
@@ -299,7 +306,7 @@ Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
 Application implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
 Active Card: NONE
-Git checkpoint: Governance hardening merge commit 6ed41e3be169390a98f30114973595d91250d982 on main; PR #2 merged; main synchronized with origin/main
+Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
 ## 17. Decision Ledger
@@ -380,8 +387,7 @@ Active Card: NONE
 Next Roadmap Card: V1-C02 — Domain Models
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
-Git checkpoint: Governance hardening merge commit 6ed41e3be169390a98f30114973595d91250d982 on main; PR #2 merged; main synchronized with origin/main
-Working tree: CLEAN
+Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
 Safe next action: None. V1-C01 is complete; obtain separate human authorization before starting V1-C02.
@@ -398,5 +404,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01 IS AUTHORIZED; LATER CARDS REQUIRE SEPARATE HUMAN APPROVAL.
+V1-C01 IS COMPLETE; LATER CARDS REQUIRE SEPARATE HUMAN APPROVAL.
 ```

@@ -1,9 +1,9 @@
 # AI Quotation Intelligence System — V1 Card Evidence Map
 
-Status: CANONICAL EVIDENCE LEDGER
-Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
-Active Card: NONE
-Authorization: C01 start approval recorded historically; no active Card
+Status: CANONICAL VERIFIED EVIDENCE LEDGER
+This file does not own live operational state. PROJECT_CONTROL.md is authoritative
+for current phase, Active Card, authorization, blockers, and current Git state.
+Implementation evidence below is immutable Card evidence, not a live-state ledger.
 
 ## 0. Role and Ownership
 
@@ -73,7 +73,7 @@ NO EVIDENCE → NO COMPLETION CLAIM
 
 Never fabricate command output, test results, Git commits, AWS state, Bedrock responses, S3 behavior, deployment state, runtime behavior, file paths, or evaluation scores.
 
-## 2. Current Project Evidence State
+## 2. Verified Project Evidence Summary (Not Live State)
 
 ~~~
 Project: AI Quotation Intelligence System
@@ -118,7 +118,9 @@ Each Card record uses exactly these sections:
 19. Completion Evidence
 20. Recommended State
 
-Current values are factual pre-implementation values only.
+Card-record values are factual evidence for the named Card and checkpoint; they
+are not a competing current-state authority. Current live state is read from
+PROJECT_CONTROL.md and runtime Git commands.
 
 ## 4. Future Evidence Expectations
 
@@ -426,7 +428,7 @@ Working Tree at delivery: CLEAN; final main tree CLEAN
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 PR: MERGED — #1
 Merge: COMPLETED — 693e17be652cdd4f82cdfe6da2bef89f6529103c
-Final Reconciliation Commit: 0af07c84c1d64b83afa57a516699a90110b5ec4c
+Final Reconciliation Commit for C01 completion event: 0af07c84c1d64b83afa57a516699a90110b5ec4c
 
 ### 17. Known Limitations
 

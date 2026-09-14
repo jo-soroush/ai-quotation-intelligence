@@ -14,7 +14,7 @@ info() { say "INFO  $*"; }
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." 2>/dev/null && pwd)"
 if [[ ! -d "$PROJECT_ROOT" ]]; then
-  fail "invalid project root: $PROJECT_ROOT"; say "BOOTSTRAP_STATUS: FAIL"; exit 1
+  fail "invalid project root: $PROJECT_ROOT"; say "BOOTSTRAP_RESULT: FAIL"; exit 1
 fi
 cd -- "$PROJECT_ROOT" || { fail "cannot enter project root"; exit 1; }
 
@@ -22,6 +22,8 @@ say "========================================"
 say "AI QUOTATION INTELLIGENCE SESSION CHECK"
 say "========================================"
 say "Project root: $PROJECT_ROOT"
+say "BOOTSTRAP_ROLE: SESSION / REPOSITORY SMOKE CHECK"
+say "BOOTSTRAP_SCOPE: safe inspect/resume checks only; not Card completion, pytest, Exit Gate, quality gate, or final consistency proof"
 
 if [[ -f PROJECT_PROFILE.md ]] && grep -Fq "Project: AI Quotation Intelligence System" PROJECT_PROFILE.md; then
   pass "project identity is correct"
@@ -36,7 +38,8 @@ REQUIRED_FILES=(
   CARD_LEARNING_AND_DECISION_LOG.md
   QUOTATION_ENGINEERING_HARNESS.md COMMERCIAL_AND_DATA_GUARDRAILS.md
   GIT_WORKFLOW.md .agents/skills/quotation-card-execution/SKILL.md
-  PROJECT_MIGRATION_STATUS.md
+  PROJECT_MIGRATION_STATUS.md scripts/final_card_state_consistency.sh
+  scripts/test_governance_harness.sh
 )
 for path in "${REQUIRED_FILES[@]}"; do
   [[ -f "$path" ]] && pass "canonical file exists: $path" || fail "required file missing: $path"
@@ -129,11 +132,7 @@ if { grep -Fq "Application Implementation: NOT_STARTED" PROJECT_CONTROL.md && \
 else
   fail "contradictory implementation evidence claim detected"
 fi
-if [[ ! -d tests ]] && ! grep -Fq "Test PASS claims: COMPLETE" PROJECT_CONTROL.md; then
-  pass "no contradictory test PASS claim with absent tests"
-else
-  warn "test PASS claim requires review"
-fi
+info "test PASS claims are not evaluated by bootstrap; run pytest in the Card workflow"
 if [[ -f CARD_LEARNING_AND_DECISION_LOG.md ]] && \
    { grep -Fq "Application Implementation: NOT_STARTED" CARD_LEARNING_AND_DECISION_LOG.md || \
      grep -Fq "Application Implementation: V1-C01 BASELINE IMPLEMENTED" CARD_LEARNING_AND_DECISION_LOG.md; } && \
@@ -145,7 +144,7 @@ fi
 
 say "PROJECT_CONTROL"
 if [[ -f PROJECT_CONTROL.md ]]; then
-  for label in "Project Phase" "Application Implementation" "Active Card" "Active Card State" "Next Roadmap Card" "Next Card Authorized" "Safe Resume"; do
+  for label in "Project Phase" "Application Implementation" "Active Card" "Active Card State" "Next Roadmap Card" "Next Card Authorized" "Safe next action"; do
     line="$(grep -E -m1 "^$label:" PROJECT_CONTROL.md 2>/dev/null || true)"
     [[ -n "$line" ]] && info "$line" || warn "field not reliably parsed: $label"
   done
@@ -216,19 +215,8 @@ for path in src tests; do
 done
 
 say "PYTEST"
-if [[ -d tests ]]; then
-  if command -v python3 >/dev/null 2>&1 && python3 -m pytest --version >/dev/null 2>&1; then
-    if PYTHONDONTWRITEBYTECODE=1 python3 -m pytest --collect-only -q -p no:cacheprovider >/dev/null 2>&1; then
-      pass "pytest collection: PASS"
-    else
-      fail "pytest collection: FAIL"
-    fi
-  else
-    warn "pytest collection: NOT_RUN"
-  fi
-else
-  info "pytest collection: NOT_AVAILABLE (tests directory not created)"
-fi
+info "CARD_TESTS: NOT_EVALUATED_BY_BOOTSTRAP"
+info "pytest collection/execution and Card validation belong to the Card workflow"
 
 say "SECRET / SENSITIVE FILE NAMES"
 secret_found=0
@@ -271,13 +259,14 @@ done
 info "migration fragments: NOT_PRESENT; canonical specifications are authoritative"
 
 say "PASS=$PASS WARN=$WARN FAIL=$FAIL"
-if [[ "$FAIL" -gt 0 ]]; then say "BOOTSTRAP_STATUS: FAIL"; exit 1; fi
-if [[ "$WARN" -gt 0 ]]; then say "BOOTSTRAP_STATUS: WARN"; exit 0; fi
-say "BOOTSTRAP_STATUS: PASS"; exit 0
+if [[ "$FAIL" -gt 0 ]]; then say "BOOTSTRAP_RESULT: FAIL"; exit 1; fi
+if [[ "$WARN" -gt 0 ]]; then say "BOOTSTRAP_RESULT: WARN"; exit 0; fi
+say "BOOTSTRAP_RESULT: PASS"; exit 0
 
 # THIS SCRIPT INSPECTS.
 # IT DOES NOT REPAIR.
 # IT DOES NOT AUTHORIZE.
 # IT DOES NOT IMPLEMENT.
 # IT DOES NOT DEPLOY.
-# BOOTSTRAP PASS != CARD APPROVAL.
+# BOOTSTRAP_RESULT is a smoke-check result, not Card approval or completion proof.
+# BOOTSTRAP_RESULT PASS != pytest PASS != Exit Gate PROVEN != CARD_QUALITY_GATE PASS.

@@ -23,7 +23,7 @@ Ownership remains separated as follows:
 SOURCE_ADAPTATION_TRACEABILITY.md → external-source decision and adaptation history
 CARD_LEARNING_AND_DECISION_LOG.md → engineering rationale and lessons
 QUOTATION_CARD_EVIDENCE_MAP.md → technical proof
-PROJECT_PROFILE.md → stable/current architecture
+PROJECT_PROFILE.md → stable architecture and invariants
 PROJECT_CONTROL.md → live project state and authorization
 GIT_WORKFLOW.md → Git delivery state and evidence
 ```
@@ -202,15 +202,18 @@ Examples of the relationship are `Decision: ADAPT` with `Status: APPROVED`
 or, after actual incorporation, `Decision: ADAPT` with `Status: IMPLEMENTED`.
 No current record is approved or implemented.
 
-## 9. Current Ledger State
+## 9. Recorded Ledger State (Not Live Project State)
 
 ```text
 Current Records: NONE
 Source Adaptation Records: NONE
-Application Implementation: NOT_STARTED
-Active Card: NONE
-V1-C01 Authorized: NO
-Git Repository: NO
+Historical migration-time Application Implementation: NOT_STARTED
+Historical migration-time Active Card: NONE
+Historical migration-time V1-C01 Authorization: NO
+Historical migration-time Git Repository: NO
+
+These fields are retained as historical ledger context. PROJECT_CONTROL.md
+owns current project state and authorization; Git owns runtime Git facts.
 ```
 
 No external source has been formally adopted through this ledger. Prior

@@ -30,7 +30,7 @@ When a Card has external-source relevance, also read SOURCE_ADAPTATION_TRACEABIL
 
 ## 2. Resolve Exactly One Card
 
-Read PROJECT_CONTROL.md and resolve:
+Read PROJECT_CONTROL.md as the sole live operational-state and authorization owner, then resolve:
 
 Card ID, title, state, human start approval, authorized scope, safe checkpoint, and known blockers.
 
@@ -590,7 +590,9 @@ Contract satisfied
 → READY_FOR_DELIVERY
 → one GIT_DELIVERY_APPROVAL for the exact validated Card state
 → commit → push → PR → merge
-→ PROJECT_CONTROL reconciled
+→ outcome-only final reconciliation
+→ reconciliation commit/push if required
+→ runtime Git verification
 → FINAL_CARD_STATE_CONSISTENCY_GATE PASS
 → Card COMPLETE
 → Active Card NONE
@@ -611,7 +613,11 @@ Never start the next Card automatically.
 
 Only after validation and quality evidence are ready, set READY_FOR_DELIVERY and follow GIT_WORKFLOW.md. One explicit GIT_DELIVERY_APPROVAL covers the normal commit, push, PR, and merge chain for the exact validated Card state. Do not force push by default. Merge is not Card completion.
 
-If implementation files, governance evidence, staged diff, validation result, branch, or delivery file set materially changes after approval, set GIT_DELIVERY_APPROVAL: INVALIDATED, STOP, revalidate, and require a new approval.
+Outcome-only reconciliation that records only observed delivery results does not
+invalidate the consumed approval. Any implementation, scope, contract,
+validated-payload, material evidence, staged-diff, validation, branch, or
+unrelated-file change after approval sets GIT_DELIVERY_APPROVAL: INVALIDATED,
+requires STOP, revalidation, and new approval.
 
 ## 17. Resume After Interruption
 
@@ -677,7 +683,11 @@ SYNTHETIC DATA STAYS SYNTHETIC
 PROVIDER OBJECTS STAY OUTSIDE CORE
 ```
 
-## 20. Current Project State
+## 20. Recorded C01 Completion Context (Not Live State)
+
+Current live operational state is owned by PROJECT_CONTROL.md. Runtime Git
+facts must be queried from Git; the values below are historical execution
+context and do not independently authorize or activate a Card.
 
 ```
 Application Implementation: V1-C01 BASELINE IMPLEMENTED
@@ -716,10 +726,21 @@ RESOLVE CARD
 → READY_FOR_DELIVERY
 → GIT_DELIVERY_APPROVAL
 → COMMIT → PUSH → PR → MERGE
-→ FINAL RECONCILIATION
+→ OUTCOME-ONLY FINAL RECONCILIATION
+→ RECONCILIATION COMMIT/PUSH IF REQUIRED
+→ RUNTIME GIT VERIFICATION
+→ FINAL_CARD_STATE_CONSISTENCY_GATE PASS
 → CARD COMPLETE
 → ACTIVE CARD NONE
 → STOP
 ```
 
 No step authorizes work beyond the active Card or explicit human approval.
+
+`scripts/quotation_session_bootstrap.sh` is a SESSION / REPOSITORY SMOKE CHECK
+only. It does not execute pytest or prove a Card, Exit Gate, quality gate, or
+final consistency state; Card validation runs separately.
+
+Run `bash scripts/test_governance_harness.sh` for executable governance
+regression checks. Its temporary fixtures must not mutate the canonical
+repository and its results do not replace Card-specific validation.
