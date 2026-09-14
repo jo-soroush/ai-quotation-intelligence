@@ -1776,6 +1776,6 @@ NOT YET RECORDED — complete only from actual implementation evidence.
 
 NOT YET RECORDED — complete only from actual implementation evidence.
 
-## Current Canonical State
+## Historical Migration Baseline (Not Current Project State)
 
-All 20 Cards are NOT_STARTED. No Card is authorized. No Card is COMPLETE. This file is a governance contract and does not authorize implementation.
+This preserved contract snapshot records the migration-time baseline in which all 20 Cards were NOT_STARTED, no Card was authorized, and no Card was COMPLETE. It is not current project state or authorization authority; consult PROJECT_CONTROL.md for live state. This file remains a governance contract and does not authorize implementation.

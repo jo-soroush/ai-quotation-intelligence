@@ -39,12 +39,12 @@ make_fixture() {
 }
 
 make_fixture_state() {
-  local name="$1" completed="$2" active="$3" active_state="$4" next_card="$5" next_state="$6"
+  local name="$1" completed="$2" active="$3" active_state="$4" next_card="$5" next_state="$6" learning_status="${7:-COMPLETE}"
   local dir="$TMP_ROOT/$name"
   mkdir -p "$dir"
   python3 "$ROOT/scripts/governance_fixture_builder.py" \
     --source-root "$ROOT" --root "$dir" --completed "$completed" --active "$active" \
-    --active-state "$active_state" --next "$next_card" --next-state "$next_state" >/dev/null || return 1
+    --active-state "$active_state" --next "$next_card" --next-state "$next_state" --learning-status "$learning_status" >/dev/null || return 1
   [[ -d "$dir" && -f "$dir/PROJECT_CONTROL.md" && -f "$dir/QUOTATION_CARD_EVIDENCE_MAP.md" ]] || return 1
   git -C "$dir" init -q -b main >/dev/null 2>&1 || return 1
   git -C "$dir" config user.email governance-test@example.invalid >/dev/null 2>&1 || return 1
@@ -187,6 +187,29 @@ case_hf06() { local d output; output="$(make_fixture_state hf06 V1-C01 NONE ACTI
 case_hf07() { local d; d="$(make_fixture_state hf07 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; [[ -d "$d" ]] && view_check "$d"; }
 case_hf08() { local d="$TMP_ROOT/hf08"; ! make_fixture_state hf08 V1-C01 NONE ACTIVE BAD_STATE V1-C02 NOT_STARTED; }
 
+case_fc01() { local d; d="$(make_fixture_state fc01 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; [[ -d "$d" ]] && gate_passes V1-C02 COMPLETE "$d"; }
+case_fc02() { local d; d="$(make_fixture_state fc02 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; [[ -d "$d" ]] && gate_passes V1-C02 COMPLETE "$d"; }
+case_fc03() { local d; d="$(make_fixture_state fc03 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/PROJECT_CONTROL.md" 'Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models' 'Completed Cards: V1-C01 — Repository Baseline'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_fc04() { local d; d="$(make_fixture_state fc04 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED CURRENT)"; gate_passes V1-C02 COMPLETE "$d"; }
+case_fc05() { local d; d="$(make_fixture_state fc05 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; gate_passes V1-C02 COMPLETE "$d"; }
+case_fc06() { local d; d="$(make_fixture_state fc06 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" $'Learning Documentation Status:\nCOMPLETE' $'Learning Documentation Status:\nPARTIAL'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_fc07() { local d; d="$(make_fixture_state fc07 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; gate_passes V1-C01 COMPLETE "$d"; }
+case_fc08() { local d; d="$(make_fixture_state fc08 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; gate_passes V1-C02 COMPLETE "$d"; }
+case_fc09() { local d; d="$(make_fixture_state fc09 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" 'merged' 'delivered'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_fc10() { local d; d="$(make_fixture_state fc10 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" 'merged' 'delivered'; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" '164ae7c3982009025ec16de72cd0d4ad1efc646d' 'no-merge-hash'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_fc11() { local d; d="$(make_fixture_state fc11 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; gate_passes V1-C02 COMPLETE "$d"; }
+case_fc12() { local d; d="$(make_fixture_state fc12 V1-C01,V1-C02,V1-C03,V1-C04,V1-C05 NONE ACTIVE V1-C06 NOT_STARTED)"; gate_passes V1-C05 COMPLETE "$d"; }
+
+case_pc_state01() { local d; d="$(make_fixture_state pc-state-01 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; gate_passes V1-C02 COMPLETE "$d"; }
+case_pc_state02() { local d; d="$(make_fixture_state pc-state-02 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/PROJECT_CONTROL.md" 'State: COMPLETE' 'State: READY_FOR_DELIVERY'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_pc_state03() { local d; d="$(make_fixture_state pc-state-03 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/PROJECT_CONTROL.md" 'Delivery Commit: fixture-02-delivery' 'Delivery Commit: NOT_CREATED'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_pc_state04() { local d; d="$(make_fixture_state pc-state-04 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/PROJECT_CONTROL.md" 'PR: MERGED — #2' 'PR: NOT_CREATED'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_pc_state05() { local d; d="$(make_fixture_state pc-state-05 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; replace_once "$d/PROJECT_CONTROL.md" 'Merge Commit: 0202020202020202020202020202020202020202' 'Merge Commit: NOT_CREATED'; ! gate_passes V1-C02 COMPLETE "$d"; }
+case_pc_state06() { local d; d="$(make_fixture_state pc-state-06 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; gate_passes V1-C01 COMPLETE "$d"; }
+case_pc_state07() { local d; d="$(make_fixture_state pc-state-07 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; gate_passes V1-C02 COMPLETE "$d"; }
+case_pc_state08() { local d; d="$(make_fixture_state pc-state-08 V1-C01,V1-C02,V1-C03,V1-C04,V1-C05 NONE ACTIVE V1-C06 NOT_STARTED)"; gate_passes V1-C05 COMPLETE "$d"; }
+case_pc_state09() { local d; d="$(make_fixture_state pc-state-09 V1-C01,V1-C02,V1-C03,V1-C04,V1-C05 NONE ACTIVE V1-C06 NOT_STARTED)"; replace_once "$d/PROJECT_CONTROL.md" 'State: COMPLETE' 'State: READY_FOR_DELIVERY'; ! gate_passes V1-C05 COMPLETE "$d"; }
+
 say "GOVERNANCE_TEST_SUITE: START"
 expect_pass GC-01 case_gc01
 expect_pass GC-02 case_gc02
@@ -227,6 +250,27 @@ expect_pass HF-05 case_hf05
 expect_pass HF-06 case_hf06
 expect_pass HF-07 case_hf07
 expect_pass HF-08 case_hf08
+expect_pass FC-01 case_fc01
+expect_pass FC-02 case_fc02
+expect_pass FC-03 case_fc03
+expect_pass FC-04 case_fc04
+expect_pass FC-05 case_fc05
+expect_pass FC-06 case_fc06
+expect_pass FC-07 case_fc07
+expect_pass FC-08 case_fc08
+expect_pass FC-09 case_fc09
+expect_pass FC-10 case_fc10
+expect_pass FC-11 case_fc11
+expect_pass FC-12 case_fc12
+expect_pass PC-STATE-01 case_pc_state01
+expect_pass PC-STATE-02 case_pc_state02
+expect_pass PC-STATE-03 case_pc_state03
+expect_pass PC-STATE-04 case_pc_state04
+expect_pass PC-STATE-05 case_pc_state05
+expect_pass PC-STATE-06 case_pc_state06
+expect_pass PC-STATE-07 case_pc_state07
+expect_pass PC-STATE-08 case_pc_state08
+expect_pass PC-STATE-09 case_pc_state09
 say "GOVERNANCE_TEST_SUMMARY:"
 say "PASS=$PASS"
 say "FAIL=$FAIL"
