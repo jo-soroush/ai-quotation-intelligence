@@ -532,7 +532,7 @@ The future suite should:
 
 No testing library is prescribed here.
 
-## 7. Current Project State
+## 7. Recorded C01 Context (Not Live State)
 
 ```text
 Core Proof Cases Defined: 19
@@ -541,12 +541,12 @@ Executable Proof Suite: NOT_CREATED
 Proof Cases Executed: 0
 Proof Cases PASS: 0
 Proof Cases NOT_EXECUTED: 24
-Application: V1-C01 BASELINE IMPLEMENTED
-Active Card: NONE
+Recorded Application Context: V1-C01 BASELINE IMPLEMENTED
+Recorded Active Card at completion: NONE
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C01 State: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
-Git: YES
+Recorded Git Context at completion: YES
 ```
 
 ## 8. Relationship to Canonical Files

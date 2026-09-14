@@ -1,9 +1,11 @@
 # AI Quotation Intelligence System — V1 Card Learning and Decision Log
 
 Status: CANONICAL EDUCATIONAL ENGINEERING RECORD
-Implementation State: V1-C01 BASELINE IMPLEMENTED / V1 APPLICATION LOGIC NOT_STARTED
-Active Card: NONE
-Authorization: C01 start approval recorded historically; no active Card
+This file owns rationale, alternatives, root causes, fixes, tradeoffs, and
+historical learning. It does not own live phase, Active Card, authorization,
+runtime Git state, implementation evidence, or Card contracts.
+Read PROJECT_CONTROL.md for live operational state and query Git for runtime
+Git facts.
 
 ## Role and Ownership
 
@@ -81,18 +83,18 @@ A Card is educationally complete only when implementation evidence exists, appli
 
 This file alone does not mark a Card COMPLETE. Card completion remains governed by QUOTATION_CARD_SPECIFICATIONS.md, QUOTATION_CARD_EVIDENCE_MAP.md, QUOTATION_ENGINEERING_HARNESS.md, and PROJECT_CONTROL.md.
 
-## Current Project State
+## Historical C01 Completion Context
 
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: NONE
+Active Card at C01 completion: NONE
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C01 State: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
-Git Repository: YES
-Current branch: main
-HEAD: 6ed41e3be169390a98f30114973595d91250d982
-Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: origin/main; C01 delivered through PR #1; governance hardening delivered through PR #2
+Git Repository at C01 delivery: YES
+Branch at C01 delivery: main
+Runtime Git state is not owned here; query Git and PROJECT_CONTROL.md for current state.
+Remote at C01 delivery: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
+Tracking at C01 delivery: origin/main; C01 delivered through PR #1; governance hardening delivered through PR #2
 
 V1-C01 implementation learning is recorded below. No later Card learning record contains implementation claims.
 
@@ -163,6 +165,15 @@ The baseline uses simple environment variables rather than a settings library, s
 The existing repository already had a pushed governance baseline, but that does not satisfy the C01 application baseline. A minimal standard-library Core is sufficient for package/configuration/logging ownership, while pytest can remain development-only.
 
 The final C01 reconciliation exposed that detailed Card state and aggregate Current Card Table state had been updated independently. The root cause was the absence of a deterministic cross-section completion check. The repair added FINAL_CARD_STATE_CONSISTENCY_GATE and a dependency-free validator; its negative fixtures stop on contradictory state and the corrected repository passes.
+
+Separate P3 governance maintenance found that the first regression-fixture
+mutations did not match the actual table and summary text, so the negative
+cases initially failed to exercise their intended contradictions. The root
+cause was fixture assumptions instead of section-scoped field assertions. The
+fixture mutations and validator table/summary checks were corrected; the final
+temporary-fixture governance suite passed 23 of 23 cases. This is governance
+regression evidence, not new V1 application implementation or C01 technical
+evidence.
 
 ### 17. What Should Be Remembered Later
 

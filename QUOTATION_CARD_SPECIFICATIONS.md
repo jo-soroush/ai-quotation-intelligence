@@ -1,9 +1,8 @@
 # AI Quotation Intelligence System — V1 Card Specifications
 
 Status: CANONICAL GOVERNANCE CONTRACT
-Implementation State: NOT_STARTED
-Active Card: NONE
-Authorization: NONE
+Contract metadata only; this file does not own implementation state, Active Card,
+or authorization. Read PROJECT_CONTROL.md for live operational state.
 
 This file defines the detailed execution contract for all official V1 Cards.
 

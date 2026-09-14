@@ -59,20 +59,24 @@ For Card implementation or resume, read in this order:
     Status now: MIGRATED / CANONICAL
 
 12. scripts/quotation_session_bootstrap.sh
-    → read-only session baseline verification
+    → read-only session/repository smoke check; not Card completion proof
     Status now: MIGRATED / CANONICAL
 
 13. scripts/final_card_state_consistency.sh
     → deterministic cross-section completion-state verification
     Status now: CREATED / CANONICAL
 
-13. SOURCE_ADAPTATION_TRACEABILITY.md
+14. scripts/test_governance_harness.sh
+    → executable temporary-fixture governance regression checks
+    Status now: CREATED / CANONICAL
+
+15. SOURCE_ADAPTATION_TRACEABILITY.md
     → external-source study, adaptation/reuse decision, license awareness,
       what was and was not taken, risks, Card linkage, and evidence/learning
       linkage
     Status now: CREATED / CANONICAL
 
-14. GOVERNANCE_HARNESS_PROOF_CASES.md
+16. GOVERNANCE_HARNESS_PROOF_CASES.md
     → formal governance proof scenarios; not executed-test evidence
     Status now: CREATED / CANONICAL
 
@@ -80,7 +84,7 @@ During governance migration also read PROJECT_MIGRATION_STATUS.md.
 
 Do not load every file indiscriminately.
 
-For ownership, QUOTATION_CARD_SPECIFICATIONS.md defines what a Card is intended to build, QUOTATION_CARD_EVIDENCE_MAP.md records what was actually observed and proven, and CARD_LEARNING_AND_DECISION_LOG.md records why decisions were made, what problems occurred, why they occurred, how they were fixed, and what was learned. PROJECT_CONTROL.md remains the owner of current state and authorization.
+For ownership, PROJECT_CONTROL.md is the sole owner of live operational state and authorization. QUOTATION_CARD_SPECIFICATIONS.md defines what a Card is intended to build, QUOTATION_CARD_EVIDENCE_MAP.md records what was actually observed and proven, and CARD_LEARNING_AND_DECISION_LOG.md records why decisions were made, what problems occurred, why they occurred, how they were fixed, and what was learned. Runtime Git commands own current Git facts. PROJECT_MIGRATION_STATUS.md is a frozen historical migration snapshot, not a current-state or authorization authority.
 
 For each Card, preserve enough rationale for a future reader to understand what changed, why it changed, why the chosen approach was selected, alternatives considered, problems, root cause, fix, tradeoffs, lessons learned, and impact on later Cards. Do not invent these before implementation.
 
@@ -519,7 +523,9 @@ Then:
 READY_FOR_DELIVERY
 → GIT_DELIVERY_APPROVAL
 → commit → push → PR → merge
-→ final reconciliation
+→ outcome-only final reconciliation
+→ required reconciliation delivery
+→ runtime Git verification
 → FINAL_CARD_STATE_CONSISTENCY_GATE: PASS
 → Card = COMPLETE
 → Active Card = NONE
@@ -530,7 +536,11 @@ GIT_DELIVERY_APPROVAL is valid only for the exact validated Card state. A materi
 
 Do not start the next Card without separate explicit human approval.
 
-## 20. Current Migration State
+## 20. Recorded Migration and C01 Completion Context
+
+PROJECT_CONTROL.md is the sole live-state and authorization authority. The
+following records migration/completion context and must not be used as a
+substitute for current state.
 
 ~~~
 Project Phase: V1_C01_COMPLETE
@@ -552,22 +562,18 @@ QUOTATION_ENGINEERING_HARNESS.md: MIGRATED / CANONICAL
 GIT_WORKFLOW.md: MIGRATED / CANONICAL
 .agents/skills/quotation-card-execution/SKILL.md: MIGRATED / CANONICAL
 scripts/quotation_session_bootstrap.sh: MIGRATED / CANONICAL
+Recorded C01 Completion Context (not live state):
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: NONE
+Active Card at completion: NONE
 C01 Start Authorization: GRANTED (historical; Card complete)
-Git repository: YES
-Current branch: main
-HEAD: 6ed41e3be169390a98f30114973595d91250d982
-Remote: origin → https://github.com/jo-soroush/ai-quotation-intelligence.git
-Tracking: origin/main
-V1-C01 State: COMPLETE
+V1-C01 State at completion: COMPLETE
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Current source adaptation records: NONE
 Historical source/template material is not canonical project authority.
 Proof cases executed: 0
 Proof cases PASS: 0
 Proof cases NOT_EXECUTED: 24
-Executable proof suite: NOT_CREATED
+Formal executable proof suite: NOT_CREATED; P3 governance regression runner: CREATED
 ~~~
 
 ## 21. Required STOP Codes

@@ -1,10 +1,20 @@
-# AI Quotation Intelligence System — Migration Status
+# AI Quotation Intelligence System — Historical Migration Status
+
+HISTORICAL MIGRATION SNAPSHOT
+NOT CURRENT PROJECT STATE
+NOT AUTHORIZATION AUTHORITY
+NOT IMPLEMENTATION AUTHORITY
+
+Current live operational state is owned only by PROJECT_CONTROL.md.
+Runtime Git facts must be queried from Git. Verified implementation evidence
+belongs in QUOTATION_CARD_EVIDENCE_MAP.md; rationale and learning belong in
+CARD_LEARNING_AND_DECISION_LOG.md.
 
 ## Project Identity
 
 Project: AI Quotation Intelligence System
 Target: V1
-Current Phase: READY_FOR_V1_C01_AUTHORIZATION
+Historical Migration-Time Phase: READY_FOR_V1_C01_AUTHORIZATION
 Original Governance Migration: COMPLETE
 Canonical Governance: COMPLETE
 Strict Governance Audit: PASS
@@ -16,10 +26,10 @@ Final Hardening Re-audit: PASS
 Legacy Root Pointer Cleanup: COMPLETE
 Historical source/template material: REMOVED; current project is independent
 Governance Remaining Actions: NONE
-Application Implementation: NOT_STARTED
-Active Card: NONE
-C01 Authorization: NO
-Git Repository: NO
+Historical Migration-Time Application Implementation: NOT_STARTED
+Historical Migration-Time Active Card: NONE
+Historical Migration-Time C01 Authorization: NO
+Historical Migration-Time Git Repository: NO
 
 ## Migration Completion Matrix
 
@@ -73,7 +83,7 @@ The current canonical governance/control set is:
 
 PROJECT_MIGRATION_STATUS.md is a migration-status ledger, not long-term architecture authority.
 
-## Current Implementation Reality
+## Historical Migration-Time Implementation Reality
 
 - Application code: NOT_STARTED
 - Python package: NOT_CREATED
@@ -96,7 +106,7 @@ NONE.
 
 These items do not authorize V1-C01 or any application implementation.
 
-## Safe Next State
+## Historical Migration-Time Safe Next State
 
 Governance migration, Learning Governance, Governance Hardening, and
 legacy cleanup are COMPLETE. No governance action remains.
@@ -116,7 +126,7 @@ V1-C01 remains unauthorized until explicit human approval. Governance completion
 - Learning Governance integration was completed across the canonical router, Harness, Skill, Evidence Map, Card Specifications, and bootstrap.
 - Governance migration created no V1 application implementation evidence.
 
-## Final Migration Rule
+## Final Migration Rule (Historical Migration Constraint)
 
 GOVERNANCE MIGRATION PREPARES THE PROJECT.
 IT DOES NOT IMPLEMENT V1.

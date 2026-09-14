@@ -1,9 +1,8 @@
 # AI Quotation Intelligence System — V1 Engineering Harness
 
 Status: CANONICAL GOVERNANCE HARNESS
-Implementation State: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: NONE
-Authorization: C01 start approval recorded historically; no active Card
+PROJECT_CONTROL.md is the sole owner of live operational state and authorization.
+The execution metadata below is procedural context, not an independent state ledger.
 
 ## 1. Role of This File
 
@@ -40,7 +39,8 @@ It does not own:
 Ownership:
 
 PROJECT_PROFILE.md → architecture and invariants.
-PROJECT_CONTROL.md → live state and authorization.
+PROJECT_CONTROL.md → sole live operational state and authorization.
+Git commands → current runtime Git facts.
 AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md → Card identity and order.
 QUOTATION_CARD_SPECIFICATIONS.md → detailed Card contracts.
 QUOTATION_CARD_EVIDENCE_MAP.md → implementation evidence.
@@ -52,6 +52,15 @@ GIT_WORKFLOW.md → Git delivery procedure once migrated.
 AGENTS.md → coding-agent router.
 
 This file does not authorize implementation.
+
+`scripts/quotation_session_bootstrap.sh` is a SESSION / REPOSITORY SMOKE CHECK.
+It answers whether the repository can be safely inspected or resumed. Its
+result is not pytest evidence, Exit Gate proof, CARD_QUALITY_GATE proof, or
+FINAL_CARD_STATE_CONSISTENCY_GATE proof.
+
+`scripts/test_governance_harness.sh` is the executable governance regression
+runner. It uses temporary fixture copies and does not replace Card validation,
+the Exit Gate, or the formal proof-case contract.
 
 For active Card execution, context-loss recovery, and safe resume, read the canonical files in this order:
 
@@ -101,8 +110,10 @@ Instructions
 → CARD_QUALITY_GATE
 → READY_FOR_DELIVERY
 → GIT_DELIVERY_APPROVAL
-→ Commit / Push / PR / Merge
-→ Final Reconciliation
+→ Stage / Commit / Push / PR / Merge
+→ Outcome-Only Final Reconciliation
+→ Commit / Push Reconciliation if required
+→ Query Runtime Git State
 → FINAL_CARD_STATE_CONSISTENCY_GATE PASS
 → Card COMPLETE
 → Active Card NONE
@@ -879,6 +890,15 @@ A Card may become COMPLETE only if:
 - the normal commit/push/PR/merge chain is complete.
 - FINAL_CARD_STATE_CONSISTENCY_GATE is PASS across all current Card-state representations.
 
+Outcome-only final reconciliation may record only observed delivery results,
+historical delivery hashes, completion evidence, the completed-card list, and
+the Active Card transition to NONE. It must not change implementation, scope,
+contract, validated payload, or unrelated policy. Such reconciliation does not
+invalidate the consumed GIT_DELIVERY_APPROVAL. The final consistency gate runs
+after any required reconciliation commit/push, against a clean working tree;
+runtime Git facts are queried directly and current HEAD is never required in a
+tracked document.
+
 Then:
 
 ~~~text
@@ -954,8 +974,9 @@ NEW HUMAN APPROVAL REQUIRED
 
 ## 26B. FINAL_CARD_STATE_CONSISTENCY_GATE
 
-Run the deterministic `scripts/final_card_state_consistency.sh` validator
-after final reconciliation and before marking a Card COMPLETE. It compares
+Run the deterministic `scripts/final_card_state_consistency.sh <CARD_ID>
+[EXPECTED_STATE] [ROOT]` validator after any required reconciliation
+commit/push and before marking a Card COMPLETE. It compares
 PROJECT_CONTROL.md, the detailed Card record and Current Card Table and
 Current Summary in QUOTATION_CARD_EVIDENCE_MAP.md, the Learning Log current
 state and completion record, the active Card and authorization state, the
@@ -963,6 +984,9 @@ CARD_QUALITY_GATE, Exit Gate, tests/evidence, Git delivery state,
 Recommended State, and Completed Cards list.
 
 The validator must return zero only when all current representations agree.
+For example: `bash scripts/final_card_state_consistency.sh V1-C01 COMPLETE`.
+It validates the requested Card only; it does not require current HEAD to be
+stored in a tracked document.
 On mismatch:
 
 ~~~text
@@ -1022,7 +1046,11 @@ SYNTHETIC DATA STAYS SYNTHETIC
 PROVIDER OBJECTS STAY OUTSIDE CORE
 ~~~
 
-## 28. Current Project State
+## 28. Recorded C01 Completion Context (Not Live State)
+
+Current live operational state is owned by PROJECT_CONTROL.md. Runtime Git
+facts must be queried from Git; the values below document the completed C01
+event and are not an independent current-state ledger.
 
 The current project state is:
 
@@ -1074,7 +1102,10 @@ PASS CARD_QUALITY_GATE.
 READY_FOR_DELIVERY.
 GIT_DELIVERY_APPROVAL.
 COMMIT → PUSH → PR → MERGE.
-FINAL RECONCILIATION.
+OUTCOME-ONLY FINAL RECONCILIATION.
+RECONCILIATION COMMIT/PUSH IF REQUIRED.
+RUNTIME GIT VERIFICATION.
+FINAL_CARD_STATE_CONSISTENCY_GATE: PASS.
 COMPLETE CARD.
 ACTIVE CARD → NONE.
 STOP.
