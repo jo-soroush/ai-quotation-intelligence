@@ -718,6 +718,8 @@ RESOLVE CARD
 → IMPLEMENT
 → VALIDATE
 → RECORD EVIDENCE
+→ GOVERNANCE_RECONCILIATION --write
+→ GOVERNANCE_VIEW_RECONCILIATION_GATE --check
 → CHECKPOINT
 → ACCEPT / FIX / ROLLBACK
 → PROVE EXIT GATE
@@ -731,6 +733,10 @@ RESOLVE CARD
 → RUNTIME GIT VERIFICATION
 → FINAL_CARD_STATE_CONSISTENCY_GATE PASS
 → CARD COMPLETE
+
+Mutable/latest validation results belong in the Evidence Map. The Learning Log
+records rationale and historical validation events, not a current status
+dashboard; run generated-view reconciliation after either document is updated.
 → ACTIVE CARD NONE
 → STOP
 ```

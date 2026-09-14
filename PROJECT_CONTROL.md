@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C01_COMPLETE
+Project Phase: V1_C02_ACTIVE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / LATER DOMAIN LOGIC NOT_STARTED
+Active Card: V1-C02
+Active Card State: READY_FOR_DELIVERY
 Last COMPLETE Card: V1-C01 — Repository Baseline
 Next Roadmap Card: V1-C02 — Domain Models
-Next Card Authorized: NO — V1-C01 is complete; later Cards remain unauthorized
-Implementation Authorization: C01 scope authorization consumed by completion; later Cards not authorized
+Next Card Authorized: YES — V1-C02 explicitly authorized; V1-C03 and later Cards remain unauthorized
+Implementation Authorization: V1-C02 — Domain Models only; V1-C03 and later Cards not authorized
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
 Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
@@ -132,32 +132,31 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C01
-Title: Repository Baseline
-State: COMPLETE
-Branch: card/v1-c01-repository-baseline
-Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
-Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e
-PR: #1 — MERGED
-Merge Commit: 693e17be652cdd4f82cdfe6da2bef89f6529103c
-Governance Hardening PR: #2 — MERGED
-Governance Hardening Merge Commit: 6ed41e3be169390a98f30114973595d91250d982
-Human Start Approval: GRANTED
-Authorized Scope: V1-C01 — Repository Baseline only
-ROADMAP_ALIGNMENT_GATE: PASS
+Card ID: V1-C02
+Title: Domain Models
+State: READY_FOR_DELIVERY
+Branch: card/v1-c02-domain-models
+Start Commit: 4b3d8b8615b148c91454ff298a76d0140035c92a
+Delivery Commit: NOT_CREATED — pending approved Git delivery
+PR: NOT_CREATED — pending approved Git delivery
+Merge Commit: NOT_CREATED
+Human Start Approval: GRANTED — explicit human authorization for V1-C02
+Authorized Scope: V1-C02 — Domain Models only
+ROADMAP_ALIGNMENT_GATE: PASS — pre-write inspection complete
 CARD_QUALITY_GATE: PASS
 ```
 
 Safe Checkpoint:
 
-V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, and merge are complete. Domain/application business implementation has not started.
-FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — current-state representations reconciled after final delivery.
+C02 domain contracts and focused validation are complete on the dedicated Card branch. V1-C02 is READY_FOR_DELIVERY; V1-C03 and later implementation has not started and is not authorized.
+V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
+FINAL_CARD_STATE_CONSISTENCY_GATE: NOT_RUN — V1-C02 has not reached final delivery.
 
 ## 6. Authorization Ledger
 
 ```
-Card Start: GRANTED — V1-C01 only
-Next Card: NOT_GRANTED
+Card Start: GRANTED — V1-C02 only
+Next Card: NOT_GRANTED — V1-C03 and later Cards remain unauthorized
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 Architecture Change: NOT_GRANTED
 Material Scope Change: NOT_GRANTED
@@ -174,7 +173,7 @@ Read-only inspection: ALLOWED
 Governance final audit: COMPLETE / READ_ONLY
 ```
 
-V1-C01 implementation authorization was consumed by completion; no later Card is authorized.
+V1-C02 implementation authorization is active for the bounded Domain Models scope; no later Card is authorized.
 
 ## 7. Roadmap Position
 
@@ -182,9 +181,10 @@ V1-C01 implementation authorization was consumed by completion; no later Card is
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline
-Active Card: NONE
+Active Card: V1-C02
 Next Roadmap Card: V1-C02 — Domain Models
 V1-C01 Start Approval: YES
+V1-C02 Start Approval: YES — explicit human authorization
 Later Cards: NOT_AUTHORIZED
 ```
 
@@ -192,7 +192,7 @@ V1-C01 start authorization was consumed by completion. Being next in sequence do
 
 ## 8. Current Blockers and Pending Control
 
-No implementation, validation, or delivery blocker remains for V1-C01. Final reconciliation confirms the Card is COMPLETE.
+V1-C02 implementation and validation are complete. Git delivery remains pending separate GIT_DELIVERY_APPROVAL.
 
 Governance remaining actions: NONE.
 
@@ -212,15 +212,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: C01 scope, ownership, dependencies, boundaries, validation, and authorization were verified before implementation.
+Reason: V1-C02 identity, scope, ownership, dependency posture, boundaries, and explicit human authorization were verified before implementation.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / INSPECTION RECORDED IN SESSION
-Risk Map: COMPLETE / INSPECTION RECORDED IN SESSION
-Reason: C01 pre-write inspection completed before implementation.
+Contract Map: COMPLETE / V1-C02 pre-write inspection recorded in session
+Risk Map: COMPLETE / V1-C02 pre-write inspection recorded in session
+Reason: V1-C02 pre-write inspection completed before implementation.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -296,7 +296,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C01_COMPLETE
+Checkpoint Type: V1_C02_ACTIVE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -304,8 +304,8 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: NONE
+Application implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / LATER DOMAIN LOGIC NOT_STARTED
+Active Card: V1-C02
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -331,7 +331,7 @@ These are governance decisions, not implementation claims.
 | Card | Title | State | Start Approved | Quality Gate | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | V1-C01 | Repository Baseline | COMPLETE | YES | PASS | PRESENT |
-| V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C02 | Domain Models | READY_FOR_DELIVERY | YES | PASS | PRESENT — implementation and validation evidence |
 | V1-C03 | Synthetic Historical Data | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C04 | Quote Calculation Engine | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C05 | Historical Comparison Engine | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -351,7 +351,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01 is COMPLETE. Active Card is NONE. Later Cards remain not authorized.
+V1-C01 is COMPLETE. V1-C02 is the sole authorized Active Card and is READY_FOR_DELIVERY. V1-C03 and later Cards remain not authorized.
 
 ## 19. Resume Protocol
 
@@ -382,15 +382,15 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / DOMAIN IMPLEMENTATION NOT_STARTED
-Active Card: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / LATER DOMAIN LOGIC NOT_STARTED
+Active Card: V1-C02
 Next Roadmap Card: V1-C02 — Domain Models
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: None. V1-C01 is complete; obtain separate human authorization before starting V1-C02.
+Safe next action: Obtain GIT_DELIVERY_APPROVAL for the validated V1-C02 delivery state; do not start V1-C03 or later Cards.
 
 Do not start any later Card automatically.
 

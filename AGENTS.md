@@ -70,19 +70,29 @@ For Card implementation or resume, read in this order:
     → executable temporary-fixture governance regression checks
     Status now: CREATED / CANONICAL
 
-15. SOURCE_ADAPTATION_TRACEABILITY.md
+15. scripts/reconcile_governance_views.py
+    → deterministic reconciliation of explicitly generated governance views
+    Status now: CREATED / CANONICAL
+
+16. SOURCE_ADAPTATION_TRACEABILITY.md
     → external-source study, adaptation/reuse decision, license awareness,
       what was and was not taken, risks, Card linkage, and evidence/learning
       linkage
     Status now: CREATED / CANONICAL
 
-16. GOVERNANCE_HARNESS_PROOF_CASES.md
+17. GOVERNANCE_HARNESS_PROOF_CASES.md
     → formal governance proof scenarios; not executed-test evidence
     Status now: CREATED / CANONICAL
 
 During governance migration also read PROJECT_MIGRATION_STATUS.md.
 
 Do not load every file indiscriminately.
+
+After updating Card evidence or learning, run the generic generated-view
+reconciliation tool: `python scripts/reconcile_governance_views.py --write`
+then `python scripts/reconcile_governance_views.py --check`. It may rewrite
+only explicitly generated Evidence Map blocks; PROJECT_CONTROL.md remains the
+sole live-state authority.
 
 For ownership, PROJECT_CONTROL.md is the sole owner of live operational state and authorization. QUOTATION_CARD_SPECIFICATIONS.md defines what a Card is intended to build, QUOTATION_CARD_EVIDENCE_MAP.md records what was actually observed and proven, and CARD_LEARNING_AND_DECISION_LOG.md records why decisions were made, what problems occurred, why they occurred, how they were fixed, and what was learned. Runtime Git commands own current Git facts. PROJECT_MIGRATION_STATUS.md is a frozen historical migration snapshot, not a current-state or authorization authority.
 

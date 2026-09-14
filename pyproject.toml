@@ -3,7 +3,9 @@ name = "ai-quotation-intelligence"
 version = "0.1.0"
 description = "Local-first AI quotation intelligence system baseline"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pydantic>=2.0,<3.0",
+]
 
 [project.optional-dependencies]
 dev = [

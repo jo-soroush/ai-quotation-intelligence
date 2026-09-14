@@ -199,63 +199,63 @@ Shared typed semantics prevent later calculation, evidence, AI, API, and storage
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Implemented a provider-neutral `domain` package containing strict Pydantic contracts for Money, Hours, Quote, QuoteItem, ProjectOutcome, HistoricalQuote, NewQuoteRequest, VarianceResult, SimilarQuote, RiskEvidence, RiskSuggestion, DraftQuote, ApprovalDecision, AgentRequest, and AgentResult. The models validate shape, required fields, explicit units/currency, non-negative numeric values, status boundaries, nested currency consistency, provenance, and serialization. They do not calculate totals, compare history, retrieve records, analyze risk, invoke AI, or persist data.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The domain package is the Core owner of quotation concepts. `Money` keeps amount and currency together; `Hours` keeps the time unit explicit; estimated and actual values are separate optional fields so missing actuals remain unknown. Strict extra-field rejection prevents accidental provider payloads from becoming domain state. Drafts cannot be approved or contain an approved nested quote, and evidence/suggestion records require explicit source identifiers. Historical quote provenance must agree with the nested quote provenance.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+Pydantic 2 was selected because the C02 contract explicitly requires Pydantic contracts and it provides deterministic validation plus JSON round-tripping without introducing an API or provider framework. Decimal is used for monetary and measured values to avoid binary floating-point representation in the contract layer. Standard-library datetime and enums keep the Core provider-neutral.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives considered were plain dataclasses, unconstrained dictionaries, and a larger domain framework. Plain dataclasses would require separately rebuilding validation and serialization; dictionaries would not provide stable contracts; a larger framework would add scope and dependencies without C02 need.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+The selected approach satisfies the explicit Pydantic requirement while keeping the package independent of FastAPI, AWS SDKs, Bedrock, S3, persistence, and calculation services. Later Cards can consume these contracts without making the models responsible for their behavior.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Pydantic 2 (`pydantic>=2.0,<3.0`) was added as the sole runtime dependency. Pytest remains the existing development dependency. No provider, API, persistence, data-generation, or agent dependency was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Pydantic was required by the canonical C02 Roadmap contract. The existing pytest setup was retained so the baseline and C02 behavior run through one command.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first C02 test run failed because a fixture assumed lowercase currency would be normalized, while the contract intentionally requires an explicit uppercase three-letter code. A governance regression run also failed five cases because its temporary fixtures copied mutable active-C02 state instead of a committed completed-C01 baseline. The pre-delivery audit then exposed two cross-model validation gaps and one contradictory live-state label.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The currency fixture was corrected to use the explicit contract form. The governance fixture builder was changed to source fixtures from committed `HEAD`, isolating regression scenarios from the live Card state while continuing to invoke the real validator. Model-level validators now reject approved nested drafts and mismatched historical provenance; PROJECT_CONTROL now has one C02 lifecycle state.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+`.venv/bin/pytest -q` passed before these targeted repairs with 9 tests and passed after the repairs with 14 tests. New regression tests cover allowed and approved-nested drafts plus consistent REAL/SYNTHETIC and mismatched provenance. Model import, configuration loading, JSON serialization, negative-hours rejection, nested-currency rejection, shell syntax, `git diff --check`, and the governance suite passed. The governance suite reported 23/23 cases passing after the fixture fix. The C02 READY_FOR_DELIVERY consistency validator also passed after reconciliation.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+Evidence is recorded in the V1-C02 section of QUOTATION_CARD_EVIDENCE_MAP.md. Historical validation events include the initial 9-test run and the post-repair 14-test run; the governance regression suite completed with 23 passed cases before the generated-view cases were added. The Evidence Map is authoritative for the latest observed result. Git delivery remains pending.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Decimal and explicit currency/unit wrappers improve safety but leave arithmetic and currency conversion to later Cards. Cross-model validators are necessary where a valid nested object can still form an invalid aggregate. Some concepts remain intentionally permissive because their business semantics belong to later calculation, comparison, risk, agent, and approval Cards.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+C02 demonstrated that stable contracts should encode boundaries without embedding use-case behavior. Keeping estimates, actuals, provenance, and evidence links explicit prevents later services or models from silently inventing commercial truth. Field-by-field validity is insufficient: nested state and cross-model provenance must also be checked. Governance views that can change must be generated from PROJECT_CONTROL.md and exact Card evidence sections; mutable latest results belong in the Evidence Map, while this log preserves historical events and learning.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+C02 supplies the typed foundation for C03 synthetic history and later deterministic services. Do not add calculation, retrieval, risk, AI, persistence, API, or export behavior to these models for convenience; extend a contract only when the owning Card and canonical specification require it.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C03 can build synthetic historical records against these contracts. Later Cards can consume stable provider-neutral types while retaining ownership of calculations, comparison, retrieval, risk, agents, approval, export, API, and persistence. C03 remains unstarted and unauthorized.
 
 ## V1-C03 — Synthetic Historical Data
 

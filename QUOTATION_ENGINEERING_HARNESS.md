@@ -104,6 +104,8 @@ Instructions
 → Implement
 → Validate
 → Record Evidence
+→ GOVERNANCE_RECONCILIATION --write
+→ GOVERNANCE_VIEW_RECONCILIATION_GATE --check
 → Checkpoint
 → Accept / Fix / Rollback
 → Prove Exit Gate
@@ -696,7 +698,7 @@ TECHNOLOGY_CHANGE_REQUEST
 
 ## 17. Evidence Update Rule
 
-After meaningful implementation or validation, update QUOTATION_CARD_EVIDENCE_MAP.md incrementally.
+After meaningful implementation or validation, update QUOTATION_CARD_EVIDENCE_MAP.md incrementally. Record mutable/latest validation evidence in the Evidence Map; the Learning Log may preserve validation results only as dated or explicitly historical events and must not act as a current status dashboard. Before final quality proof or READY_FOR_DELIVERY, run `python scripts/reconcile_governance_views.py --write` followed by `python scripts/reconcile_governance_views.py --check`. Only explicitly generated Evidence Map blocks may be changed by the reconciliation tool; detailed Card evidence remains manual and authoritative for observed facts.
 
 Record only:
 

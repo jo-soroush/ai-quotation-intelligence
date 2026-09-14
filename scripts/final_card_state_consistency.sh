@@ -8,6 +8,7 @@ set -o pipefail
 CARD_ID="${1:-}"
 EXPECTED_STATE="${2:-COMPLETE}"
 ROOT="${3:-$(pwd)}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -z "$CARD_ID" || ! "$CARD_ID" =~ ^V1-C(0[1-9]|1[0-9]|20)$ ]]; then
   printf 'usage: bash scripts/final_card_state_consistency.sh V1-C01 [COMPLETE|READY_FOR_DELIVERY|ACTIVE|UNSTARTED] [ROOT]\n' >&2
@@ -20,6 +21,13 @@ case "$EXPECTED_STATE" in
 esac
 
 cd "$ROOT" || exit 2
+
+if ! python3 "$SCRIPT_DIR/reconcile_governance_views.py" --check --root "$ROOT"; then
+  printf 'FINAL_CARD_STATE_CONSISTENCY_GATE: FAIL\n'
+  printf 'STATE_RECONCILIATION_REQUIRED\n'
+  printf 'STOP\n'
+  exit 1
+fi
 
 failures=0
 pass() { printf 'PASS  %s\n' "$1"; }
@@ -168,7 +176,7 @@ case "$EXPECTED_STATE" in
     has_text "$evidence_section" "Learning Documentation Status:" && has_text "$evidence_section" "CURRENT" && pass "Learning documentation evidence is current" || fail "Learning documentation evidence is not current"
     has_text "$git_section" "PR: MERGED" && has_text "$git_section" "Merge: COMPLETED" && pass "Historical Git delivery evidence is complete" || fail "Historical Git delivery evidence is incomplete"
     table_matches "$evidence_table_section" COMPLETE YES PASS PROVEN PASS PRESENT COMPLETE && pass "Evidence Map status table agrees with completed Card" || fail "Evidence Map status table contradicts completed Card"
-    has_text "$evidence_summary_section" "$CARD_ID Exit Gate Evidence is PROVEN" && has_text "$evidence_summary_section" "$CARD_ID CARD_QUALITY_GATE is PASS" && pass "Evidence Map summary gates agree with completed Card" || fail "Evidence Map summary gates contradict completed Card"
+    has_text "$evidence_summary_section" "$CARD_ID: COMPLETE" && has_text "$evidence_summary_section" "Active Card: NONE" && pass "Evidence Map summary agrees with completed Card" || fail "Evidence Map summary contradicts completed Card"
     ;;
   READY_FOR_DELIVERY)
     has_exact_line "$approval_section" "YES" && pass "Human start approval is recorded" || fail "Human start approval is missing"
