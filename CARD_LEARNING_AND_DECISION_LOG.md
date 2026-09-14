@@ -275,63 +275,63 @@ Historical comparison and risk evidence require repeatable portfolio data while 
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Built `ai_quotation_intelligence.data.synthetic_history`, a deterministic in-memory generator of 40 fictional `HistoricalQuote` records. Each record contains three work items, estimated item hours and rates, an observed actual-hours outcome, explicit synthetic provenance, a source identifier, and controlled outcome context.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The generator owns data construction only. C02 `HistoricalQuote`, `Quote`, `QuoteItem`, `Hours`, and `Money` remain the validation boundary; no parallel schema or authoritative total calculation was introduced.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+Standard Python collections, `datetime`, `Decimal`, and the existing Pydantic domain contracts were sufficient. A fixed ordered pattern catalog and deterministic case numbering provide reproducibility without a random seed or external dependency.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives were a checked-in static JSON dataset, seeded random generation, or a larger data-factory dependency.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Static JSON would duplicate schema construction and weaken direct contract validation; random generation would make controlled business patterns harder to inspect; a dependency would add no value for this local foundation. The small explicit catalog keeps the records reviewable and repeatable.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard library plus the existing Pydantic C02 contracts. No AWS, Bedrock, FastAPI, persistence, or analytics library was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+The standard library and existing domain contracts were enough to express deterministic dates, Decimal quantities, and nested validation without provider coupling.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The independent pre-delivery audit found that the initial `under_estimate` rows had actual hours below estimated hours, reversing their meaning. It also found that the first pattern test asserted labels and counts but not numeric relationships.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The root cause was an incorrect pair of deterministic template values combined with label-only regression coverage. The generator remained within scope; the defect was in dataset semantics, not a C04 calculation requirement.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The repaired generator uses actual-hours values above estimated hours for under-estimate and overrun patterns, below estimates for over-estimate, and within five hours for near-estimate. Five focused C03 tests now prove these relationships, alongside 40 unique valid records, multi-item structure, synthetic provenance, deterministic repeatability, and estimated/actual separation.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+The generator is intentionally in-memory and does not persist a file. Pattern labels and supplied outcomes are controlled data fixtures for later analysis, not analysis itself; C04 arithmetic and C05 comparison remain future work.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Keep synthetic provenance on both `HistoricalQuote` and nested `Quote`, and continue validating generated records through the C02 models. Do not replace explicit observed outcomes with calculations in C03.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+The generated contracts are intended as inputs for C04 calculation and later comparison, retrieval, risk, agent, approval, export, API, and storage Cards without implementing those behaviors early.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Synthetic provenance is a cross-model invariant: both the historical record and nested quotation must remain explicitly synthetic. Keep generated outcomes as observed fixture values and leave authoritative arithmetic to C04.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C04 can consume the estimated item hours and rates without inheriting a calculation engine. C05 and later Cards can use the controlled labels and outcome fields for comparison and evidence work, while C06+ behavior remains outside this Card.
 
 ## V1-C04 — Quote Calculation Engine
 
