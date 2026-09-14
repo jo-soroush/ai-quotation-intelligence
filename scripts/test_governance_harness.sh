@@ -16,7 +16,9 @@ make_fixture() {
   local name="$1"
   local dir="$TMP_ROOT/$name"
   mkdir -p "$dir"
-  tar -cf - --exclude=.git --exclude=.venv --exclude='__pycache__' --exclude=.pytest_cache . | tar -xf - -C "$dir"
+  # Governance cases use the committed baseline, not mutable live Card state.
+  # The real validator is still invoked from ROOT below.
+  git archive --format=tar HEAD | tar -xf - -C "$dir"
   git -C "$dir" init -q -b main
   git -C "$dir" config user.email governance-test@example.invalid
   git -C "$dir" config user.name governance-test
@@ -26,6 +28,10 @@ make_fixture() {
   git -C "$dir" update-ref refs/remotes/origin/main HEAD
   git -C "$dir" symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
   git -C "$dir" branch --set-upstream-to=origin/main main >/dev/null
+  python3 "$ROOT/scripts/reconcile_governance_views.py" --write --root "$dir" >/dev/null
+  git -C "$dir" add QUOTATION_CARD_EVIDENCE_MAP.md
+  git -C "$dir" commit -qm generated-views
+  git -C "$dir" update-ref refs/remotes/origin/main HEAD
   printf '%s\n' "$dir"
 }
 
@@ -54,7 +60,7 @@ expect_fail() {
 
 case_gc01() { local d; d="$(make_fixture gc01)"; gate_passes V1-C01 COMPLETE "$d"; }
 case_gc02() { local d; d="$(make_fixture gc02)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" '| V1-C01 | Repository Baseline | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |' '| V1-C01 | Repository Baseline | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |'; ! gate_passes V1-C01 COMPLETE "$d"; }
-case_gc03() { local d; d="$(make_fixture gc03)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" 'V1-C01 Exit Gate Evidence is PROVEN' 'V1-C01 Exit Gate Evidence is NOT_PROVEN'; ! gate_passes V1-C01 COMPLETE "$d"; }
+case_gc03() { local d; d="$(make_fixture gc03)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" 'V1-C01: COMPLETE' 'V1-C01: NOT_STARTED'; ! gate_passes V1-C01 COMPLETE "$d"; }
 case_gc04() { local d; d="$(make_fixture gc04)"; replace_once "$d/PROJECT_CONTROL.md" 'Active Card: NONE' 'Active Card: V1-C01'; ! gate_passes V1-C01 COMPLETE "$d"; }
 case_gc05() { local d; d="$(make_fixture gc05)"; replace_once "$d/PROJECT_CONTROL.md" 'Implementation Authorization: C01 scope authorization consumed by completion; later Cards not authorized' 'Implementation Authorization: V1-C01 currently authorized'; ! gate_passes V1-C01 COMPLETE "$d"; }
 case_gc06() { local d; d="$(make_fixture gc06)"; ! gate_passes V1-C99 COMPLETE "$d"; }
@@ -119,6 +125,30 @@ case_card03() { local d; d="$(make_fixture card03)"; replace_once "$d/PROJECT_CO
 case_card04() { future_leakage_blocked NOT_STARTED NO; }
 case_card05() { local d; d="$(make_fixture card05)"; gate_passes V1-C01 COMPLETE "$d" && gate_passes V1-C02 UNSTARTED "$d"; }
 
+view_check() { python3 "$ROOT/scripts/reconcile_governance_views.py" --check --root "$1" >/dev/null 2>&1; }
+view_write() { python3 "$ROOT/scripts/reconcile_governance_views.py" --write --root "$1" >/dev/null 2>&1; }
+card_section() { awk -v card="$1" '/^## V1-C[0-9][0-9] —/{if (found) exit; found = index($0, "## " card " —") == 1} found{print}' "$2"; }
+
+promote_c02_fixture() {
+  local d="$1"
+  replace_once "$d/PROJECT_CONTROL.md" 'Project Phase: V1_C01_COMPLETE' 'Project Phase: V1_C02_ACTIVE'
+  replace_once "$d/PROJECT_CONTROL.md" 'Active Card: NONE' 'Active Card: V1-C02'
+  replace_once "$d/PROJECT_CONTROL.md" '| V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | PENDING |' '| V1-C02 | Domain Models | READY_FOR_DELIVERY | YES | PASS | PRESENT |'
+  replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" $'## V1-C02 — Domain Models\n\n### 1. Card\n\nV1-C02 — Domain Models\n\n### 2. Contract Source\n\nQUOTATION_CARD_SPECIFICATIONS.md\n\nRoadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md.\n\n### 3. State\n\nNOT_STARTED' $'## V1-C02 — Domain Models\n\n### 1. Card\n\nV1-C02 — Domain Models\n\n### 2. Contract Source\n\nQUOTATION_CARD_SPECIFICATIONS.md\n\nRoadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md.\n\n### 3. State\n\nREADY_FOR_DELIVERY'
+  replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" $'### 4. Human Start Approval\n\nNO' $'### 4. Human Start Approval\n\nYES'
+  replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" $'### 7. Focused Tests\n\nNOT_RUN' $'### 7. Focused Tests\n\nPASS'
+  replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" $'### 20. Recommended State\n\nNOT_STARTED' $'### 20. Recommended State\n\nREADY_FOR_DELIVERY'
+}
+
+case_gv01() { local d; d="$(make_fixture gv01)"; view_check "$d"; }
+case_gv02() { local d; d="$(make_fixture gv02)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" '| V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |' '| V1-C02 | Domain Models | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |'; ! view_check "$d"; }
+case_gv03() { local d; d="$(make_fixture gv03)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" 'V1-C02: NOT_AUTHORIZED / NOT_STARTED' 'V1-C02: NOT_AUTHORIZED / COMPLETE'; ! view_check "$d"; }
+case_gv04() { local d; d="$(make_fixture gv04)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" '| V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |' '| V1-C02 | Domain Models | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |'; view_write "$d" && view_check "$d"; }
+case_gv05() { local d; d="$(make_fixture gv05)"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" '| V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |' '| V1-C02 | Domain Models | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |'; view_write "$d" || return 1; cp "$d/QUOTATION_CARD_EVIDENCE_MAP.md" "$d/after-first-write"; view_write "$d" && cmp -s "$d/after-first-write" "$d/QUOTATION_CARD_EVIDENCE_MAP.md"; }
+case_gv06() { local d before after; d="$(make_fixture gv06)"; before="$(card_section V1-C02 "$d/QUOTATION_CARD_EVIDENCE_MAP.md")"; replace_once "$d/QUOTATION_CARD_EVIDENCE_MAP.md" '| V1-C02 | Domain Models | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |' '| V1-C02 | Domain Models | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |'; view_write "$d" || return 1; after="$(card_section V1-C02 "$d/QUOTATION_CARD_EVIDENCE_MAP.md")"; [[ "$before" == "$after" ]]; }
+case_gv07() { local d; d="$(make_fixture gv07)"; replace_once "$d/PROJECT_CONTROL.md" 'Active Card: NONE' 'Active Card: V1-C02'; ! gate_passes V1-C02 READY_FOR_DELIVERY "$d"; }
+case_gv08() { local d; d="$(make_fixture gv08)"; promote_c02_fixture "$d"; view_write "$d" && view_check "$d" && gate_passes V1-C02 READY_FOR_DELIVERY "$d"; }
+
 say "GOVERNANCE_TEST_SUITE: START"
 expect_pass GC-01 case_gc01
 expect_pass GC-02 case_gc02
@@ -143,6 +173,14 @@ expect_pass CARD-02 case_card02
 expect_pass CARD-03 case_card03
 expect_pass CARD-04 case_card04
 expect_pass CARD-05 case_card05
+expect_pass GV-01 case_gv01
+expect_pass GV-02 case_gv02
+expect_pass GV-03 case_gv03
+expect_pass GV-04 case_gv04
+expect_pass GV-05 case_gv05
+expect_pass GV-06 case_gv06
+expect_pass GV-07 case_gv07
+expect_pass GV-08 case_gv08
 say "GOVERNANCE_TEST_SUMMARY:"
 say "PASS=$PASS"
 say "FAIL=$FAIL"

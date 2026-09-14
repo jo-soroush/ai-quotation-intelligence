@@ -532,7 +532,24 @@ The future suite should:
 
 No testing library is prescribed here.
 
-## 7. Recorded C01 Context (Not Live State)
+## 7. Generated Governance-View Reconciliation Cases
+
+These cases are executed by `scripts/test_governance_harness.sh` using
+temporary fixtures and the real reconciliation tool/validator. They are not
+Card implementation evidence.
+
+| Case | Scenario | Expected Result | Observed Result |
+| --- | --- | --- | --- |
+| GV-01 | Generated views synchronized | PASS | PASS |
+| GV-02 | Current Card Table stale | FAIL from `--check` | PASS |
+| GV-03 | Current Summary stale | FAIL from `--check` | PASS |
+| GV-04 | `--write` repairs stale views | PASS | PASS |
+| GV-05 | Second `--write` is idempotent | No diff | PASS |
+| GV-06 | Detailed Card evidence preserved | Unchanged | PASS |
+| GV-07 | Control state changes without reconciliation | Validator FAIL | PASS |
+| GV-08 | Reconciled fixture validates | Validator PASS | PASS |
+
+## 8. Recorded C01 Context (Not Live State)
 
 ```text
 Core Proof Cases Defined: 19
