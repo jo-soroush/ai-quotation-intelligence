@@ -74,13 +74,17 @@ For Card implementation or resume, read in this order:
     → deterministic reconciliation of explicitly generated governance views
     Status now: CREATED / CANONICAL
 
-16. SOURCE_ADAPTATION_TRACEABILITY.md
+16. scripts/governance_fixture_builder.py
+    → explicit temporary governance-fixture state construction
+    Status now: CREATED / CANONICAL
+
+17. SOURCE_ADAPTATION_TRACEABILITY.md
     → external-source study, adaptation/reuse decision, license awareness,
       what was and was not taken, risks, Card linkage, and evidence/learning
       linkage
     Status now: CREATED / CANONICAL
 
-17. GOVERNANCE_HARNESS_PROOF_CASES.md
+18. GOVERNANCE_HARNESS_PROOF_CASES.md
     → formal governance proof scenarios; not executed-test evidence
     Status now: CREATED / CANONICAL
 

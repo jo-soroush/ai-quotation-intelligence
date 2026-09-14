@@ -549,7 +549,24 @@ Card implementation evidence.
 | GV-07 | Control state changes without reconciliation | Validator FAIL | PASS |
 | GV-08 | Reconciled fixture validates | Validator PASS | PASS |
 
-## 8. Recorded C01 Context (Not Live State)
+## 8. Governance Fixture-Independence Cases
+
+These cases verify that the regression suite owns scenario state instead of
+depending on the live repository lifecycle. They are executed by
+`scripts/test_governance_harness.sh` with the standard-library fixture builder.
+
+| Case | Scenario | Expected Result | Observed Result |
+| --- | --- | --- | --- |
+| HF-01 | C01 complete / C02 unstarted while live C02 is complete | PASS | PASS |
+| HF-02 | C01 and C02 complete / C03 unstarted | PASS | PASS |
+| HF-03 | C01 through C05 complete / C06 unstarted | PASS | PASS |
+| HF-04 | Independent scenarios remain semantically independent | PASS | PASS |
+| HF-05 | Fixture factory returns a valid path | PASS | PASS |
+| HF-06 | Git diagnostics cannot contaminate fixture path data | PASS | PASS |
+| HF-07 | No-op generated-view setup is deterministic | PASS | PASS |
+| HF-08 | Fixture preparation failure stops cleanly | PASS | PASS |
+
+## 9. Recorded C01 Context (Not Live State)
 
 ```text
 Core Proof Cases Defined: 19
@@ -566,7 +583,7 @@ GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #1 merged
 Recorded Git Context at completion: YES
 ```
 
-## 8. Relationship to Canonical Files
+## 10. Relationship to Canonical Files
 
 ```text
 GOVERNANCE_HARNESS_PROOF_CASES.md → formal governance proof scenarios
@@ -577,7 +594,7 @@ CARD_LEARNING_AND_DECISION_LOG.md → learning/rationale from actual implementat
 PROJECT_CONTROL.md → live state and authorization
 ```
 
-## 9. Final Principle
+## 11. Final Principle
 
 ```text
 A GOVERNANCE RULE IS NOT PROVEN BECAUSE IT IS WRITTEN.

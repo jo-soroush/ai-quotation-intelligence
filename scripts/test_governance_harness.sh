@@ -16,22 +16,51 @@ make_fixture() {
   local name="$1"
   local dir="$TMP_ROOT/$name"
   mkdir -p "$dir"
-  # Governance cases use the committed baseline, not mutable live Card state.
-  # The real validator is still invoked from ROOT below.
-  git archive --format=tar HEAD | tar -xf - -C "$dir"
-  git -C "$dir" init -q -b main
-  git -C "$dir" config user.email governance-test@example.invalid
-  git -C "$dir" config user.name governance-test
-  git -C "$dir" add .
-  git -C "$dir" commit -qm fixture
-  git -C "$dir" remote add origin https://example.invalid/ai-quotation-intelligence.git
-  git -C "$dir" update-ref refs/remotes/origin/main HEAD
-  git -C "$dir" symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
-  git -C "$dir" branch --set-upstream-to=origin/main main >/dev/null
-  python3 "$ROOT/scripts/reconcile_governance_views.py" --write --root "$dir" >/dev/null
-  git -C "$dir" add QUOTATION_CARD_EVIDENCE_MAP.md
-  git -C "$dir" commit -qm generated-views
-  git -C "$dir" update-ref refs/remotes/origin/main HEAD
+  python3 "$ROOT/scripts/governance_fixture_builder.py" \
+    --source-root "$ROOT" --root "$dir" \
+    --completed V1-C01 --active NONE --next V1-C02 --next-state NOT_STARTED >/dev/null
+  [[ -d "$dir" && -f "$dir/PROJECT_CONTROL.md" && -f "$dir/QUOTATION_CARD_EVIDENCE_MAP.md" ]] || return 1
+  git -C "$dir" init -q -b main >/dev/null 2>&1 || return 1
+  git -C "$dir" config user.email governance-test@example.invalid >/dev/null 2>&1 || return 1
+  git -C "$dir" config user.name governance-test >/dev/null 2>&1 || return 1
+  git -C "$dir" add . >/dev/null 2>&1 || return 1
+  git -C "$dir" commit -qm fixture >/dev/null 2>&1 || return 1
+  git -C "$dir" remote add origin https://example.invalid/ai-quotation-intelligence.git >/dev/null 2>&1 || return 1
+  git -C "$dir" update-ref refs/remotes/origin/main HEAD >/dev/null 2>&1 || return 1
+  git -C "$dir" symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main >/dev/null 2>&1 || return 1
+  git -C "$dir" branch --set-upstream-to=origin/main main >/dev/null 2>&1 || return 1
+  python3 "$ROOT/scripts/reconcile_governance_views.py" --write --root "$dir" >/dev/null 2>&1 || return 1
+  if ! git -C "$dir" diff --quiet -- QUOTATION_CARD_EVIDENCE_MAP.md; then
+    git -C "$dir" add QUOTATION_CARD_EVIDENCE_MAP.md >/dev/null 2>&1 || return 1
+    git -C "$dir" commit -qm generated-views >/dev/null 2>&1 || return 1
+  fi
+  git -C "$dir" update-ref refs/remotes/origin/main HEAD >/dev/null 2>&1 || return 1
+  printf '%s\n' "$dir"
+}
+
+make_fixture_state() {
+  local name="$1" completed="$2" active="$3" active_state="$4" next_card="$5" next_state="$6"
+  local dir="$TMP_ROOT/$name"
+  mkdir -p "$dir"
+  python3 "$ROOT/scripts/governance_fixture_builder.py" \
+    --source-root "$ROOT" --root "$dir" --completed "$completed" --active "$active" \
+    --active-state "$active_state" --next "$next_card" --next-state "$next_state" >/dev/null || return 1
+  [[ -d "$dir" && -f "$dir/PROJECT_CONTROL.md" && -f "$dir/QUOTATION_CARD_EVIDENCE_MAP.md" ]] || return 1
+  git -C "$dir" init -q -b main >/dev/null 2>&1 || return 1
+  git -C "$dir" config user.email governance-test@example.invalid >/dev/null 2>&1 || return 1
+  git -C "$dir" config user.name governance-test >/dev/null 2>&1 || return 1
+  git -C "$dir" add . >/dev/null 2>&1 || return 1
+  git -C "$dir" commit -qm fixture >/dev/null 2>&1 || return 1
+  git -C "$dir" remote add origin https://example.invalid/ai-quotation-intelligence.git >/dev/null 2>&1 || return 1
+  git -C "$dir" update-ref refs/remotes/origin/main HEAD >/dev/null 2>&1 || return 1
+  git -C "$dir" symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main >/dev/null 2>&1 || return 1
+  git -C "$dir" branch --set-upstream-to=origin/main main >/dev/null 2>&1 || return 1
+  python3 "$ROOT/scripts/reconcile_governance_views.py" --write --root "$dir" >/dev/null 2>&1 || return 1
+  if ! git -C "$dir" diff --quiet -- QUOTATION_CARD_EVIDENCE_MAP.md; then
+    git -C "$dir" add QUOTATION_CARD_EVIDENCE_MAP.md >/dev/null 2>&1 || return 1
+    git -C "$dir" commit -qm generated-views >/dev/null 2>&1 || return 1
+  fi
+  git -C "$dir" update-ref refs/remotes/origin/main HEAD >/dev/null 2>&1 || return 1
   printf '%s\n' "$dir"
 }
 
@@ -149,6 +178,15 @@ case_gv06() { local d before after; d="$(make_fixture gv06)"; before="$(card_sec
 case_gv07() { local d; d="$(make_fixture gv07)"; replace_once "$d/PROJECT_CONTROL.md" 'Active Card: NONE' 'Active Card: V1-C02'; ! gate_passes V1-C02 READY_FOR_DELIVERY "$d"; }
 case_gv08() { local d; d="$(make_fixture gv08)"; promote_c02_fixture "$d"; view_write "$d" && view_check "$d" && gate_passes V1-C02 READY_FOR_DELIVERY "$d"; }
 
+case_hf01() { local d; d="$(make_fixture_state hf01 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; [[ -d "$d" ]] && gate_passes V1-C01 COMPLETE "$d" && gate_passes V1-C02 UNSTARTED "$d"; }
+case_hf02() { local d; d="$(make_fixture_state hf02 V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; [[ -d "$d" ]] && view_check "$d"; }
+case_hf03() { local d; d="$(make_fixture_state hf03 V1-C01,V1-C02,V1-C03,V1-C04,V1-C05 NONE ACTIVE V1-C06 NOT_STARTED)"; [[ -d "$d" ]] && view_check "$d"; }
+case_hf04() { local before after; before="$(make_fixture_state hf04 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; after="$(make_fixture_state hf04b V1-C01,V1-C02 NONE ACTIVE V1-C03 NOT_STARTED)"; [[ -d "$before" && -d "$after" && "$before" != "$after" ]]; }
+case_hf05() { local d; d="$(make_fixture_state hf05 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; [[ "$d" == "$TMP_ROOT/hf05" && -d "$d" ]]; }
+case_hf06() { local d output; output="$(make_fixture_state hf06 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; [[ "$output" != *"On branch"* && "$output" == "$TMP_ROOT/hf06" ]]; }
+case_hf07() { local d; d="$(make_fixture_state hf07 V1-C01 NONE ACTIVE V1-C02 NOT_STARTED)"; [[ -d "$d" ]] && view_check "$d"; }
+case_hf08() { local d="$TMP_ROOT/hf08"; ! make_fixture_state hf08 V1-C01 NONE ACTIVE BAD_STATE V1-C02 NOT_STARTED; }
+
 say "GOVERNANCE_TEST_SUITE: START"
 expect_pass GC-01 case_gc01
 expect_pass GC-02 case_gc02
@@ -181,6 +219,14 @@ expect_pass GV-05 case_gv05
 expect_pass GV-06 case_gv06
 expect_pass GV-07 case_gv07
 expect_pass GV-08 case_gv08
+expect_pass HF-01 case_hf01
+expect_pass HF-02 case_hf02
+expect_pass HF-03 case_hf03
+expect_pass HF-04 case_hf04
+expect_pass HF-05 case_hf05
+expect_pass HF-06 case_hf06
+expect_pass HF-07 case_hf07
+expect_pass HF-08 case_hf08
 say "GOVERNANCE_TEST_SUMMARY:"
 say "PASS=$PASS"
 say "FAIL=$FAIL"
