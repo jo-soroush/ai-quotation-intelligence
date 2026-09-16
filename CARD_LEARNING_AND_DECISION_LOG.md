@@ -499,63 +499,63 @@ Comparable history provides context for quotation intelligence, but simple expla
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Implemented deterministic similar-quotation retrieval over validated C02 `Quote`, `NewQuoteRequest`, and `HistoricalQuote` contracts. Results reuse the C02 `SimilarQuote` model and retain source ID and synthetic provenance in a typed C06 match boundary.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+V1 retrieval uses explainable structured feature overlap: normalized project-name tokens, work-item description tokens, and item-count agreement. Scores use Decimal arithmetic, results are ordered by descending score with quote ID/source ID tie-breakers, and commercial values are never copied into results.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The existing C02 contracts expose stable structured quotation fields without requiring a new schema or provider dependency. Simple overlap is inspectable and reproducible for V1 while similarity remains contextual rather than authoritative.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives were embeddings, vector search/RAG, opaque model ranking, and copying historical prices or effort into the result.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those alternatives would add C06-external infrastructure or make contextual similarity appear to be commercial truth. Price/effort copying is explicitly outside C06.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard library `Decimal`, `dataclasses`, regular expressions, and existing Pydantic domain models. No dependency was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Decimal keeps scores deterministic; frozen dataclasses retain typed source identity and provenance without duplicating quotation schemas.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+No implementation failure was observed. The main boundary decision was retaining provenance and source identity because the existing `SimilarQuote` model intentionally contains only contextual result fields.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The C02 `SimilarQuote` contract does not itself carry source ID or data origin, while C06 requires stable identity/provenance evidence. The C06 match wrapper preserves those fields without altering the C02 model.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The retrieval boundary returns `SimilarQuoteMatch`, combining the validated C02 result with source ID and provenance; it validates currency compatibility, handles empty/limited inputs, and applies stable deterministic ordering.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+Focused C06 tests passed 8 tests; the full suite passed 48 tests. Coverage includes ranking sanity, stable ties, limits, empty/small history, invalid limits, currency mismatch, C03 integration, immutability, provenance, and no commercial-value copying.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The V1 feature set is intentionally limited to structured token overlap and item-count agreement. It does not provide embeddings, vector databases, RAG, semantic retrieval, pricing, risk, AI, or infrastructure.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Retrieval must expose why a record matched and must preserve historical provenance; stable tie-breaking prevents otherwise identical inputs from producing ambiguous evidence.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Future maintainers must keep SimilarQuote results contextual, preserve C03 source records, and avoid turning C06 ranking into price copying or C07 risk logic.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C06 provides bounded comparable-quotation references for later evidence/risk workflows without implementing RiskEvidence, AI interpretation, or approval behavior.
 
 ## V1-C07 — Risk Evidence Engine
 
