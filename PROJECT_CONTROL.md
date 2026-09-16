@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C04_READY_FOR_DELIVERY
+Project Phase: V1_C04_COMPLETE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE READY_FOR_DELIVERY
-Active Card: V1-C04
-Active Card State: READY_FOR_DELIVERY
-Last COMPLETE Card: V1-C03 — Synthetic Historical Data
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED
+Active Card: NONE
+Active Card State: NONE
+Last COMPLETE Card: V1-C04 — Quote Calculation Engine
 Next Roadmap Card: V1-C05 — Historical Comparison Engine
 Next Card Authorized: NO — V1-C05 and later Cards remain unauthorized
-Implementation Authorization: GRANTED — V1-C04 only; V1-C05 and later Cards not authorized
+Implementation Authorization: CONSUMED — V1-C04 authorization consumed by completion; V1-C05 and later Cards not authorized
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
 Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
@@ -134,12 +134,12 @@ Do not infer external AWS setup into repository implementation state.
 ```
 Card ID: V1-C04
 Title: Quote Calculation Engine
-State: READY_FOR_DELIVERY
+State: COMPLETE
 Branch: card/v1-c04-quote-calculation-engine
-Start Commit: NOT_CREATED — implementation began from main working state
-Delivery Commit: NOT_CREATED
-PR: NOT_CREATED
-Merge Commit: NOT_CREATED
+Start Commit: a3cd0e8472c53553ce646ceece2e217e02ccc157
+Delivery Commit: 266884504a40584d9d7497a648beb1268c8f827f
+PR: MERGED — #9
+Merge Commit: 3ed46f0ce81ccf502e5d2833ce2e7e9a33c1801b
 Human Start Approval: GRANTED — explicit human authorization for V1-C04
 Authorized Scope: V1-C04 — Quote Calculation Engine only
 ROADMAP_ALIGNMENT_GATE: PASS — pre-write inspection complete
@@ -155,35 +155,35 @@ FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C02 delivery and final reconcilia
 ## 6. Authorization Ledger
 
 ```
-Card Start: GRANTED — V1-C04 only
+Card Start: CONSUMED — V1-C04 complete
 Next Card: NOT_GRANTED — V1-C05 and later Cards remain unauthorized
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
-V1-C04: START APPROVAL GRANTED (CURRENT HUMAN AUTHORIZATION)
+V1-C04: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 Architecture Change: NOT_GRANTED
 Material Scope Change: NOT_GRANTED
 Significant Technology Addition: NOT_GRANTED
 Sensitive Credential Use: NOT_GRANTED
 External Write/Action Capability: NOT_GRANTED
-Commit: COMPLETED — 2041479 (historical C03 delivery)
-Push: COMPLETED — origin/card/v1-c03-synthetic-historical-data (historical C03 delivery)
-GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #7 merged (historical C03 delivery)
-PR: MERGED — #7 (historical C03 delivery)
-Merge: COMPLETED — 9fd7673bbb31167857f8d8f5f468d5631cde302d (historical C03 delivery)
+Commit: COMPLETED — 266884504a40584d9d7497a648beb1268c8f827f (C04 delivery)
+Push: COMPLETED — origin/card/v1-c04-quote-calculation-engine (C04 delivery)
+GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #9 merged (C04 delivery)
+PR: MERGED — #9 (C04 delivery)
+Merge: COMPLETED — 3ed46f0ce81ccf502e5d2833ce2e7e9a33c1801b (C04 delivery)
 Deployment/Release: NOT_GRANTED
 Read-only inspection: ALLOWED
 Governance final audit: COMPLETE / READ_ONLY
 ```
 
-V1-C04 implementation authorization is active; no later Card is authorized.
+V1-C04 implementation, validation, delivery, and reconciliation are complete; no later Card is authorized.
 
 ## 7. Roadmap Position
 
 ```
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
-Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data
-Active Card: V1-C04
+Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine
+Active Card: NONE
 Next Roadmap Card: V1-C05 — Historical Comparison Engine
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
@@ -194,7 +194,7 @@ V1-C01 start authorization was consumed by completion. Being next in sequence do
 
 ## 8. Current Blockers and Pending Control
 
-V1-C02 and V1-C03 implementation, validation, Git delivery, and final reconciliation are complete. V1-C04 implementation and validation are complete for pre-delivery state; C05 and later remain unauthorized.
+V1-C02, V1-C03, and V1-C04 implementation, validation, Git delivery, and final reconciliation are complete. C05 and later remain unauthorized.
 
 Governance remaining actions: NONE.
 
@@ -273,7 +273,7 @@ tests/: C01 BASELINE, C02 DOMAIN, C03 SYNTHETIC DATA, and C04 CALCULATION TESTS 
 pytest project baseline: ESTABLISHED
 Evaluation Harness implementation: NOT_STARTED
 Golden Case: NOT_STARTED
-Card tests: C01 BASELINE — 3 PASSED; C02 FULL SUITE — 14 PASSED; C03 focused tests — 5 PASSED; C04 focused tests — 7 PASSED; full suite — 26 PASSED (observed)
+Card tests: C01 BASELINE — 3 PASSED; C02 FULL SUITE — 14 PASSED; C03 focused tests — 5 PASSED; C04 focused tests — PASS (11 PASSED); full suite — 30 PASSED (observed)
 ```
 
 Bootstrap inspection is not V1 Card test evidence.
@@ -286,7 +286,7 @@ Canonical Evidence Map:
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
 Implementation Evidence: V1-C01, V1-C02, V1-C03, and V1-C04 PRESENT; later Cards NONE
-Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data
+Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine
 V1-C01 CARD_QUALITY_GATE: PASS
 Later Card Quality Gates: NOT_RUN
 V1-C01 Exit Gate: PROVEN
@@ -301,7 +301,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C04_READY_FOR_DELIVERY
+Checkpoint Type: V1_C04_COMPLETE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -309,8 +309,9 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE READY_FOR_DELIVERY
-Active Card: V1-C04
+Application implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED
+Active Card: NONE
+Active Card State: NONE
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -338,7 +339,7 @@ These are governance decisions, not implementation claims.
 | V1-C01 | Repository Baseline | COMPLETE | YES | PASS | PRESENT |
 | V1-C02 | Domain Models | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
 | V1-C03 | Synthetic Historical Data | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
-| V1-C04 | Quote Calculation Engine | READY_FOR_DELIVERY | YES | PASS | PRESENT |
+| V1-C04 | Quote Calculation Engine | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
 | V1-C05 | Historical Comparison Engine | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C06 | Similar Quote Retrieval | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C07 | Risk Evidence Engine | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -356,7 +357,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01, V1-C02, and V1-C03 are COMPLETE. V1-C04 is READY_FOR_DELIVERY and is the only active Card; V1-C05 and later remain not authorized.
+V1-C01, V1-C02, V1-C03, and V1-C04 are COMPLETE. No Card is currently active; V1-C05 and later remain not authorized.
 
 ## 19. Resume Protocol
 
@@ -387,9 +388,9 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE READY_FOR_DELIVERY
-Active Card: V1-C04
-Active Card State: READY_FOR_DELIVERY
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED
+Active Card: NONE
+Active Card State: NONE
 Next Roadmap Card: V1-C05 — Historical Comparison Engine
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
@@ -397,7 +398,7 @@ Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: Obtain separate Git delivery approval for V1-C04; do not start V1-C05 automatically.
+Safe next action: Obtain separate explicit human authorization before starting V1-C05; do not start it automatically.
 
 Do not start any later Card automatically.
 
