@@ -457,6 +457,7 @@ Use variance = actual - estimated, handle invalid denominators explicitly, and k
 - calculate percentage variance where valid
 - calculate overrun counts
 - calculate average and median variance where owned here
+- aggregate only observations from one compatible metric and unit domain; reject mixed hours/cost or mixed currencies
 - preserve scope-change context
 - preserve delay/outcome context only where validated data supports it
 - keep all results deterministic and independent of AI
@@ -477,7 +478,7 @@ The Roadmap is authoritative for dependency facts. If a dependency is unclear, s
 
 ### 11. Tests / Evaluation
 
-Estimate/actual separation, positive/negative/zero variance, percentage variance, zero denominator, missing actual values, aggregate counts, average/median calculations where owned, scope-change context, and no AI involvement.
+Estimate/actual separation, positive/negative/zero variance, percentage variance, zero denominator, missing actual values, aggregate counts, average/median calculations where owned, homogeneous metric/unit aggregation, incompatible-unit rejection, scope-change context, and no AI involvement.
 
 Test not run != PASS. Design intent != implementation evidence.
 

@@ -108,6 +108,14 @@ def summarize_variances(
     """Aggregate variance evidence using exact Decimal average and median."""
 
     observations = tuple(variances)
+    if observations:
+        first_metric = observations[0].metric
+        first_unit = observations[0].unit
+        if any(
+            result.metric != first_metric or result.unit != first_unit
+            for result in observations[1:]
+        ):
+            raise ValueError("variance observations must share metric and unit")
     values = tuple(
         _finite(result.variance, "variance")
         for result in observations

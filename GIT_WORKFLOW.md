@@ -179,6 +179,13 @@ These are guidance, not authorization or a mandatory format. Avoid vague message
 
 After an approved commit, verify HEAD changed as expected, the commit exists, it contains intended files, and the working-tree state is understood.
 
+For delivery evidence, resolve the delivery commit from the actual Card branch
+or fetched remote/PR reference and verify the Git object before recording it.
+Confirm the commit subject and Card context, record the exact observed hash,
+and keep the delivery commit distinct from the later merge commit. Do not
+manually invent or approximate immutable hashes, and do not require every
+historical object to remain reachable from current `main` forever.
+
 Record immutable event hashes in the Evidence Map when observed. Do not record
 mutable current HEAD, current branch, or current working-tree values as live
 state in tracked governance files; query those facts from Git.

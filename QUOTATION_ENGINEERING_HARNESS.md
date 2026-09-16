@@ -850,6 +850,13 @@ CARD_QUALITY_GATE: PASS | BLOCKED
 
 If BLOCKED, the Card cannot become COMPLETE.
 
+When an API combines numeric evidence, validation and focused tests must cover
+incompatible semantic combinations in addition to valid arithmetic cases. When
+a Card materially changes public/project-facing capability, review README or
+other public documentation and update it if its claims are affected. Neither
+rule requires README to duplicate live lifecycle state or requires governance
+scripts to enforce application semantics through brittle text checks.
+
 ## 21. Learning Record
 
 Before Card completion, update CARD_LEARNING_AND_DECISION_LOG.md with actual:
