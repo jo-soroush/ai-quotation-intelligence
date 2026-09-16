@@ -349,63 +349,63 @@ Commercial truth must be reproducible and must remain outside AI output so that 
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Implemented `ai_quotation_intelligence.calculation` with deterministic `calculate_item_cost`, `calculate_quote_total`, and `calculate_quote` functions over the existing C02 `QuoteItem`, `Quote`, and `Money` contracts. Item cost is estimated hours multiplied by hourly rate; quote totals are derived by summing those item costs. The implementation does not mutate inputs and performs no historical analysis, provider calls, or workflow orchestration.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The calculation module is separate from, but directly consumes, the C02 domain package. Decimal values are multiplied and summed without float conversion. A supplied estimated total is checked against the derived total rather than trusted as an independent arithmetic source. Existing C02 validation remains responsible for non-negative values, explicit units, explicit currency, required items, and mixed-currency rejection.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+C04 owns commercial arithmetic because deterministic code must remain the source of quotation truth. Keeping this responsibility in a small provider-neutral module makes the result reusable by later Cards without placing calculations in prompts, agents, data generation, APIs, or UI code.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives were floating-point arithmetic, mutating the input Quote, accepting a supplied total without reconciliation, or introducing a duplicate C04 quotation schema. Each would weaken numeric safety, traceability, or the C02 ownership boundary.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+The contract requires Decimal-safe deterministic arithmetic and reuse of C02 models. No rounding or currency-conversion policy is defined, so neither behavior was invented.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard-library `decimal.Decimal` and the existing Pydantic C02 models. No new dependency was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Decimal preserves the exact monetary semantics already established by C02, while ordinary Python functions keep the engine deterministic and provider-neutral.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The independent audit found that the implementation behavior was correct, but focused tests did not explicitly cover missing required inputs or non-finite Decimal values. The main design risk was allowing an independently supplied total to diverge from item arithmetic; the implementation and regression test explicitly guard that boundary.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The potential inconsistency was a contract-boundary risk: Quote permits an optional supplied estimated total while C04 must own the authoritative calculation. Treating that field as an assertion resolves the risk without changing C02.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The engine derives each item cost, sums the derived costs, and rejects a supplied estimated total that does not exactly reconcile. The audit coverage gap was fixed by adding explicit missing-hours, missing-rate, and NaN/Infinity/-Infinity rejection tests. Focused tests now cover one and multiple items, Decimal precision, zero values, invalid inputs, currencies, determinism, and reconciliation.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+Focused C04 tests passed 9 tests; the full suite, reconciliation gate, governance regression, bootstrap, shell/Python syntax checks, and C04 READY_FOR_DELIVERY validator were run after the coverage repair. Exact observed results are recorded in the C04 Evidence Map section.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+C04 intentionally calculates estimated costs only. It does not add rounding, FX conversion, actual-vs-estimate variance, pricing strategy, or historical interpretation because those semantics are not part of the exact C04 contract.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Commercial arithmetic should be simple, deterministic, and independently testable. A total is safer when it is structurally derived from item results, and a pre-existing total must be reconciled rather than silently accepted.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Do not move authoritative arithmetic into later AI or agent layers. Later Cards may consume the calculated Quote, but comparison and evidence analysis must remain separate responsibilities.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C05 can compare validated estimated and observed historical values without reimplementing C04 arithmetic. C06+ Cards can consume stable totals while remaining outside this engine’s scope.
 
 ## V1-C05 — Historical Comparison Engine
 
