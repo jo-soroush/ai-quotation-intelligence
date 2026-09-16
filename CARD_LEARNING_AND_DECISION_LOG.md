@@ -407,9 +407,7 @@ Do not move authoritative arithmetic into later AI or agent layers. Later Cards 
 
 C05 can compare validated estimated and observed historical values without reimplementing C04 arithmetic. C06+ Cards can consume stable totals while remaining outside this engine’s scope.
 
-### 19. Delivery Outcome
-
-C04 was delivered through commit `266884504a40584d9d7497a648beb1268c8f827f`, PR #9, and merge commit `3ed46f0ce81ccf502e5d2833ce2e7e9a33c1801b`. Outcome-only reconciliation moved C04 to COMPLETE and cleared the Active Card; V1-C05 remains unauthorized.
+C04 delivery outcome: delivered through commit `266884504a40584d9d7497a648beb1268c8f827f`, PR #9, and merge commit `3ed46f0ce81ccf502e5d2833ce2e7e9a33c1801b`. Outcome-only reconciliation moved C04 to COMPLETE and cleared the Active Card; V1-C05 remains unauthorized.
 
 ## V1-C05 — Historical Comparison Engine
 
