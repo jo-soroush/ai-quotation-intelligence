@@ -1619,8 +1619,11 @@ documentation-ownership concerns respectively.
 Observed repair validation: C05 focused tests passed 12 tests; related C04,
 C05, and C06 tests passed 31 tests; the full suite passed 50 tests; governance
 regression passed 60/60; reconciliation passed; and bootstrap reported only
-the expected dirty-working-tree warning on this undelivered maintenance
-branch. The repair remains pending independent re-audit and Git delivery.
+the expected dirty-working-tree warning on the pre-delivery maintenance
+branch. After independent re-audit, the repair was delivered through commit
+`81b8a61c6c585800f484362f2714092f2375edd8`, PR #14, and merge commit
+`eda681e24d4536bc8596f298d5c903471d96b52e`. This maintenance delivery did not
+change Card lifecycle state; V1-C07 remains unauthorized.
 
 ## Final Principle
 

@@ -108,8 +108,10 @@ and added narrow Git-evidence and capability-documentation review guidance.
 
 Observed repair validation: C05 focused tests 12 passed; C04/C05/C06 related
 tests 31 passed; full suite 50 passed; governance regression 60 passed; and
-governance view reconciliation passed. The maintenance branch remains
-undelivered and V1-C07 remains unauthorized.
+governance view reconciliation passed. The maintenance repair was delivered
+through commit `81b8a61c6c585800f484362f2714092f2375edd8`, PR #14, and merge
+commit `eda681e24d4536bc8596f298d5c903471d96b52e`. V1-C07 remains
+unauthorized.
 
 ## 3. Evidence Record Standard
 
