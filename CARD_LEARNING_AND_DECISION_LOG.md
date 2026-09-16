@@ -150,7 +150,7 @@ Pytest had not yet been installed into the pre-existing environment; `.gitignore
 
 ### 13. How We Fixed It
 
-Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch, then recorded the human-approved commit `93d6bdbdc074687f366658c4ebddc43912b7571e` and push to its remote branch.
+Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch, then recorded the human-approved commit `93d6bdbdc074687f3665c4ebddc43912b7571e` and push to its remote branch.
 
 ### 14. Validation / Evidence References
 
@@ -1592,6 +1592,35 @@ NOT YET RECORDED — complete from actual implementation experience.
 ### 18. Impact on Later Cards
 
 NOT YET RECORDED — complete from actual implementation experience.
+
+## Post-C06 Full-Project Audit and Systemic Repair
+
+The independent full-project audit found three defects before V1-C07. The C01
+delivery commit hash was mistyped in the Evidence Map and this log; C05
+`summarize_variances()` accepted incompatible metric/unit observations; and
+README still described the repository as C01-only. These were not application
+Card transitions and did not require changing PROJECT_CONTROL.md.
+
+The maintenance repair corrected the historical C01 hash, added metric/unit
+homogeneity validation at the C05 aggregate boundary, and added adversarial
+tests for mixed hours/cost and mixed currencies. It also clarified the C05
+contract, added verified Git delivery-evidence capture guidance, added a
+narrow Card-quality rule for semantic incompatibility testing and capability
+documentation review, updated README through C06, and clarified the C01-only
+Evidence Map snapshot as historical.
+
+The root causes were separate: manual immutable-hash transcription without
+object verification, a generic aggregate API that retained numeric values but
+did not enforce their metric/unit identity, and no capability-change trigger
+for project-facing documentation review. Governance Harness architecture was
+left unchanged because these are Git-process, application-semantic, and
+documentation-ownership concerns respectively.
+
+Observed repair validation: C05 focused tests passed 12 tests; related C04,
+C05, and C06 tests passed 31 tests; the full suite passed 50 tests; governance
+regression passed 60/60; reconciliation passed; and bootstrap reported only
+the expected dirty-working-tree warning on this undelivered maintenance
+branch. The repair remains pending independent re-audit and Git delivery.
 
 ## Final Principle
 

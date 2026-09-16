@@ -75,6 +75,10 @@ Never fabricate command output, test results, Git commits, AWS state, Bedrock re
 
 ## 2. Verified Project Evidence Summary (Not Live State)
 
+This is a historical C01 checkpoint snapshot captured before the C02–C06
+application Cards were implemented. It is retained as historical evidence and
+must not be read as the current capability summary.
+
 ~~~
 Project: AI Quotation Intelligence System
 Target: V1
@@ -92,6 +96,20 @@ Golden Case: NOT_STARTED
 ~~~
 
 Governance migration evidence is not V1 application implementation evidence.
+
+## 2A. Post-C06 Full-Project Audit and Systemic Repair Evidence
+
+The full-project audit identified three issues before V1-C07: a mistyped
+historical C01 delivery hash, an application-level C05 aggregate boundary that
+allowed incompatible metric/unit values to be combined, and a stale C01-only
+README. The bounded maintenance repair corrected the hash, added homogeneous
+metric/unit validation and adversarial C05 tests, updated README through C06,
+and added narrow Git-evidence and capability-documentation review guidance.
+
+Observed repair validation: C05 focused tests 12 passed; C04/C05/C06 related
+tests 31 passed; full suite 50 passed; governance regression 60 passed; and
+governance view reconciliation passed. The maintenance branch remains
+undelivered and V1-C07 remains unauthorized.
 
 ## 3. Evidence Record Standard
 
@@ -420,7 +438,7 @@ PASS — evidence and learning records updated with actual implementation decisi
 
 Branch: card/v1-c01-repository-baseline (delivered)
 Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
-Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
+Delivery Commit: 93d6bdbdc074687f3665c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
 Remote/Upstream: origin / origin/card/v1-c01-repository-baseline
 Commit: COMPLETED — human-approved
 Push: COMPLETED — human-approved to origin/card/v1-c01-repository-baseline

@@ -117,6 +117,48 @@ def test_summary_aggregates_decimal_cost_variances_and_excludes_missing_cost() -
     assert summary.median_variance == Decimal("50")
 
 
+@pytest.mark.parametrize(
+    "left,right",
+    [
+        (
+            VarianceResult(
+                metric="estimate_vs_actual",
+                estimated=Decimal("10"),
+                actual=Decimal("12"),
+                variance=Decimal("2"),
+                unit="hours",
+            ),
+            VarianceResult(
+                metric="estimate_vs_actual",
+                estimated=Decimal("100"),
+                actual=Decimal("120"),
+                variance=Decimal("20"),
+                unit="SEK",
+            ),
+        ),
+        (
+            VarianceResult(
+                metric="estimate_vs_actual",
+                estimated=Decimal("100"),
+                actual=Decimal("120"),
+                variance=Decimal("20"),
+                unit="SEK",
+            ),
+            VarianceResult(
+                metric="estimate_vs_actual",
+                estimated=Decimal("100"),
+                actual=Decimal("120"),
+                variance=Decimal("20"),
+                unit="EUR",
+            ),
+        ),
+    ],
+)
+def test_summary_rejects_incompatible_metric_or_unit(left: VarianceResult, right: VarianceResult) -> None:
+    with pytest.raises(ValueError, match="share metric and unit"):
+        summarize_variances([left, right])
+
+
 def test_c03_history_integrates_without_mutation_and_preserves_provenance() -> None:
     history = generate_synthetic_history()
     before = tuple(record.quote.model_dump(mode="json") for record in history)
