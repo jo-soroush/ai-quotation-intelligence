@@ -425,63 +425,63 @@ Grounded quotation intelligence requires reproducible historical comparison that
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Implemented deterministic historical comparison over validated C02/C03 contracts. The comparison produces per-record hour variance, optional cost variance, percentage variance where the estimate is non-zero, scope-change context, and deterministic aggregate summaries.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The comparison module reuses `HistoricalQuote`, `VarianceResult`, and the C04 `calculate_quote_total` function. Variance is defined as actual minus estimate, so positive values represent overruns and negative values represent underruns. Missing actual outcomes remain `None`; actual cost is never inferred from hours.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+Deterministic comparison keeps historical evidence reproducible and prevents later AI layers from becoming the source of variance truth. C04 remains responsible for estimated-cost arithmetic, while C05 interprets validated historical outcomes.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives considered were embedding comparison in the C04 calculation engine, inferring actual cost from actual hours, adding similarity ranking, or returning untyped dictionaries.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those alternatives would mix Card ownership, fabricate unavailable commercial evidence, introduce C06 behavior, or weaken typed contracts.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard-library `Decimal`, `dataclasses`, and the existing Pydantic domain models. No dependency was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Decimal preserves exact variance and aggregate arithmetic; frozen dataclasses provide stable provider-neutral result boundaries without creating parallel quotation schemas.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+No implementation failure was observed. The main design issue was separating missing actual cost from calculable estimated cost; this was handled by making cost variance optional and validating currency only when actual cost exists.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The C03 records intentionally contain observed actual hours but no actual cost. Inferring cost would silently create evidence, so cost comparison requires a validated `ProjectOutcome.actual_cost`.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The implementation computes hour variance directly, delegates estimated total calculation to C04, preserves missing outcomes, rejects actual-cost currency mismatch, and aggregates positive variance counts plus Decimal average/median values.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+The independent C05 audit identified a regression-coverage gap: implementation aggregates had no explicit even-count median or cost-variance aggregate tests. Two numeric regression tests were added, covering the two-middle-value median, Decimal average cost variance, Decimal median cost variance, and exclusion of missing actual cost. Focused C05 tests then passed 10 tests; the full suite passed 40 tests. The broader tests cover variance direction, percentage and zero-denominator semantics, cost variance, missing outcomes, Decimal validation, C03 integration, immutability, deterministic repeatability, and currency mismatch.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The implementation deliberately does not provide similarity ranking, retrieval, risk scoring, AI interpretation, or infrastructure. Cost variance is unavailable when actual cost is absent, and no rounding policy was invented.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Comparison must preserve the distinction between unavailable evidence and zero variance. Positive/negative direction tests are essential because a numerically valid formula can still have reversed meaning.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Future maintainers must keep C04 as the only estimated-cost arithmetic authority and must not turn C05 filtering or summaries into C06 similarity retrieval.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C05 provides deterministic variance evidence for C06 and C07 without implementing retrieval or risk decisions. Later Cards can consume its typed results and explicit missing-data behavior.
 
 ## V1-C06 — Similar Quote Retrieval
 
