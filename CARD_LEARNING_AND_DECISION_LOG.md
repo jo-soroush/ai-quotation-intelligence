@@ -765,6 +765,11 @@ safe later AI interpretation; model output must remain untrusted and non-authori
 C09 may build bounded Agent Tools over this integration. C08 does not add tools, an
 agent loop, quotation generation, approval, Excel, API, storage, or deployment.
 
+Delivery outcome: implementation commit `a29189d7d62145936aaa4f024ce8076a4bef30b7`
+was merged through PR #18 with merge commit
+`def3367540ac17bfb9ab1f3acfb97fe6302bc656`; C08 is terminally complete and no
+Card is active.
+
 ### 18. Impact on Later Cards
 
 NOT YET RECORDED — complete from actual implementation experience.
