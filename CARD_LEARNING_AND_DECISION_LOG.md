@@ -666,7 +666,10 @@ that work remains unauthorized and unimplemented.
 
 C08 can consume stable evidence without moving deterministic statistics into AI;
 future Cards must preserve provenance, missing-data semantics, and the human
-approval boundary.
+approval boundary. C07 was delivered through verified delivery commit
+`e3d6825628634866c89f5e6d772cc98376c6e736`, PR #16, and merge commit
+`e5b87edac75a20f1784c53a09acb22414dcf3ece`; outcome reconciliation recorded
+C07 as COMPLETE and cleared the Active Card. V1-C08 remains unauthorized.
 
 ## V1-C08 — Amazon Bedrock Integration
 
