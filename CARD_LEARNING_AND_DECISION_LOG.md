@@ -573,63 +573,100 @@ Evidence aggregation must be established separately from later AI risk language 
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Implemented `build_risk_evidence()` and typed `RiskEvidenceReport`. The engine
+consumes validated C03 historical records through the C05 comparison engine,
+selects one metric domain at a time, and emits reconciled counts, overrun rate,
+average/median variance, traceable quotation/source IDs, work-item context,
+scope-change IDs, outcome labels, and typed `RiskEvidence` items. No
+`RiskSuggestion`, AI, approval, pricing, or provider behavior was added.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Evidence is `SUCCESS` only when the selected metric has validated observations.
+Empty history and a metric with no available actual outcomes return
+`INSUFFICIENT_EVIDENCE`. Missing actual values are excluded, never converted to
+zero or success. C05 owns comparison and aggregate arithmetic; C07 retains the
+resulting evidence context.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The implementation uses frozen dataclasses for the report and existing C02
+`RiskEvidence` and `AgentResultStatus` models. It accepts `hours` or `cost`
+explicitly, preserves the C05 homogeneous metric/unit invariant, and requires
+one provenance origin across the input collection.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives were a generic dictionary result, duplicated variance calculation,
+using C06 similarity as risk proof, and returning a `RiskSuggestion`.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those alternatives would weaken typing, duplicate authoritative C05 behavior,
+cross the C06/C07 evidence boundary, or implement later AI interpretation
+prematurely.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Standard-library Python, `Decimal`, existing Pydantic domain models, and the
+existing C04/C05 deterministic functions.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+No provider or external dependency was needed; existing Core contracts keep
+the engine local and reproducible.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first focused run exposed an incorrect report denominator reference and an
+incorrect expectation that C03 supplied actual costs. C03 contains actual
+hours only, so the cost-success test uses a validated explicit-cost fixture;
+the real C03 cost path correctly returns `INSUFFICIENT_EVIDENCE`. An independent
+audit then found that the tests exercised, but did not explicitly assert, the
+numeric median; an even-count Decimal regression case was added.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The denominator was mistakenly assumed to be a field on C05 `VarianceSummary`,
+and the test initially treated absent C03 actual costs as successful cost
+evidence. Both were local C07 assumptions, not earlier-Card defects.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The report now derives its denominator from selected validated observations and
+distinguishes unsupported cost evidence from successful cost evidence. The
+focused tests now assert the exact even-count median value rather than only
+exercising the code path.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+Focused C07 tests passed 11; C03–C07 related tests passed 47; the full suite
+passed 61. Tests cover count/rate/statistic reconciliation, exact even-count
+median behavior, cost evidence,
+missing outcomes and costs, empty history, context retention, deterministic
+repeatability, immutability, and mixed-origin rejection.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+No rounding, FX conversion, risk threshold, or arbitrary minimum sample size was
+introduced. Insufficient evidence is represented when the selected metric has
+no usable validated observations.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+RiskEvidence is deterministic evidence for later interpretation. It is not a
+risk decision, recommendation, approval, rejection, price, or forecast.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+V1-C08 may later interpret this evidence through a provider-isolated AI Card;
+that work remains unauthorized and unimplemented.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C08 can consume stable evidence without moving deterministic statistics into AI;
+future Cards must preserve provenance, missing-data semantics, and the human
+approval boundary.
 
 ## V1-C08 — Amazon Bedrock Integration
 
