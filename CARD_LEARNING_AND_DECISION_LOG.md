@@ -687,59 +687,83 @@ Bedrock is the approved V1 AI direction, but provider payloads and failures must
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Implemented `bedrock.py`, a small injectable Amazon Bedrock Runtime Converse
+adapter, plus environment-backed C08 settings and the official `boto3` dependency.
+The Core receives a typed bounded result rather than raw SDK response objects.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Converse is used behind a lazy client boundary. Request construction is deterministic;
+response envelopes are validated; provider failures map to `UNAVAILABLE`, malformed
+responses to `INVALID`, and successful text to `SUCCESS`. Timeouts and retries are
+bounded through botocore configuration. Credentials use standard SDK resolution.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The external preflight established a working Nova Micro Converse path, so C08 owns
+the reproducible Python dependency and isolates the provider at the intended Card
+boundary without changing deterministic C01–C07 authorities.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered direct SDK calls in Core, `invoke_model`, raw response leakage, a generic
+multi-provider framework, and live-only tests.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those alternatives would weaken provider isolation, add unnecessary abstraction, or
+make deterministic unit validation depend on live AWS availability.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard library dataclasses, `boto3` 1.43.96, botocore `Config`, and the
+existing `AgentResultStatus` model.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+`boto3` is the supported AWS SDK boundary; injected clients make application tests
+repeatable, while botocore configuration provides bounded connection/read timeouts
+and retry attempts without creating a later resilience architecture.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The initial project environment did not contain boto3 because C08 had not introduced
+it; this was an expected dependency gap, not an AWS access failure. Activation state
+and evidence were reconciled to READY_FOR_DELIVERY after implementation.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The root cause was that provider integration and its dependency were intentionally
+deferred until the authorized C08 Card. The fix was to declare/install boto3 and keep
+all provider interaction inside the adapter.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Added reproducible dependency/configuration, typed request/result handling, response
+validation, controlled error mapping, mocked tests, and one minimal live smoke test.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+Focused C08 tests: 9 passed. C04–C08 related tests: 51 passed. Full suite: 70 passed.
+The live Python smoke test invoked `amazon.nova-micro-v1:0` in `us-east-1` and
+returned `BEDROCK_C08_OK`; usage was 17 input / 9 output / 26 total tokens and
+observed latency was 781.78 ms.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+No structured model-output domain schema was invented because C08 specifies response
+validation but not agent/tool output ownership. The adapter returns bounded text;
+advanced retry, agent orchestration, and production deployment remain later scope.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Provider SDK isolation and explicit malformed-response handling are prerequisites for
+safe later AI interpretation; model output must remain untrusted and non-authoritative.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+C09 may build bounded Agent Tools over this integration. C08 does not add tools, an
+agent loop, quotation generation, approval, Excel, API, storage, or deployment.
 
 ### 18. Impact on Later Cards
 

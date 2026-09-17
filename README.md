@@ -1,6 +1,7 @@
 # AI Quotation Intelligence
 
-This repository contains the V1-C01–V1-C06 foundation and the active V1-C07 deterministic risk-evidence implementation for an AI Quotation Intelligence system.
+This repository contains the implemented V1-C01–V1-C07 foundation and the V1-C08
+provider-isolated Amazon Bedrock integration for an AI Quotation Intelligence system.
 
 ## Development setup
 
@@ -25,9 +26,14 @@ The current foundation provides:
 - deterministic quotation calculation and total reconciliation;
 - historical estimate-versus-actual comparison; and
 - deterministic, explainable similar-quotation retrieval; and
-- deterministic, traceable risk-evidence statistics with explicit insufficient-evidence handling.
+- deterministic, traceable risk-evidence statistics with explicit insufficient-evidence handling; and
+- configurable Amazon Bedrock Converse integration using Amazon Nova Micro, with
+  validated responses and controlled provider failures. Deterministic Core logic
+  remains authoritative for commercial calculations and evidence.
 
-V1-C08 and later capabilities are not implemented. This includes Bedrock, agent tools and quotation-agent orchestration, human review workflow, Excel generation, FastAPI, S3, AWS deployment, CloudWatch, evaluation/failure handling, and the demo UI.
+V1-C09 and later capabilities are not implemented. This includes agent tools and
+quotation-agent orchestration, human review workflow, Excel generation, FastAPI,
+S3, AWS deployment, CloudWatch, evaluation/failure handling, and the demo UI.
 
 For current Card lifecycle and authorization state, see [PROJECT_CONTROL.md](PROJECT_CONTROL.md). This README is project-facing documentation, not live-state authority.
 
