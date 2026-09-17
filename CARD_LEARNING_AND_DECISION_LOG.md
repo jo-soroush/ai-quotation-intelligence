@@ -150,7 +150,7 @@ Pytest had not yet been installed into the pre-existing environment; `.gitignore
 
 ### 13. How We Fixed It
 
-Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch, then recorded the human-approved commit `93d6bdbdc074687f3665c4ebddc43912b7571e` and push to its remote branch.
+Declared pytest as a bounded development dependency and installed the project’s dev extra into `.venv`. Added `!.env.example` after the environment ignore patterns so only the safe example is trackable. Created the dedicated C01 branch, then recorded the human-approved commit `93d6bdbdc074687f366658c4ebddc43912b7571e` and push to its remote branch.
 
 ### 14. Validation / Evidence References
 
@@ -311,7 +311,7 @@ The root cause was an incorrect pair of deterministic template values combined w
 
 ### 13. How We Fixed It
 
-The repaired generator uses actual-hours values above estimated hours for under-estimate and overrun patterns, below estimates for over-estimate, and within five hours for near-estimate. Five focused C03 tests now prove these relationships, alongside 40 unique valid records, multi-item structure, synthetic provenance, deterministic repeatability, and estimated/actual separation. The implementation was delivered in commit `2041479` through PR #7 and merged to `main` as `9fd7673bbb31167857f8d8f5f468d5631cde302d`; the outcome-only reconciliation recorded C03 as complete without changing the validated dataset.
+The repaired generator uses actual-hours values above estimated hours for under-estimate and overrun patterns, below estimates for over-estimate, and within five hours for near-estimate. Five focused C03 tests now prove these relationships, alongside 40 unique valid records, multi-item structure, synthetic provenance, deterministic repeatability, and estimated/actual separation. The implementation was delivered in commit `204147915fcab7e2e161e083230b0b56cb2f97e0` through PR #7 and merged to `main` as `9fd7673bbb31167857f8d8f5f468d5631cde302d`; the outcome-only reconciliation recorded C03 as complete without changing the validated dataset.
 
 ### 14. Validation / Evidence References
 
@@ -1684,6 +1684,15 @@ did not enforce their metric/unit identity, and no capability-change trigger
 for project-facing documentation review. Governance Harness architecture was
 left unchanged because these are Git-process, application-semantic, and
 documentation-ownership concerns respectively.
+
+A subsequent full-project audit found that the earlier evidence repair had not
+independently re-resolved the C01 object before recording its replacement hash,
+so the replacement remained invalid. It also found stale C08-pending and
+C07-only state summaries in PROJECT_CONTROL.md. Git/PR verification was repeated
+before this bounded remediation; the exact C01 and C03 delivery hashes were then
+recorded, and the current PROJECT_CONTROL summaries were reconciled. This is a
+second evidence-capture and state-consistency failure, preserved here rather
+than rewritten away.
 
 Observed repair validation: C05 focused tests passed 12 tests; related C04,
 C05, and C06 tests passed 31 tests; the full suite passed 50 tests; governance
