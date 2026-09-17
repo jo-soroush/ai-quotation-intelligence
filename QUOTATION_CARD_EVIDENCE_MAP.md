@@ -113,6 +113,14 @@ through commit `81b8a61c6c585800f484362f2714092f2375edd8`, PR #14, and merge
 commit `eda681e24d4536bc8596f298d5c903471d96b52e`. V1-C07 remains
 unauthorized.
 
+Subsequent full-project audit verification found that the prior remediation had
+itself recorded an invalid C01 hash, while the C03 delivery evidence used an
+abbreviated hash. Git object and PR verification resolved the exact C01 delivery
+commit as `93d6bdbdc074687f366658c4ebddc43912b7571e` and the exact C03 delivery
+commit as `204147915fcab7e2e161e083230b0b56cb2f97e0`. The same remediation also
+reconciled stale C08-pending/C07-only current-state sections in
+PROJECT_CONTROL.md. No application or Harness files were changed.
+
 ## 3. Evidence Record Standard
 
 Each Card record uses exactly these sections:
@@ -440,7 +448,7 @@ PASS — evidence and learning records updated with actual implementation decisi
 
 Branch: card/v1-c01-repository-baseline (delivered)
 Start Commit: af47e98d6170551a5446b45c4dadf7f17f9e0ad1
-Delivery Commit: 93d6bdbdc074687f3665c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
+Delivery Commit: 93d6bdbdc074687f366658c4ebddc43912b7571e — feat: establish V1 C01 repository baseline
 Remote/Upstream: origin / origin/card/v1-c01-repository-baseline
 Commit: COMPLETED — human-approved
 Push: COMPLETED — human-approved to origin/card/v1-c01-repository-baseline
@@ -645,7 +653,7 @@ PASS — implementation rationale, focused tests, full regression, scope, proven
 
 ### 16. Git Evidence
 
-Delivered through approved Git delivery: commit `2041479`, pushed branch `card/v1-c03-synthetic-historical-data`, PR #7, merged to `main` as `9fd7673bbb31167857f8d8f5f468d5631cde302d`.
+Delivered through approved Git delivery: commit `204147915fcab7e2e161e083230b0b56cb2f97e0`, pushed branch `card/v1-c03-synthetic-historical-data`, PR #7, merged to `main` as `9fd7673bbb31167857f8d8f5f468d5631cde302d`.
 
 ### 17. Known Limitations
 
