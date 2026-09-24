@@ -134,6 +134,8 @@ Instructions
 → GIT_DELIVERY_APPROVAL
 → Stage / Verify Direct Index Identity / Commit / Verify Committed Tree Identity
 → Push / PR / Merge
+→ Final Delivery Output with Observed Post-Delivery Provenance
+→ Separate Retrospective Maintenance if Durable In-Repository History Is Required
 → Outcome-Only Final Reconciliation
 → Commit / Push Reconciliation if required
 → Query Runtime Git State
@@ -195,6 +197,14 @@ alone is not proof. Outcome-only records necessarily written after
 delivery follow the existing Git exception; they cannot alter the candidate
 before the identity comparison. Independent PASS never replaces
 CARD_QUALITY_GATE or human approval.
+
+Apply the GIT_WORKFLOW.md Post-Delivery Provenance Rule. Delivery-generated
+values such as commit/PR/merge identifiers and final main state are not
+preconditions for the actions that create them and must not be inserted into
+the frozen candidate to satisfy a future-evidence requirement. Report actual
+values after observation. If durable in-repository history is required, make
+that a separate authorized retrospective maintenance change; never require it
+to contain its own future identifiers or repeat evidence commits recursively.
 
 If an approved delivery workflow moves the unchanged candidate from the
 audited checkout to a dedicated delivery branch, recompute the same identity
@@ -921,6 +931,14 @@ terminal Active Card Record. While a Card is active, that record is current
 operational state; after completion it must be terminal COMPLETE with observed
 delivery evidence, or be explicitly labeled historical. It must not retain
 READY_FOR_DELIVERY or NOT_CREATED delivery fields after delivery.
+
+Post-delivery identifiers are collected in the final delivery output after
+they exist. They are not required in the frozen pre-delivery candidate, and
+their absence cannot block the delivery action that creates them. A durable
+retrospective Evidence Map or control update, when required by the owning
+workflow, is a separate post-delivery reconciliation change. Its own future
+commit/PR/merge identifiers are reported later and never written recursively
+into that same candidate.
 
 Record only:
 
