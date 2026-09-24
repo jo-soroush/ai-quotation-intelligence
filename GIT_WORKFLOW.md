@@ -209,9 +209,61 @@ and keep the delivery commit distinct from the later merge commit. Do not
 manually invent or approximate immutable hashes, and do not require every
 historical object to remain reachable from current `main` forever.
 
-Record immutable event hashes in the Evidence Map when observed. Do not record
-mutable current HEAD, current branch, or current working-tree values as live
-state in tracked governance files; query those facts from Git.
+Record immutable event hashes in the Evidence Map only after the corresponding
+Git event has occurred. Their later recording is never a precondition for the
+action that creates them. Do not record mutable current HEAD, current branch,
+or current working-tree values as live state in tracked governance files;
+query those facts from Git.
+
+## 13A. Post-Delivery Provenance Rule
+
+This rule separates audited candidate content from Git facts produced by
+delivering that content.
+
+1. **Pre-delivery candidate immutability.** Once the candidate identity is
+   frozen, independently audited PASS is recorded, and delivery approval is
+   granted, do not modify that candidate solely to record values that do not
+   yet exist. This includes the delivery commit SHA, PR number or URL, merge
+   SHA, final main SHA, final ahead/behind count, and post-merge clean-tree
+   result. The candidate identity, independent audit, and approval remain
+   bound to the frozen content.
+2. **No self-created precondition.** A Git identifier that an action creates
+   cannot be a prerequisite for that same action. A commit SHA follows the
+   commit; a PR number or URL follows PR creation; a merge SHA and final main
+   state follow merge and synchronization. Their absence from a frozen
+   pre-delivery candidate does not block those actions when all actual gates
+   pass.
+3. **Final delivery output.** The controlled delivery report is authoritative
+   observed provenance. After the actions, report the audited identity,
+   delivery branch and commit, PR number/URL, merge result and SHA, final
+   local and remote main SHAs, ahead/behind count, clean-tree result, and
+   post-delivery validation. Populate each value only from observed Git,
+   GitHub, and validation results.
+4. **Optional retrospective record.** If durable in-repository history is
+   required, make it a separately scoped, authorized governance/evidence
+   maintenance candidate after the delivery. It does not retroactively
+   invalidate the delivered candidate or become a prerequisite for its
+   delivery. Do not require that maintenance candidate to contain its own
+   future commit, PR, or merge identifiers; report those after they exist.
+5. **No recursive evidence commits.** Do not repeat an edit/commit/hash/edit
+   cycle to embed each new commit's own SHA. One observed retrospective record
+   may describe prior delivery events; its own identifiers remain post-action
+   provenance.
+6. **Delivery-agent behavior.** If canonical wording appears to require a
+   not-yet-created identifier inside the frozen candidate, preserve the
+   candidate identity and continue delivery when the real delivery gates
+   pass. Do not invent or insert the identifier. If durable history is
+   required, use the separate retrospective process above.
+7. **Audit boundary.** Independent audit certifies candidate content.
+   Delivery verification separately proves audited content equals staged
+   content equals committed content. Post-delivery Git provenance records
+   where that exact content was delivered; future Git-generated values are
+   not part of the earlier content audit.
+8. **Ownership.** PROJECT_CONTROL.md remains live project/Card state;
+   QUOTATION_CARD_EVIDENCE_MAP.md remains engineering/evidence history;
+   CARD_LEARNING_AND_DECISION_LOG.md remains rationale and learning; this
+   file remains delivery policy; Git remains runtime and immutable repository
+   truth; the final delivery output reports observed post-delivery execution.
 
 ## 14. GIT_DELIVERY_APPROVAL Invalidation and Delivery Rules
 
@@ -254,6 +306,11 @@ policy, and does not invalidate the consumed approval. Any other pre-delivery
 candidate-content change invalidates the audited identity and approval; there
 is no implementer-granted minor-edit exception.
 
+The absence of post-delivery identifiers from the frozen candidate is not a
+candidate change, validation failure, or delivery blocker. Record them in the
+final delivery output after observation; use a separate retrospective update
+only when durable in-repository history is required.
+
 Record `GIT_DELIVERY_APPROVAL: INVALIDATED`, preserve the reason, revalidate the Card state, and obtain a new approval before delivery.
 
 By default:
@@ -271,7 +328,7 @@ PR creation is covered by the single GIT_DELIVERY_APPROVAL when the exact valida
 
 Before creating one, Card scope must be stable, required validation and evidence must be current, and the diff must be reviewable.
 
-A Card PR should state:
+A Card PR should state information available when it is created:
 Card:
 Engineering Goal:
 Scope:
@@ -374,17 +431,23 @@ Exact Delivery Commit SHA:
 Push Completed:
 Remote Branch:
 PR Created:
-PR ID/URL:
-Merge Completed:
-Exact Merge SHA:
 Exact Changed File Set:
 Exact Validation Commands and Observed Results:
 Audited Candidate Identity: independent verifier's SHA-256 result
 Delivery Candidate Identity: recomputed SHA-256 result
 Identity Match: PASS / FAIL
-Final Working Tree:
 
-Each field must reflect actual observed state. Unknown values are NOT_VERIFIED or NOT_AVAILABLE; never infer them.
+PR creation generates its own PR ID/URL; merge result and SHA, final main
+identifiers, synchronization, and post-merge cleanliness do not exist yet.
+Do not pre-record them in the frozen candidate or make their absence a PR or
+merge precondition. Include those actual values in the final delivery output
+after they exist. See section 13A.
+
+Each field must reflect actual observed state. Unknown values are NOT_VERIFIED
+or NOT_AVAILABLE; never infer them. This post-event Git evidence is recorded
+after the relevant action and is not a prerequisite for that action. A durable
+retrospective record, when required, is a separate maintenance change and
+never embeds its own future immutable identifiers.
 Query runtime Git facts directly; do not duplicate mutable HEAD values in a
 tracked ledger. Keep the verifier's identity in the independent audit record
 until pre-delivery comparison, not in a candidate file where it would change

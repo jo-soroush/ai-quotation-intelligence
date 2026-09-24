@@ -662,6 +662,14 @@ validated-payload, candidate evidence, staged-diff, validation, unexpected
 branch, or unrelated-file change after approval sets GIT_DELIVERY_APPROVAL: INVALIDATED,
 requires STOP, revalidation, and new approval.
 
+Follow the GIT_WORKFLOW.md Post-Delivery Provenance Rule: never modify a
+frozen, independently audited candidate solely to add Git identifiers that do
+not exist until delivery actions occur. Missing future identifiers do not
+block the actions that create them. Report observed values in the final
+delivery output; if durable in-repository history is required, use a separate
+authorized retrospective maintenance change and do not embed that change's
+own future identifiers or create recursive evidence commits.
+
 ## 17. Resume After Interruption
 
 Re-read the canonical files, including CARD_LEARNING_AND_DECISION_LOG.md and SOURCE_ADAPTATION_TRACEABILITY.md when external-source relevance exists, inspect repository and Git reality, compare the safe checkpoint, Evidence Map, Learning / Decision Log, and Source Adaptation state, and reconcile PROJECT_CONTROL.md. If safe state cannot be proven:

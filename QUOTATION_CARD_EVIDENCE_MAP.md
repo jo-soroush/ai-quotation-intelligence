@@ -288,8 +288,110 @@ scripts/reconcile_governance_views.py --write` and `--check` → PASS; `bash
 scripts/quotation_session_bootstrap.sh` → PASS=127, WARN=1, FAIL=0 (working
 tree changes); `git diff --check` → PASS; Python compilation and candidate
 module import smoke → PASS. Bootstrap credential-pattern and suspicious
-secret-filename checks → PASS. Independent M-05b re-audit: **PENDING**. No
-application code, dependencies, delivery action, or C09 authorization changed.
+secret-filename checks → PASS. The independent M-05b re-audit later reported
+PASS for the exact candidate identity recorded below. No application code,
+dependencies, or C09 authorization changed.
+
+AEVS v1.1 post-delivery provenance blocker and resolution — the approved,
+independently audited candidate reached PR #22 but the first delivery attempt
+stopped before merge because the workflow was interpreted to require the
+delivery, PR, and merge identifiers in the Evidence Map before merge. Those
+values did not all exist until the Git actions occurred. The root cause was
+not distinguishing frozen pre-delivery candidate evidence from post-delivery
+provenance. The Post-Delivery Provenance Rule now makes those future values
+non-blocking; observed identifiers can be reported in the final delivery
+output, with any durable retrospective record handled separately after
+delivery. The audited candidate was not changed to add delivery identifiers.
+
+Observed PR #22 delivery: independent audit PASS and delivery approval GRANTED
+for candidate identity
+`f2da89985d748c0362533e1c2c252bcb50c151f6a6873ceef32d77d4dffd6c2a`; branch
+`delivery/aevs-v1.1`; delivery commit
+`7d085c4f06bb556df1df4a1c41bd6e9a092da42d`; PR
+https://github.com/jo-soroush/ai-quotation-intelligence/pull/22; merge commit
+`8a10c41023770ffcd3be13de93b3ccb1af838319`. The PR had no reported checks;
+no checks were bypassed. Final local `main` and `origin/main` both resolved to
+`8a10c41023770ffcd3be13de93b3ccb1af838319`, ahead/behind 0/0, working tree
+clean. Post-delivery validation: full pytest 110 passed; candidate identity
+21 passed; architecture 19 passed; Governance Harness PASS=60/FAIL=0;
+reconciliation `--check` PASS; bootstrap PASS=128/WARN=0/FAIL=0; compilation,
+import/config and shell syntax checks PASS; `git diff --check` PASS;
+`FINAL_CARD_STATE_CONSISTENCY_GATE` for V1-C08 COMPLETE PASS. C01–C08 remain
+COMPLETE, Active Card is NONE, and C09 remains NOT_AUTHORIZED / NOT_STARTED.
+
+Phase B maintenance validation history: the first Governance Harness run
+reported GD-07 FAIL (PASS=60, FAIL=1). Root cause: the new scenario used the
+repository-state fixture, which does not construct the approval snapshot its
+candidate-immutability assertion requires. Fix: use the existing isolated
+approval fixture and copy the three canonical policy files into it. The
+scenario then verified the rules, allowed commit/PR/merge with future IDs
+marked NOT_CREATED, kept candidate state unchanged, and rejected an injected
+pre-merge SHA requirement. Rerun: `bash scripts/test_governance_harness.sh` →
+PASS=61, FAIL=0.
+
+Independent governance audit of the Phase B candidate reported PASS with
+Critical=0, High=0, Medium=0. Its GD-07 mutation-coverage weakness was LOW:
+the case rejected only one injected merge-SHA precondition, so other policy
+regressions could pass undetected. Root cause was a narrow text check rather
+than coverage of each Post-Delivery Provenance Rule invariant. Bounded GD-07
+remediation strengthens the existing temporary-fixture GD-07 case: the valid
+eight-clause policy must pass structural/semantic checks, while seven rewritten
+clause mutants and seven contradictory-addition mutants must be rejected.
+The mutants cover future Git identifier preconditions, editing the frozen
+audited candidate, bypassing human delivery approval, skipping staged or
+committed identity verification, embedding a maintenance candidate's own SHA,
+recursive evidence commits, and fabricated/predicted provenance. The focused
+GD-07 run passed all 14 mutation checks and the valid baseline. Independent
+re-audit of this changed governance candidate remains PENDING.
+Final remediation validation: full Governance Harness PASS=61/FAIL=0;
+`.venv/bin/pytest -q` 110 passed; governance reconciliation `--check` PASS;
+bootstrap PASS=127/WARN=1/FAIL=0 (expected uncommitted maintenance tree);
+`git diff --check`, Bash syntax, Python compilation/import, and obvious
+credential-pattern checks PASS. No application or dependency files changed.
+
+M-GD07 follow-up finding: the preceding GD-07 checker rejected contradictions
+only inside GIT_WORKFLOW.md §13A; the Harness and Skill needed only to mention
+the rule, and contradictory policy elsewhere could escape. Root cause was
+scoping the negative scan to the extracted §13A body and returning early for
+the companion owners. The canonical policy was not changed. GD-07 now scans
+the complete text of each of the three owners, retains structural safeguards
+for §13A and companion delivery rules, and checks §13A's PROJECT_CONTROL.md
+live-state ownership. Temporary mutants place each tested contradiction in
+§13A, elsewhere in GIT_WORKFLOW.md, in the Harness, and in the Skill. Focused
+GD-07 passed the valid baseline and rejected 8 rewritten-clause mutants plus
+64 contradictory-addition mutants, including separate commit/PR/merge future
+identifier preconditions and the requested wording variants. This proves
+rejection of those exercised semantic mutations, not arbitrary paraphrases.
+Independent re-audit of the changed governance candidate remains PENDING.
+
+M-GD07b independent re-audit: FAIL, with one new MEDIUM finding and no new
+Critical or High findings. Placement coverage had improved, but the negative
+regexes recognized only 11 of 51 independently tried natural wordings; no
+future-identifier precondition wording in that matrix was caught. In
+particular, `Expected merge SHA may be written before merge.` passed the real
+focused GD-07 case at all eight probed placements. Root cause: a set of
+sentence-shape patterns cannot reliably decide whether arbitrary prose
+contradicts policy. The audit made no project-file edits; the starting
+candidate identity was
+`1aae7b77046c8bd63e5d7490104c8a002df416e3769340d11d98901d6e14778a`.
+
+Bounded M-GD07b remediation keeps the canonical policy text unchanged and
+replaces the negative prose regexes with approved SHA-256 byte digests for
+the three complete policy owners in the existing GD-07 Harness case. Existing
+structural safeguard checks remain. Any edit anywhere in those owners,
+including a contradictory addition or benign rewording, now fails closed
+until a separately reviewed policy update explicitly refreshes its digest.
+This is policy-change detection, not semantic classification of English.
+The focused case passed the unchanged baseline and rejected 8 clause rewrites,
+25 distinct added wordings at 8 placements each, and 3 protective edits that
+correctly require review. Those wordings include the audit's named miss,
+passive future-SHA prerequisite, indirect approval bypass, committed-tree
+skip, own-hash, recursive evidence, invented PR number, and alternate
+live-state owner. Independent re-audit of this new candidate is PENDING.
+Final local validation: focused GD-07 PASS; Governance Harness PASS=61/FAIL=0;
+`.venv/bin/pytest -q` 110 passed; reconciliation `--check` PASS;
+bootstrap PASS=127/WARN=1/FAIL=0 (uncommitted tree); `git diff --check`,
+shell syntax, Python compilation/import, and credential-pattern checks PASS.
 
 ## 3. Evidence Record Standard
 
