@@ -29,7 +29,7 @@ This is policy for future Git use. It does not initialize Git or authorize any G
 
 ## 3. Core Delivery Principle
 
-One Card → One Branch → Bounded Changes → Validation → Evidence → READY_FOR_DELIVERY → one GIT_DELIVERY_APPROVAL → git add → commit → push → PR → merge → final reconciliation → FINAL_CARD_STATE_CONSISTENCY_GATE PASS → Card COMPLETE → Active Card NONE → STOP
+One Card → One Branch → Bounded Changes → Validation → Evidence → READY_FOR_DELIVERY → one GIT_DELIVERY_APPROVAL → git add → verify index identity → commit → verify committed-tree identity → push → PR → merge → final reconciliation → FINAL_CARD_STATE_CONSISTENCY_GATE PASS → Card COMPLETE → Active Card NONE → STOP
 
 Each transition is explicit. Do not automatically perform the next Git action.
 
@@ -138,6 +138,16 @@ STOP
 
 Git delivery is not a substitute for validation. Before requesting GIT_DELIVERY_APPROVAL, required focused validation must have run, Evidence and Learning must be current, ROADMAP_ALIGNMENT_GATE must PASS, CARD_QUALITY_GATE must PASS, and the Exit Gate must be PROVEN.
 
+For future independently audited candidates, the verifier's PASS must name
+the exact content identity from `scripts/candidate_identity.py compute`.
+Before requesting delivery approval, recompute it using the same audited base
+revision and run `scripts/candidate_identity.py verify --base-ref <BASE_SHA>
+--expected <AUDITED_SHA256>`. A nonzero result or a missing independent PASS
+blocks delivery. The identity covers the base revision, changed and new paths
+(including visible untracked files), deletions, modes, and exact content
+hashes. The current branch is reported as provenance but is not hashed.
+Filename equality alone is not sufficient.
+
 Applicable evidence includes focused tests, relevant regression, Card evaluation, Exit Gate progress, known failures, known limitations, and an Evidence Map update.
 
 If required validation failed:
@@ -157,6 +167,13 @@ After the Card reaches READY_FOR_DELIVERY, one explicit human GIT_DELIVERY_APPRO
 - merge
 
 Before requesting approval, report the Card, branch, HEAD/start commit, validated file set and diff, validation results, Evidence Map and Learning Log state, ROADMAP_ALIGNMENT_GATE, CARD_QUALITY_GATE, Exit Gate, and unrelated-file check.
+Also report the audited identity, current delivery identity, and PASS result
+from their mechanical comparison. The independent verifier's audit record is
+the source of the expected identity; the implementer cannot certify it.
+If the audited checkout is not on the required delivery branch, identify the
+planned branch transition in the approval request. After that authorized
+transition, recompute and compare the same content identity before staging.
+The base revision and complete candidate manifest must remain unchanged.
 
 GIT_DELIVERY_APPROVAL does not authorize force push, history rewrite, destructive Git actions, architecture or scope changes outside the Card contract, sensitive credential use, unrelated external actions, or deployment/release unless separately authorized and owned by the Card.
 
@@ -177,7 +194,13 @@ These are guidance, not authorization or a mandatory format. Avoid vague message
 
 ## 13. Post-Commit Verification
 
-After an approved commit, verify HEAD changed as expected, the commit exists, it contains intended files, and the working-tree state is understood.
+After an approved commit, verify HEAD changed as expected, the commit exists,
+it contains intended files, and the working-tree state is understood. Before
+push, run `scripts/candidate_identity.py verify --base-ref <BASE_SHA>
+--expected <AUDITED_SHA256> --require-committed`. This reads the committed
+HEAD tree and compares its identity with the audited candidate; commit success
+or a clean worktree is not proof of exact committed content. A mismatch is
+STOP before push, PR, or merge.
 
 For delivery evidence, resolve the delivery commit from the actual Card branch
 or fetched remote/PR reference and verify the Git object before recording it.
@@ -193,12 +216,30 @@ state in tracked governance files; query those facts from Git.
 ## 14. GIT_DELIVERY_APPROVAL Invalidation and Delivery Rules
 
 GIT_DELIVERY_APPROVAL is valid only for the exact validated delivery state.
+An explicitly planned move of the unchanged audited candidate to its approved
+delivery branch is a workflow transition, not a candidate-content change.
+Recompute and verify the audited identity on that branch before staging; a
+mismatch, different base, unexpected branch, or changed file set is STOP.
+After approved narrow staging and before commit, repeat the identity
+comparison with `--require-staged`. The verifier constructs the candidate
+directly from base tree versus Git index blobs and modes, using the same
+content identity as the audited worktree candidate. It requires both worktree
+and index identities to match the audited identity, and fails on candidate
+skip-worktree or assume-unchanged flags. It does not trust porcelain diff
+visibility, clean-filtered worktree comparisons, or `core.fileMode` settings
+as staged-content proof. An extra staged change, missing candidate entry, or
+visible untracked file fails the exact index comparison. After commit, the
+same identity is constructed from base tree versus committed HEAD tree and
+must match before push. Any candidate-content change after independent PASS invalidates that PASS and
+requires independent re-verification, regardless of whether the implementer
+considers the change substantive. This rule applies before delivery approval
+as well as after it.
 
 If any of the following occurs after approval, the approval is invalidated immediately and execution stops:
 
 - implementation files change;
-- governance evidence materially changes;
-- the staged diff changes materially;
+- candidate governance evidence changes before commit;
+- the staged candidate diff changes;
 - tests are rerun and fail;
 - CARD_QUALITY_GATE becomes FAIL;
 - the Exit Gate becomes NOT_PROVEN;
@@ -209,8 +250,9 @@ Outcome-only final reconciliation is an exception after the approved delivery:
 it may record only observed delivery results, historical hashes, completion
 evidence, completed-card state, and the Active Card transition to NONE. It must
 not change implementation, scope, contract, validated payload, or unrelated
-policy, and does not invalidate the consumed approval. Any other governance
-evidence change remains material and invalidates approval.
+policy, and does not invalidate the consumed approval. Any other pre-delivery
+candidate-content change invalidates the audited identity and approval; there
+is no implementer-granted minor-edit exception.
 
 Record `GIT_DELIVERY_APPROVAL: INVALIDATED`, preserve the reason, revalidate the Card state, and obtain a new approval before delivery.
 
@@ -325,18 +367,33 @@ Future Card evidence should distinguish:
 
 Git Initialized:
 Branch Created:
+Base Branch/Commit:
 Start Commit:
 Commit Created:
-Commit Hash:
+Exact Delivery Commit SHA:
 Push Completed:
 Remote Branch:
 PR Created:
 PR ID/URL:
 Merge Completed:
-Merge Commit:
+Exact Merge SHA:
+Exact Changed File Set:
+Exact Validation Commands and Observed Results:
+Audited Candidate Identity: independent verifier's SHA-256 result
+Delivery Candidate Identity: recomputed SHA-256 result
+Identity Match: PASS / FAIL
 Final Working Tree:
 
 Each field must reflect actual observed state. Unknown values are NOT_VERIFIED or NOT_AVAILABLE; never infer them.
+Query runtime Git facts directly; do not duplicate mutable HEAD values in a
+tracked ledger. Keep the verifier's identity in the independent audit record
+until pre-delivery comparison, not in a candidate file where it would change
+the hash recursively. Record compared identities as observed delivery
+provenance when the owning evidence record is updated after delivery.
+Post-approval changes also follow section 14.
+Reproducible source, tested artifact identity, and traceable delivery are
+adopted provenance principles. Full SLSA attestation infrastructure is not
+justified now; SBOM generation remains risk-triggered for a later Card.
 
 ## 23. CI Boundary
 

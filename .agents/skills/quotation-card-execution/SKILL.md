@@ -114,6 +114,15 @@ Do not implement while building this map.
 
 ## 5. Risk Map
 
+For future Cards, apply Harness sections 2A–2C before implementation. Record
+STANDARD, ELEVATED, or CRITICAL / EXCEPTIONAL with actual escalation
+triggers; derive a concise Acceptance Contract and applicable Critical
+Invariants from canonical clauses. Select each advanced technique as
+REQUIRED, CONDITIONAL / EVALUATE, or NOT_APPLICABLE with a reason. No tool is
+required merely because it is listed. If a material architecture decision
+cannot be derived, STOP for human decision. This policy does not authorize a
+Card start.
+
 Create an inspect-only Risk Map containing only risks relevant to the active Card. Consider, where applicable:
 
 - missing versus zero
@@ -432,6 +441,17 @@ STOP
 
 ## 11. Validation Ladder
 
+If a Card adds, moves, or changes responsibility of a Python module, update
+the complete package classification in `tests/test_architecture.py` and run
+its focused suite. Discovery must fail on an unclassified module, including
+`__init__.py`; a forgotten registration cannot be accepted as a clean check.
+
+For consequential logic, challenge test quality using independent
+counterexamples or focused mutation-resistance/invariant probes when
+justified. Check failure paths, weak or mirrored assertions, skipped cases,
+misleading mocks, and contradictory evidence. For ambiguous partial external
+failure, inject the failure and verify final state and replay safety.
+
 Use only levels applicable to the active Card:
 
 1. syntax/static
@@ -533,6 +553,29 @@ Do not invent evidence or commit hashes.
 
 ## 14. Exit Gate and Quality Gate
 
+After implementation self-validation, compute the read-only identity with
+`scripts/candidate_identity.py compute` and freeze its exact manifest for
+INDEPENDENT VERIFIER review under Harness section 2A. The implementer cannot
+mark independent audit PASS. The verifier reads the Card specification,
+Acceptance Contract, and Critical Invariants first, challenges the candidate,
+and reports PASS or BLOCKED for that identity. Findings return to bounded
+remediation and independent re-audit. Any candidate-content change after PASS
+invalidates that identity. Before requesting delivery approval, compare the
+current candidate with the identity in the independent PASS record using
+`scripts/candidate_identity.py verify --expected <AUDITED_SHA256>`. After
+approved staging, repeat with `--require-staged` before commit. It must
+compare the audited worktree candidate with the actual Git index blobs/modes
+and reject candidate skip-worktree or assume-unchanged flags. After commit
+and before push, use `--require-committed` to compare the committed HEAD tree
+with the same audited identity. A mismatch is STOP; the implementer cannot
+self-exempt a change. Keep the verifier's identity outside the pre-delivery
+candidate to avoid self-reference.
+The identity binds base and exact candidate contents, not the current branch
+name; branch is reported as provenance. If approval explicitly plans a move
+to the required delivery branch, recompute and verify the same identity there
+before staging. A changed base, file set, contents, or unexpected branch is
+STOP under GIT_WORKFLOW.md.
+
 Prove the exact Card Exit Gate:
 
 ```
@@ -615,8 +658,8 @@ Only after validation and quality evidence are ready, set READY_FOR_DELIVERY and
 
 Outcome-only reconciliation that records only observed delivery results does not
 invalidate the consumed approval. Any implementation, scope, contract,
-validated-payload, material evidence, staged-diff, validation, branch, or
-unrelated-file change after approval sets GIT_DELIVERY_APPROVAL: INVALIDATED,
+validated-payload, candidate evidence, staged-diff, validation, unexpected
+branch, or unrelated-file change after approval sets GIT_DELIVERY_APPROVAL: INVALIDATED,
 requires STOP, revalidation, and new approval.
 
 ## 17. Resume After Interruption

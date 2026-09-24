@@ -427,6 +427,14 @@ Never invent:
 
 For high-impact Cards or changes, final verification should be independently checkable.
 
+For future Card work, use the vendor-neutral IMPLEMENTATION AGENT and
+INDEPENDENT VERIFIER roles defined in QUOTATION_ENGINEERING_HARNESS.md. The
+implementer cannot certify independent audit. A verifier reviews the frozen
+candidate from the canonical specification and may return BLOCKED; material
+remediation requires independent re-audit. Apply the Harness risk-selection,
+Acceptance Contract, invariant, and evidence rules before implementation.
+This governance direction does not authorize any Card or Git delivery.
+
 Prioritize this for:
 
 - commercial calculations;
@@ -546,7 +554,11 @@ READY_FOR_DELIVERY
 → STOP
 ~~~
 
-GIT_DELIVERY_APPROVAL is valid only for the exact validated Card state. A material post-approval change invalidates it and requires STOP, revalidation, and new approval.
+GIT_DELIVERY_APPROVAL is valid only for the exact validated Card state. Any
+candidate-content change after independent audit PASS invalidates that PASS;
+after delivery approval it also requires STOP, revalidation, and new approval.
+Only outcome-only records written after delivery follow the Git Workflow
+exception.
 
 Do not start the next Card without separate explicit human approval.
 
