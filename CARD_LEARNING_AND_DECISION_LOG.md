@@ -25,6 +25,12 @@ Every completed Card should eventually explain what changed, why it was necessar
 
 Failures must not be erased after recovery. Later records should preserve the problem, observed behavior, expected behavior, root cause, fix, validation, and remaining limitation.
 
+For a repeated or structural failure, use the existing Card sections to record
+the Problem, Root Cause, Why Existing Controls Missed It, Fix, Prevention Rule,
+and evidence that the recurrence path is closed. A passing rerun alone does
+not explain why the original control missed the defect. Do not create a
+separate root-cause ledger or rewrite completed Card history for this policy.
+
 Material decisions should later record their context, chosen option, alternatives, tradeoffs, evidence references, and future revisit condition. Technology decisions should later explain purpose, need, alternatives, complexity, operational cost, portability, and replacement conditions.
 
 This file references evidence; it does not duplicate raw command output or test output.
@@ -82,6 +88,148 @@ unfilled.
 A Card is educationally complete only when implementation evidence exists, applicable failure and fix history is recorded, design and technology rationale are recorded, tradeoffs and limitations are recorded, What We Learned is complete, and future reminders are recorded.
 
 This file alone does not mark a Card COMPLETE. Card completion remains governed by QUOTATION_CARD_SPECIFICATIONS.md, QUOTATION_CARD_EVIDENCE_MAP.md, QUOTATION_ENGINEERING_HARNESS.md, and PROJECT_CONTROL.md.
+
+## AEVS v1.1 Bounded Remediation Learning (Governance Only)
+
+The Phase 1 implementer self-audit reported PASS; the independent Claude
+Code audit later reported FAIL (M-01, M-02, M-03). This remediation addresses
+those findings without changing C01–C08 application behavior. Independent
+re-audit of the changed candidate remains pending.
+
+The subsequent independent re-audit reported FAIL: M-01 and M-03 CLOSED,
+M-02's direct escape probes CLOSED, and new M-04 OPEN. These are independent
+reported outcomes, not a PASS for the current candidate.
+
+M-01 — Problem: new package modules, including re-export `__init__.py` files,
+could escape the architecture check. Root Cause: the test iterated a manual
+Core file list rather than comparing it with discovered package files. Why
+Existing Controls Missed It: the docstring told future maintainers to
+register modules, but no assertion enforced registration. Fix: discover all
+package Python files and require exact architectural classification. Prevention
+Rule: a Card adding, moving, or reassigning a module updates classification,
+while an omission fails automatically. Evidence Recurrence Path Is Closed in
+local verification: isolated new-module and new-package tests fail on missing
+classification; `tests/test_architecture.py` passed 12 tests. Independent
+confirmation is still pending.
+
+M-02 — Problem: realistic provider, agent/tool, and API namespaces could pass
+through the old forbidden-name matcher. Root Cause: a short token blacklist
+encoded names rather than dependency direction. Why Existing Controls Missed
+It: the original self-test exercised only a few exact tokens and did not
+challenge every prohibited category. Fix: resolve imports to discovered,
+classified package modules; Core cannot depend on PROVIDER, AGENT_TOOL, or
+APPLICATION_BOUNDARY modules, and boto3/botocore remain external SDK
+restrictions. Prevention Rule: each prohibited category has an isolated
+counterexample test; future modules must be classified. Evidence Recurrence
+Path Is Closed in local verification: provider adapter, agent tools,
+quotation agent, tooling package, API, and SDK probes all failed as expected;
+independent confirmation remains pending. Static imports are the limit of
+this control.
+
+M-03 — Problem: a verifier PASS tied to filenames/diff description could be
+reused after same-path content changed. Root Cause: the candidate had no
+deterministic content identity. Why Existing Controls Missed It: the policy
+used an ambiguous “substantive” change exception and did not mechanically
+compare audited and delivery candidates. Fix at that stage: compute a read-only SHA-256
+identity over base revision, branch, path/status/mode/content manifest;
+compare it with the independent verifier's reported identity before delivery
+and again after approved staging. Prevention Rule: any candidate-content
+change invalidates the prior independent PASS, without an implementer
+self-exemption. Evidence Recurrence Path Is Closed in local verification:
+isolated Git fixtures changed content at the same path, added an untracked
+file, deleted a file, and changed the base revision; each changed the
+identity. Unchanged and staged-equivalent candidates remained stable.
+Independent confirmation remains pending. The verifier's identity stays
+outside pre-delivery candidate files to avoid a self-referential hash.
+
+M-04 — Problem: Core could import a Support re-export of Provider, Agent Tool,
+or Application Boundary without the architecture test failing. Root Cause:
+the checker classified all modules but inspected outbound imports only from
+Core. Why Existing Control Missed It: the visible Core edge ended at allowed
+Support; `_local_category()` did not inspect Support's own import. Fix: validate
+static outbound imports from every classified module against a category
+dependency policy. Core permits Core/Support, Support permits only Support,
+and the current Provider permits Core/Support. Future Agent Tool and
+Application Boundary directions remain empty until their owning Cards decide
+them. A separate policy reachability check rejects a weakened Support policy
+that would make a forbidden category reachable from Core. Prevention Rule:
+classify every module and reject every forbidden static local edge, including
+`__init__.py` re-exports; retain isolated laundering counterexamples. Local
+focused proof passed for all three forbidden Support chains, a Support package
+re-export, legitimate Core-to-Support and Support imports, and the policy
+self-test. This is static import evidence only; dynamic imports, runtime
+object/value leakage, and semantic misuse remain outside this control.
+Independent M-04 re-audit: PENDING.
+
+Branch/identity delivery blocker — A later independent AEVS audit was reported
+PASS for the exact candidate identity
+`24fcc567464a755fa68e373fbc6b1bc38c31b7113cd8dae590ebaaa1afd614cd`,
+and human delivery approval was supplied. Delivery correctly STOPPED before
+staging: the identity included the branch name, so an unchanged candidate
+would acquire a different hash on the required delivery branch. This was a
+candidate-provenance modeling error, not a failure of the architecture fix.
+Root Cause: branch/workspace location was mixed into the hashed content
+manifest. Why Existing Controls Missed It: tests challenged file and base
+changes but did not challenge a branch-only move. Fix: hash schema, base, and
+exact candidate path/status/mode/content entries; report branch separately as
+provenance. An isolated Git test now switches from `main` to a delivery branch
+without changing identity, while a one-byte edit and staged/worktree drift
+still fail verification. Alternative rejected: special-casing branch names or
+committing directly on `main`, which would weaken the model or bypass the
+documented workflow. Prevention Rule: every audited candidate identity must
+be stable across an explicitly approved branch-only transition, then be
+recomputed before staging and verified again after staging. The base revision
+remains hashed. Local tests passed; this changed candidate requires a new
+independent audit and new human delivery approval. No delivery occurred.
+
+M-05 — A fresh independent branch/identity re-audit verified the branch-only
+design but reported that `--require-staged` could PASS despite unaudited index
+content under skip-worktree, assume-unchanged, clean filters, or
+`core.fileMode=false`; the verifier reproduced an unaudited commit after a
+false PASS. Root Cause: the previous staged check inferred index equivalence
+from porcelain worktree diff and visible untracked state, while Git commits
+the index rather than worktree bytes. Why Existing Control Missed It: normal
+staging tests challenged ordinary drift, not Git local-state controls that
+hide or transform the staged blob or mode. Fix: retain one canonical
+schema/base/path-status-mode-content identity, but derive it directly from
+worktree, index, and committed tree sources. Read index blobs/modes from Git
+plumbing, fail on candidate skip-worktree/assume-unchanged flags, and require
+both audited worktree and index identities before commit. Verify the committed
+HEAD tree against the same audited identity before push. The rejected
+alternative was a procedural warning against index flags or another porcelain
+diff check; neither proves committed bytes. Direct blob inspection costs extra
+I/O but keeps the proof deterministic and auditable. Prevention Rule: exact
+candidate provenance has three checkpoints—worktree before staging, index
+before commit, committed tree before push—and any mismatch stops delivery.
+Local fixture tests cover the reported bypasses and exact/inauthentic commits;
+local self-review also caught a missing-new-worktree-file omission in the
+initial scan, which was changed to an explicit failure and regression-tested.
+Independent M-05 re-audit remains PENDING. No application behavior or C09
+state changed.
+
+Technical commands and observed results are in QUOTATION_CARD_EVIDENCE_MAP.md
+section 2B. This historical learning record is not a second live-state ledger
+or a claim that the independent re-audit passed.
+
+M-05b — Replace refs exposed a second object-identity boundary in the same
+candidate verifier. Git's normal object-reading behavior follows
+`refs/replace/*`; therefore `cat-file` could return audited replacement bytes
+for an unaudited blob ID present in the index or committed tree. Independent
+staged and committed fixtures demonstrated this: ordinary `cat-file` returned
+the audited bytes and the pre-fix verifier falsely passed both candidates.
+The root cause was using default Git object semantics for direct object reads.
+The fix places `--no-replace-objects` in the shared Git invocation helper,
+which applies uniformly to tree enumeration and blob reads across worktree
+base, index, and committed-tree verification. A narrower per-call fix was
+rejected because any missed object-read path would preserve the bypass.
+After the change, the attack fixtures fail closed and exact staged/committed
+content continues to pass; the focused candidate identity and architecture
+suites report 21 and 19 passing tests. This keeps the existing single
+schema/base/path/status/mode/content identity model. Lesson: object IDs alone
+do not guarantee that Git plumbing returns the stored object when replacement
+refs are enabled; security-sensitive verification must explicitly opt out of
+that indirection on every Git operation. Independent M-05b re-audit remains
+PENDING. No application behavior, dependency, delivery, or C09 state changed.
 
 ## Historical C01 Completion Context
 

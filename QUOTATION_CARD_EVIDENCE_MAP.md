@@ -121,6 +121,176 @@ commit as `204147915fcab7e2e161e083230b0b56cb2f97e0`. The same remediation also
 reconciled stale C08-pending/C07-only current-state sections in
 PROJECT_CONTROL.md. No application or Harness files were changed.
 
+## 2B. AEVS v1.1 Independent Audit and Bounded Remediation (Governance Only)
+
+The prior Phase 1 implementation self-audit reported PASS. The subsequent
+independent Claude Code audit was reported as **FAIL** with three MEDIUM
+findings: M-01 incomplete package-module coverage, M-02 forbidden-boundary
+matching gaps, and M-03 an unpinned audited candidate. It reported no
+CRITICAL or HIGH findings. This is historical audit evidence supplied for
+remediation, not an independent PASS for the changed candidate.
+
+Observed bounded remediation:
+
+- M-01: `tests/test_architecture.py` now discovers all package `*.py` files,
+  requires an exact classification map, and inspects Core imports including
+  `__init__.py`. Isolated new-module and new-package fixtures return the
+  expected failure when unclassified.
+- M-02: import direction resolves local modules by architectural category.
+  Isolated provider adapter, agent tools, quotation agent, tooling package,
+  API boundary, boto3, and botocore probes all return the expected failure.
+- M-03: at this remediation stage, `scripts/candidate_identity.py` computed a
+  read-only SHA-256 identity from base revision, branch, changed/added/deleted paths, modes, and exact
+  content hashes. Isolated Git fixtures prove stable identity when unchanged,
+  and mismatch after same-path content change, untracked addition, deletion,
+  or base-revision change. A staged-content check fails before staging and
+  passes after the exact candidate is staged in the fixture. A repository
+  subdirectory probe detects unstaged drift elsewhere in the repository.
+
+Executed validation: `.venv/bin/pytest -q tests/test_architecture.py
+tests/test_candidate_identity.py` → 18 passed; `.venv/bin/pytest -q` → 88
+passed; `bash scripts/test_governance_harness.sh` → PASS=60, FAIL=0;
+`.venv/bin/python scripts/reconcile_governance_views.py --check` → PASS;
+`bash scripts/quotation_session_bootstrap.sh` → PASS=127, WARN=1, FAIL=0
+(working-tree changes); `git diff --check` → PASS. Python compilation,
+package/config import smoke, and governance shell syntax checks passed.
+An initial architecture-fixture test failed because its relative import
+pointed at a nonexistent namespace; the fixture was corrected and the
+focused suite reran successfully. That failed attempt remains part of the
+remediation history.
+
+Known limits: the architecture check is static and does not inspect dynamic
+imports, runtime object/value leakage, or semantic misuse. Candidate identity
+covers visible untracked files; ignored files are excluded from the delivery
+candidate and would change the identity if force-staged. It does not itself
+prove independent audit authorization. **Independent re-audit: PENDING.**
+No delivery or C09 implementation is evidenced here.
+
+Independent re-audit after the earlier bounded remediation reported FAIL:
+M-01 CLOSED, M-03 CLOSED, M-02 direct probes CLOSED, and new M-04 OPEN.
+M-04 was a Core → Support → forbidden-category static re-export escape:
+the prior checker inspected Core outbound imports but not Support outbound
+imports. The M-04 remediation now checks outbound static imports for every
+classified module against an explicit category policy. Core allows Core and
+Support; Support allows only Support; the existing Provider allows Core and
+Support. Future Agent Tool/Application Boundary local dependency directions
+remain empty pending their owning Cards. A reachability self-check rejects a
+policy that would make a forbidden category reachable from Core.
+
+M-04 focused proof, using isolated temporary package trees: direct
+Core → Provider FAIL as expected; Core → Support → Provider, Agent Tool, and
+Application Boundary each FAIL as expected; a Support `__init__.py` Provider
+re-export and Support boto3 import each FAIL as expected; legitimate Core →
+Support and Support → Support/stdlib imports PASS; a weakened Support policy
+that allows Provider FAILS the policy self-check. The current package's
+complete module classification/import check and new unclassified module and
+package-`__init__.py` probes pass. `.venv/bin/pytest -q
+tests/test_architecture.py tests/test_candidate_identity.py` → 25 passed;
+`.venv/bin/pytest -q` → 95 passed; `bash scripts/test_governance_harness.sh`
+→ PASS=60, FAIL=0; `.venv/bin/python
+scripts/reconcile_governance_views.py --check` → PASS; `bash
+scripts/quotation_session_bootstrap.sh` → PASS=127, WARN=1, FAIL=0
+(dirty-tree warning); `git diff --check`, Python compilation, package/config
+import smoke, and governance shell syntax checks → PASS. An initial focused
+collection attempt failed with an indentation error in the new fixture test;
+the misplaced call was repaired and the focused and full suites reran PASS.
+The checker remains static: dynamic imports, runtime object/value leakage,
+and semantic misuse are not proved absent. Independent M-04 re-audit:
+**PENDING**. No Git delivery or C09 authorization is implied.
+
+Subsequent independent AEVS v1.1 audit was reported PASS for candidate
+`24fcc567464a755fa68e373fbc6b1bc38c31b7113cd8dae590ebaaa1afd614cd`.
+Human delivery approval was supplied for that identity. The delivery attempt
+STOPPED before staging, commit, push, PR, or merge: the then-current identity
+hashed `main` as part of the candidate, while the Git workflow required a
+delivery branch. The pre-staging identity matched, but moving the exact same
+contents to a branch would have changed the hash. No delivery occurred.
+
+Bounded branch/identity governance remediation changes the identity model:
+base revision and sorted path/status/mode/content entries remain hashed;
+branch is returned only as provenance. An isolated Git fixture computed the
+same identity on `main` and `delivery/aevs-v1.1` with identical base and
+candidate entries, then detected a one-byte content change. The fixture also
+verified `verify --expected` and `--require-staged` on the delivery branch;
+existing tests retain add, deletion, base-change, determinism, and staged/
+worktree-drift probes. `.venv/bin/pytest -q tests/test_candidate_identity.py
+tests/test_architecture.py` → 26 passed; `.venv/bin/pytest -q` → 96 passed;
+`bash scripts/test_governance_harness.sh` → PASS=60, FAIL=0;
+`.venv/bin/python scripts/reconcile_governance_views.py --check` → PASS;
+`bash scripts/quotation_session_bootstrap.sh` → PASS=127, WARN=1, FAIL=0
+(dirty-tree warning); `git diff --check`, Python compilation, package/config
+import smoke, and governance shell syntax checks → PASS. No application source
+or dependencies changed. The new candidate is **not independently audited**;
+independent re-audit and new human delivery approval are PENDING. No real
+delivery branch, staging, commit, push, PR, merge, or C09 work occurred.
+
+The fresh independent branch/identity re-audit subsequently reported the
+branch-only design verified but identified **M-05**: `verify --require-staged`
+could falsely PASS while the index held unaudited bytes under local Git state
+such as skip-worktree, assume-unchanged, clean filters, or
+`core.fileMode=false`. The verifier reported an end-to-end unaudited commit
+after that false PASS. This is an independent finding supplied for bounded
+remediation, not an independent PASS for the current candidate.
+
+M-05 local remediation uses one schema/base/path-status-mode-SHA256 identity
+model over three directly inspected sources: worktree bytes, Git index blobs
+and modes, and committed HEAD tree blobs and modes. Pre-stage verification
+requires the worktree identity to match the audited identity. After staging,
+`--require-staged` additionally requires the index identity to match and
+rejects candidate skip-worktree/assume-unchanged flags. After commit,
+`--require-committed` compares the committed tree directly with the audited
+identity before push. Git porcelain visibility, clean-filtered worktree
+comparisons, and `core.fileMode` settings are not used as staged truth.
+Isolated Git fixtures exercise both flags, clean-filtered bytes, mode
+divergence, extra/missing staged changes, exact deletion and untracked
+addition semantics, a missing new worktree file, unaudited committed bytes,
+an exact committed candidate, and symlink target bytes. Branch independence,
+base/content sensitivity, and prior architecture tests remain in scope for
+regression. During local self-review, the first worktree-state version could
+omit a staged new path after its worktree file disappeared; the scan was
+changed to fail explicitly and an isolated regression fixture was added.
+The verifier runs at a point in time; it does not atomically bind
+later Git actions, so delivery must still verify the intended commit/ref and
+STOP on subsequent drift. Ignored files remain outside the delivery candidate.
+Independent M-05 re-audit: **PENDING**. No real delivery action or C09 work is
+evidenced.
+
+M-05 executed local validation: `.venv/bin/pytest -q
+tests/test_candidate_identity.py` → 19 passed; `.venv/bin/pytest -q
+tests/test_architecture.py` → 19 passed; `.venv/bin/pytest -q` → 108 passed;
+`bash scripts/test_governance_harness.sh` → PASS=60, FAIL=0;
+`.venv/bin/python scripts/reconcile_governance_views.py --write` and
+`--check` → PASS; `bash scripts/quotation_session_bootstrap.sh` →
+PASS=127, WARN=1, FAIL=0 (dirty-tree warning); `git diff --check`, Python
+compilation, package/config import smoke, and governance shell syntax checks
+→ PASS. These are implementer-local results, not independent closure of M-05.
+
+M-05b — The independent audit identified that replace refs could mask the
+actual staged or committed blob: ordinary `git cat-file` follows
+`refs/replace/*`, so the verifier could read audited bytes for a different
+object ID and falsely PASS. Root cause: candidate Git object reads used the
+default replace-aware Git behavior. Independent reproduction: isolated staged
+and committed fixtures created replacement refs from unaudited blob IDs to
+the audited blob ID; in both fixtures ordinary `git cat-file blob <unaudited>`
+returned the audited bytes and the pre-fix verifier returned PASS. The new
+attack tests failed before the fix for exactly that false-PASS behavior.
+Fix: add Git's global `--no-replace-objects` option in the shared `_git`
+helper, covering all Git plumbing reads including base/HEAD tree listings and
+index/committed blob reads. Regression proof: after the fix, both attack tests
+return FAIL for the unaudited candidate; exact staged and exact committed
+candidates still PASS, and ordinary wrong staged/committed candidates FAIL.
+The focused candidate identity suite reports 21 passed and the architecture
+suite reports 19 passed. The independent attack tests also assert the ordinary
+`cat-file` replacement behavior to ensure the fixture exercises the finding.
+Full validation: `.venv/bin/pytest -q` → 110 passed; `bash
+scripts/test_governance_harness.sh` → PASS=60, FAIL=0; `.venv/bin/python
+scripts/reconcile_governance_views.py --write` and `--check` → PASS; `bash
+scripts/quotation_session_bootstrap.sh` → PASS=127, WARN=1, FAIL=0 (working
+tree changes); `git diff --check` → PASS; Python compilation and candidate
+module import smoke → PASS. Bootstrap credential-pattern and suspicious
+secret-filename checks → PASS. Independent M-05b re-audit: **PENDING**. No
+application code, dependencies, delivery action, or C09 authorization changed.
+
 ## 3. Evidence Record Standard
 
 Each Card record uses exactly these sections:
@@ -153,6 +323,22 @@ PROJECT_CONTROL.md and runtime Git commands.
 ## 4. Future Evidence Expectations
 
 These are expected evidence categories, not current evidence:
+
+For consequential requirements and invariants in future Cards, use a compact
+trace in the applicable Card record, without changing its numbered section
+structure:
+
+| ID | Canonical Requirement / Invariant | Implementation Evidence | Verification Evidence | Observed Result |
+| --- | --- | --- | --- | --- |
+| Card-local ID | Exact canonical clause/reference | Path/behavior once implemented; otherwise NONE | Executed command/case and result once run; otherwise NONE | NOT_YET_EXECUTED until observed |
+
+Do not trace trivial details. Planned cases and expected behavior are not
+execution evidence. After execution, preserve failures and subsequent recovery
+results; do not replace a failed observation with a bare PASS.
+For C09 and later, record the exact frozen candidate identity, independent
+verifier findings and PASS/BLOCKED result, remediation and re-audit where
+needed, and any post-audit re-verification in the applicable Card record.
+An implementation self-audit is labeled SELF-AUDIT, never independent PASS.
 
 - V1-C01 — Repository Baseline: repository structure; Git initialization; configuration; importability; test baseline; .gitignore; secret hygiene
 - V1-C02 — Domain Models: domain model files; validation tests; null/zero semantics; estimated/actual separation; numeric validation

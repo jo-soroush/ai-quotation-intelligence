@@ -40,6 +40,19 @@ Sections 1–12 define the pre-implementation contract. Sections 13 and 14 are e
 
 NOT YET RECORDED — complete only from actual implementation evidence.
 
+For C09 and later, complete a compact verification block within each Card's
+existing pre-implementation sections before implementation: Risk
+Classification and Escalation Triggers; Canonical Sources; a derived
+Acceptance Contract (Given, When, Then, failure and prohibited behavior where
+meaningful); applicable Critical Invariants; Verification Strategy; Advanced
+Verification Decision with REQUIRED, CONDITIONAL / EVALUATE, or
+NOT_APPLICABLE plus reason for each Harness technique; Independent Verifier
+Expectations; consequential Evidence / Traceability Requirements; and Known
+Non-Scope. These fields refine verification of the existing contract, not
+Card identity, scope, dependencies, authorization, or architecture. The
+Harness owns selection and audit policy; the Evidence Map owns observed
+results. No completed C01–C08 contract is retrofitted by this rule.
+
 ## Global Execution Rules
 
 - One Card is active at a time.
@@ -786,9 +799,12 @@ Quotation Agent → Tool Interface → existing application/domain services.
 
 ### 6. Current System Before Card
 
-C01–C08 may later provide the baseline, domain services, retrieval, evidence, and provider contract. The full agent and tool layer are not implemented; application state remains NOT_STARTED.
+C01–C08 have delivered the baseline, domain services, retrieval, evidence,
+and Bedrock adapter according to PROJECT_CONTROL.md and their Evidence Map
+records. The C09 tool layer and C10 agent are not implemented.
 
-This is a contract description, not a claim that prior Cards or this Card are complete.
+This is a pre-implementation contract description, not evidence that C09 is
+authorized or complete. Query PROJECT_CONTROL.md for live state.
 
 ### 7. Design Decision
 
@@ -821,6 +837,60 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 ### 11. Tests / Evaluation
 
 Tool input/output validation, deterministic service delegation, failure propagation, missing data, unsupported operations, traceability, and no commercial-authority leakage into the model layer.
+
+Pre-implementation C09 verification block (derived from this Card sections
+2, 5, 7–9, 11–12; Roadmap V1-C09; PROJECT_PROFILE.md sections 10, 17–18;
+COMMERCIAL_AND_DATA_GUARDRAILS.md G02–G03, G08–G10, G24, G30–G31, G36,
+G39):
+
+- Risk Classification: ELEVATED for tool execution and untrusted boundaries.
+  Reassess if actual C09 scope introduces an external or irreversible effect;
+  that change requires its own authorization and risk decision.
+- Escalation Triggers: tool invocation, validation, evidence provenance,
+  commercial authority, explicit failure propagation, future agent use.
+- Acceptance Contract: Given validated inputs and an available approved
+  existing service, when its tool interface is invoked, then it delegates to
+  that service and returns a validated, traceable result. Given invalid input,
+  malformed output, unavailable capability, or service failure, when invoked,
+  then it fails explicitly without fabricated success. It must never compute
+  authoritative totals, invent RiskEvidence, approve/finalize a quotation,
+  invoke an unauthorized action, or implement a future-Card capability.
+- Critical Invariants: existing service ownership is preserved; tool results
+  and model output are untrusted until validated; failures remain failures;
+  source identity remains traceable; no AI or tool path overrides
+  deterministic commercial truth or human approval.
+- Verification Strategy: independent contract cases for valid and invalid
+  input/output, delegation, unsupported capability, failure propagation,
+  provenance, and forbidden authority; mechanical Core import boundary check.
+- Advanced Verification Decision (reassess against actual C09 design at Card
+  start; no framework is implied):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Service ownership and authority boundaries |
+  | Contract tests | REQUIRED | Typed input/output and explicit failures |
+  | Integration | CONDITIONAL / EVALUATE | Needed if tool-service wiring cannot be proven by contract tests |
+  | Generated property tests | CONDITIONAL / EVALUATE | Only if combinatorial validated inputs exceed focused examples |
+  | Targeted mutation-resistance | CONDITIONAL / EVALUATE | Challenge consequential permission/failure assertions if examples appear weak |
+  | Failure injection | CONDITIONAL / EVALUATE | Required if actual interface has ambiguous partial failure or replay |
+  | Fuzzing | NOT_APPLICABLE | No unbounded parser surface is specified |
+  | Differential | NOT_APPLICABLE | No alternative equivalent implementation is specified |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Needed if shared state or concurrent execution is introduced |
+  | Adversarial testing | REQUIRED | Malformed inputs/results and unauthorized operation probes |
+  | Threat modeling | REQUIRED | Tool execution creates a trust/permission boundary |
+  | Agent evals | NOT_APPLICABLE | Full agent loop belongs to C10/C17 |
+  | Rollback/recovery | CONDITIONAL / EVALUATE | Needed if C09 creates persistent or external effects |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal-state risk is specified |
+- Independent Verifier Expectations: spec-first review of the frozen diff,
+  independent counterexamples, false-green challenge, failure and permission
+  review, and evidence/architecture checks. Findings require re-audit.
+- Evidence / Traceability Requirements: map consequential tool validation,
+  delegation, provenance, failure, and prohibited-authority claims to actual
+  implementation paths, executed cases, and observed results in the Evidence
+  Map. Before execution, observations remain NOT_YET_EXECUTED.
+- Known Non-Scope: section 9 remains authoritative. Planned tool categories
+  whose underlying capability is not yet owned by a completed Card cannot
+  silently become implementations or successful invocations in C09.
 
 Test not run != PASS. Design intent != implementation evidence.
 

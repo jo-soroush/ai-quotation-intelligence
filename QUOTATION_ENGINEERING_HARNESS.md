@@ -111,6 +111,8 @@ Instructions
 → Reconcile State
 → Contract Map
 → Risk Map
+→ Risk Classification / Acceptance Contract / Critical Invariants
+→ Verification Technique Decision
 → Human Start Approval
 → CONTENT_ALIGNMENT_GATE
 → SOURCE_ADAPTATION_GATE (when applicable)
@@ -124,10 +126,14 @@ Instructions
 → Checkpoint
 → Accept / Fix / Rollback
 → Prove Exit Gate
+→ Compute Candidate Content Identity / Independent Spec-First Audit
+→ Bounded Remediation and Re-Audit if BLOCKED
+→ Verify Audited Identity Matches Delivery Candidate
 → CARD_QUALITY_GATE
 → READY_FOR_DELIVERY
 → GIT_DELIVERY_APPROVAL
-→ Stage / Commit / Push / PR / Merge
+→ Stage / Verify Direct Index Identity / Commit / Verify Committed Tree Identity
+→ Push / PR / Merge
 → Outcome-Only Final Reconciliation
 → Commit / Push Reconciliation if required
 → Query Runtime Git State
@@ -139,6 +145,192 @@ Instructions
 ~~~
 
 No automatic continuation is permitted.
+
+## 2A. Evidence-Driven Verification Roles and Candidate Review
+
+These roles apply to future authorized Cards and material governance changes.
+They do not grant Card-start, delivery, external-action, or release authority.
+
+**IMPLEMENTATION AGENT** implements authorized scope, writes grounded tests,
+runs deterministic verification, self-audits, records observed evidence, and
+performs bounded remediation after confirmed findings. It cannot certify its
+own work as independently audited, mark independent audit PASS, dismiss a
+verifier finding without evidence, authorize delivery, or start the next Card.
+
+**INDEPENDENT VERIFIER** reviews from a fresh context where practical. It
+reads the canonical specification, derived Acceptance Contract, and Critical
+Invariants before the implementation explanation; then inspects the exact
+candidate diff, executed evidence, tests, failure paths, architecture and
+permission boundaries, and evidence accuracy. It seeks counterexamples and
+false-green tests. It must report PASS or BLOCKED with findings and evidence.
+Implementation-agent claims, self-audit, test count, coverage, and green CI
+are inputs to challenge, not independent proof. The verifier does not silently
+edit the candidate during audit. Vendor choice does not define independence;
+separation of context, specification source, evidence, and review objective
+does. A Codex implementer and Claude Code verifier is one optional mapping.
+
+Freeze the candidate after implementation, self-validation, and evidence
+update. Use `scripts/candidate_identity.py compute` to capture the exact base
+revision, changed/added/deleted path manifest, file modes and content hashes,
+and resulting SHA-256 identity. The current branch is reported separately as
+workflow provenance, not included in the content hash. The utility reads
+tracked changes and visible untracked files without staging. Ignored files are not delivery
+candidate files. The implementer then stops unreviewed edits. The verifier
+audits that exact identity and reports its identity with PASS or BLOCKED.
+Keep the audited identity in the independent review record outside the
+pre-delivery candidate; writing it into a candidate file would change the
+identity recursively. BLOCKED findings return to bounded remediation and
+independent re-audit. **Any candidate-content change** after verifier PASS
+invalidates the exact identity; the implementer cannot declare an exception
+for an apparently non-substantive edit. Before delivery, recompute and compare
+against the identity in the independent verifier's PASS record using
+`scripts/candidate_identity.py verify --expected <AUDITED_SHA256>`. A mismatch
+is STOP and requires re-verification. After approved narrow staging, repeat
+with `--require-staged` before commit: worktree and direct Git-index candidate
+identities must both equal the audited identity, with no candidate skip-worktree
+or assume-unchanged flag. After commit and before push, use
+`--require-committed` against the same base and expected identity to verify
+the committed HEAD tree directly. A porcelain clean diff or successful commit
+alone is not proof. Outcome-only records necessarily written after
+delivery follow the existing Git exception; they cannot alter the candidate
+before the identity comparison. Independent PASS never replaces
+CARD_QUALITY_GATE or human approval.
+
+If an approved delivery workflow moves the unchanged candidate from the
+audited checkout to a dedicated delivery branch, recompute the same identity
+there before staging. The base, paths, statuses, modes, and content hashes
+must match; the branch name may differ as provenance. An unexpected branch
+or candidate-content change still invalidates approval. This branch transition
+does not itself authorize delivery or a Card start.
+
+## 2B. Risk Selection and Derived Contract
+
+Before implementation of a future Card, record in its canonical Card contract;
+the inspect-only Contract/Risk Map may reference that decision:
+
+```text
+Risk Classification: STANDARD | ELEVATED | CRITICAL / EXCEPTIONAL
+Escalation Triggers: relevant triggers or NONE
+Selected Verification Techniques: technique, REQUIRED or CONDITIONAL / EVALUATE, reason
+Rejected / Not Applicable Techniques: technique, NOT_APPLICABLE, reason
+Acceptance Contract: canonical clause, Given, When, Then, failure behavior, prohibited behavior where meaningful
+Critical Invariants: applicable invariant, owning canonical clause, verification method
+```
+
+STANDARD is the default. Escalate when material behavior concerns financial
+or commercial authority, deterministic pricing, risk decisions,
+security/authorization, agent autonomy or tool execution, external or
+irreversible actions, persistent state, ambiguous partial failure,
+credentials, untrusted model output, high-value data, or deployment/runtime
+change. CRITICAL / EXCEPTIONAL is reserved for unusually consequential or
+hard-to-recover behavior and needs a stated reason; no numeric score is
+required. Classification selects verification depth, not authorization.
+
+The Acceptance Contract derives only from the Roadmap, Card Specification,
+PROJECT_PROFILE.md, and applicable guardrails. It does not redefine scope or
+create a second specification. A consequential invariant must be explicit
+before implementation and must name a verification method. If a necessary
+behavior cannot be derived without a material architecture choice, STOP for
+human decision; do not fill the gap by assumption.
+
+For every future Card, classify the applicability of deterministic invariant,
+integration, contract, generated property, targeted mutation or mutation-
+resistance, failure injection, fuzzing, differential, concurrency/race,
+adversarial, threat-model, agent-eval, rollback/recovery, and formal-method
+verification as REQUIRED, CONDITIONAL / EVALUATE, or NOT_APPLICABLE with a
+short reason. This is a selection record, not a mandate to run every method.
+Use existing deterministic checks first. Add a dependency only after recording
+the requirement, insufficiency of the current stack, measurable benefit,
+maintenance/security cost, and why an existing mechanism cannot suffice.
+
+Invariants are required when meaningful; generated property testing is
+conditional on a large/combinatorial input space, a clear invariant, and
+insufficient deterministic examples. For compact consequential branches
+(commercial arithmetic, authorization, idempotency, risk gates, agent
+routing, allowlists, recovery), challenge whether tests detect a plausible
+fault through independent counterexamples, invariant checks, or targeted
+mutation-resistance probes. No universal mutation score is required.
+
+Where partial or ambiguous failure can corrupt external state, failure
+injection is REQUIRED and must answer whether final state is safe, including
+uncertain completion and retry/replay. Where two paths implement the same
+logical contract, evaluate differential testing of normalized business
+outcomes; preserve unexplained mismatches. Evaluate concurrency and recovery
+tests when shared or persistent state makes them relevant. Advanced techniques
+are otherwise conditional; no framework is mandated by this policy.
+
+## 2C. Agent, Permission, and Threat Verification
+
+For future tool/agent Cards, explicitly evaluate READ, WRITE, EXECUTE,
+NETWORK, CREDENTIALS, DELIVERY, and PRODUCTION / EXTERNAL EFFECT permissions.
+Grant only what the authorized scope needs. A model's ability to propose an
+action does not grant execution permission. Evaluate tool allowlists, least
+privilege, input and output validation, untrusted model output, human approval
+for high-impact effects, replay and retry safety, failure semantics, loop and
+resource/cost limits, prompt/tool-output injection, state/context poisoning,
+audit logging, sandboxing, recovery/reconciliation, and adversarial scenarios.
+Controls for high-impact actions must be enforced at tool/runtime/control
+boundaries where practical, not only in prompt text. Actions should be
+inspectable, traceable, instrumentable, interruptible where feasible, and
+auditable. These are verification obligations, not authorization to implement
+future agent behavior.
+
+When tools, external actions, secrets, authorization, persistent state,
+deployment, network boundaries, or model-controlled actions are material,
+record a proportional threat review: Asset, Trust Boundary, Attack / Failure
+Path, Control, Verification Evidence, Residual Risk. No generic threat-model
+document is required.
+
+Future agent evaluation should record Task, Initial State, multiple trials
+when stochastic behavior matters, outcome/state graders, trace inspection,
+failure classification, and regression cases from observed defects. Prefer
+deterministic graders for final state, schema, permission, evidence linkage,
+turn/resource limits, action count, and prohibited behavior. Use a model
+judge only when deterministic grading is insufficient; exact tool-call order
+is graded only when order is contractual.
+
+For material work, prefer an isolated Card branch/worktree, reproducible
+virtual environment, isolated service fixtures, controlled external test
+environment, and synthetic credentials/data where practical. The verifier
+must inspect the exact candidate intended for delivery. No orchestration
+platform or new dependency is required by this policy.
+
+Current tool posture: property and mutation frameworks are CONDITIONAL /
+EVALUATE; fuzzing, full SLSA, SBOM, and heavy orchestration are WATCH;
+agent-eval and agent-control tooling are EVALUATE when the owning Card needs
+them; formal verification is AVOID_FOR_NOW unless exceptional risk justifies
+it. No framework is adopted by this policy alone.
+
+## 2D. Enforcement Ownership
+
+| New rule | Enforcement owner |
+| --- | --- |
+| Risk selection, derived acceptance, invariant declaration, candidate freeze | HARNESS_ENFORCED (procedural; verifier checks record) |
+| Spec-first independent findings, false-green challenge, re-audit | AUDIT_ENFORCED |
+| Tool/runtime permissions, failure safety, agent outcomes when implemented | APPLICATION_TEST_ENFORCED; audit challenges sufficiency |
+| Static local category dependency direction, including Core-to-Support laundering | APPLICATION_TEST_ENFORCED by `tests/test_architecture.py` |
+| Complete Python module classification, including package re-exports | APPLICATION_TEST_ENFORCED by `tests/test_architecture.py` |
+| Audited-versus-delivery candidate content identity | GIT_WORKFLOW_ENFORCED by `scripts/candidate_identity.py` |
+| Exact delivery provenance and approval invalidation | GIT_WORKFLOW_ENFORCED |
+| Future technique/tool adoption posture | DOCUMENTED_POLICY_ONLY until a Card selects and verifies it |
+
+No text-only policy is claimed to be mechanically enforced. Application
+semantics remain owned by Card implementation and its tests, not by brittle
+governance text matching.
+
+When a future Card creates or moves a Python module, or changes its
+architectural responsibility, update the explicit classification in
+`tests/test_architecture.py` and validate the category dependency policy. Core
+may import Core or Support; Support may import Support, but not Provider,
+Agent Tool, or Application Boundary. The existing Provider may import Core
+or Support. Future Agent Tool and Application Boundary dependency directions
+are left empty until their owning Cards authorize and verify them. The policy
+self-check rejects any category path from Core to a forbidden category. The test
+discovers every `*.py` under the governed package, including `__init__.py`,
+and fails if a discovered module is unclassified or a classification is stale.
+It checks each classified module's static local outbound imports, including
+re-export paths. It remains a static import check; dynamic imports, runtime object/value
+leakage, and semantic misuse require separate validation.
 
 ## 3. Card Resolution
 
@@ -657,6 +849,13 @@ Validate narrow to broad using only levels applicable to the active Card:
 
 Do not require future infrastructure before its Card exists.
 
+For high-risk logic, a green suite is insufficient when assertions mirror
+implementation assumptions, exercise only happy paths, or mock away the
+behavior needing proof. Review skipped/xfail cases, swallowed exceptions,
+weak assertions, synthetic fixtures that bypass state evolution, stale
+evidence, duplicated state, and conflicts between tests and architecture.
+Record the selected test-quality challenge and its observed result.
+
 ~~~text
 TEST NOT RUN != PASS
 ~~~
@@ -819,6 +1018,9 @@ Learning / Decision Log Current
 Learning Record Complete
 Source Adaptation: NOT_APPLICABLE when no material external source was involved
 Source Adaptation Traceability: required and current when ADAPT or REUSE materially occurred
+Risk/Acceptance/Invariant and technique decisions current for future Cards
+Independent verifier result PASS for each future Card, with depth proportional to risk
+Candidate content identity, independent audit identity, and any post-audit re-verification current
 Approved Delivery Complete where applicable
 ~~~
 
@@ -994,8 +1196,9 @@ architecture or scope changes outside the Card contract, sensitive
 credentials, unrelated external actions, or deployment/release unless
 separately authorized and owned by the Card.
 
-If implementation files, governance evidence, staged diff, tests, gate
-results, branch, or delivery file set materially changes after approval:
+If candidate content (implementation, governance evidence, or staged diff)
+changes after approval, or tests/gates fail, the branch changes unexpectedly, or unrelated
+files enter the delivery set:
 
 ~~~text
 GIT_DELIVERY_APPROVAL: INVALIDATED
