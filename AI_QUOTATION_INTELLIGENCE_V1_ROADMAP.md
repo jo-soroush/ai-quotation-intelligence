@@ -465,6 +465,15 @@ Tools must:
 - fail explicitly
 - avoid hidden business logic inside prompts
 
+### Exit Gate
+
+* tool interfaces have typed inputs
+* tool interfaces have typed outputs
+* each tool is independently testable
+* each tool fails explicitly rather than fabricating success
+* tools delegate to existing owned capabilities without duplicating business logic
+* no tool computes authoritative totals, invents evidence, or approves/finalizes a quotation
+
 ---
 
 ## V1-C10 — Quotation Agent
