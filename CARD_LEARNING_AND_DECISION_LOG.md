@@ -1037,63 +1037,148 @@ The future agent needs controlled access to approved capabilities while determin
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+One provider-free `agent_tools.py` module with typed Pydantic requests/results,
+explicit `ToolFailure` codes, fixed resolution of five completed capabilities,
+injected service functions for isolated tests, and output validation against
+Core-owned deterministic results. Focused C09 and architecture tests were added.
+No agent loop, approval, draft generator, Excel, API, or storage behavior was built.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+C09 exposes C03 synthetic history, C06 similarity, C05 comparison/statistics,
+and C07 risk evidence. Deferred draft creation/validation and Excel names are
+explicitly rejected by a fixed resolver. The tool layer checks provenance and
+re-executes the relevant pure Core owner to reject plausible numeric changes in
+delegated results; it does not implement arithmetic or evidence generation.
+Tool requests carry query parameters, never historical records; every method
+obtains the complete verified C03 corpus through its internal source boundary.
+The architecture category `AGENT_TOOL` may import Core only. Core cannot
+import Agent Tools, and Support cannot launder a forbidden dependency.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+Only C03–C07 provide owned capabilities now. Returning a successful placeholder
+for later-Card functions would fabricate a capability. Reusing deterministic
+Core functions keeps commercial ownership where it already belongs; checking
+their exact outputs closes the observed numeric-tampering gap without copying
+the formulas. A fixed resolver makes unsupported calls explicit without C10
+tool selection or model-driven invocation. Loading the full owned corpus inside
+the tool boundary prevents a future agent from supplying or cherry-picking
+records while still allowing an explicit missing-source failure.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered exposing all Roadmap tool names as successful stubs, returning only
+shape-validated delegated values, importing C08 for model-driven tool calls,
+moving commercial checks into C09, and allowing callers to pass historical
+records into the tool requests.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Successful stubs would misrepresent future-Card readiness; shape checks missed
+a forged numeric variance in an executed adversarial probe; C08 has no
+structured tool-calling contract; duplicated arithmetic would weaken C04/C05
+ownership and make two commercial authorities. Caller-supplied records also
+allowed an executed altered-outcome probe to fabricate apparently traceable
+risk evidence, so provenance labels alone were not a sufficient input gate.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Existing Python 3.13+ standard library dataclasses, enums, and typing;
+existing Pydantic validation. No dependency added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Pydantic already defines C02's typed domain boundaries and provides runtime
+input/output shape validation. Dataclasses hold the existing Core service
+results. Injectable callables permit deterministic unavailable, malformed,
+and failure probes without Bedrock or network access.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first focused C09/architecture run passed 44 tests. A later adversarial
+probe that changed only a comparison variance while preserving source identity
+failed its expected-rejection assertion (1 failed): the tool accepted the
+plausible tampered result. A later ACTIVE-state consistency check failed three
+exact-line assertions in the C09 governance records. A second adversarial
+probe failed (1 failed): a caller changed historical actual hours while
+retaining source identity, and the initial risk tool accepted it. No external
+or partial side effect occurred.
+
+The independent C09 audit subsequently reported PASS with one actionable LOW:
+the architecture policy allowed Agent Tool → Support even though the actual
+tool module imports only Core. This was an unnecessary permission, not an
+observed tool-behavior failure.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+Output validation initially checked type, provenance, and missing-data
+relationships, but these do not prove a numeric value came from C05. The
+governance mismatch came from adding explanatory text on lines that the
+existing consistency script parses as exact state values. The altered-outcome
+probe revealed that tool inputs still owned their own history collection;
+comparing Core output to Core recomputation over that same untrusted input
+could only prove calculation consistency, not evidence authenticity.
+The architecture allowance was broader than the imports required for C09;
+the original policy change opened both Core and Support without a concrete
+Support dependency.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The tool boundary now compares delegated outputs against results from the
+existing deterministic owners (C03/C05/C06/C07), with no C09 arithmetic.
+The adversarial probe then passed, as did the 46-test combined focused suite
+after one additional whitespace-ID case. Typed numeric checks and missing-cost
+cases were added to prevent coercion or silent evidence creation.
+The C09 state and approval records now use bare canonical values with
+explanation on following lines; the ACTIVE-state consistency gate passed on rerun.
+Historical records were removed from tool request models; the tool layer now
+loads and validates the full C03 dataset before delegating. The new probe
+passed on focused rerun (24 C09 tests).
+The bounded audit remediation narrowed `AGENT_TOOL` to `{CORE}` and added an
+architecture fixture that rejects Agent Tool → Support. No tool behavior or
+other category policy changed. Because candidate content changed, independent
+re-audit of the remediated candidate is pending; the earlier audit PASS is not
+represented as approval of this new identity.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+See QUOTATION_CARD_EVIDENCE_MAP.md → V1-C09 for the executed failure and
+recovery, commands, focused C09 24 passed, architecture 23 passed, full pytest
+138 passed, Governance Harness 61 passed / 0 failed,
+and C09 Exit Gate proof. The later audit LOW and bounded remediation are
+recorded there with post-remediation C09 24 passed, architecture 24 passed,
+full pytest 139 passed, and independent re-audit pending.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Exact owner re-execution costs additional deterministic work, but keeps the
+boundary robust against injected numeric tampering and creates no second
+formula. History retrieval is limited to C03 synthetic records; there is no
+general storage/repository capability yet. C08 remains unused because C09
+does not own an agent protocol. Independent audit and delivery are pending.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Preserving source IDs is necessary but insufficient: a result can have correct
+provenance and still alter a commercial statistic—or the input record itself
+can be fabricated. In this pure local C09 boundary, source-owned history and
+exact comparison to the owning deterministic service are both required.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+C10 may call these code-level methods but must not treat the deferred names
+as implemented, permit model-supplied commercial totals, or assume C08's text
+result contains structured tool calls. A future history provider needs its
+own authorized source contract and provenance checks; do not silently relax
+the C03-only restriction or accept model-supplied history in C09.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C10 receives bounded, tested local tool interfaces without receiving agent
+reasoning or selection logic. C11–C20 remain untouched; their capabilities
+must be implemented and approved in their own Cards. C09 is active and ready
+for independent audit, not complete or authorized for Git delivery.
 
 ## V1-C10 — Quotation Agent
 

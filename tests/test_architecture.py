@@ -19,13 +19,13 @@ APPLICATION_BOUNDARY = "APPLICATION_BOUNDARY"
 SUPPORT = "SUPPORT"
 CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, APPLICATION_BOUNDARY, SUPPORT}
 FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, APPLICATION_BOUNDARY}
-# Empty future-category policies are deliberate: their dependency directions
-# must be approved with the owning Card, not guessed by this governance change.
+# Empty future-category policies are deliberate; C09 permits Agent Tools to
+# delegate to Core without granting Core a reverse dependency or SDK access.
 ALLOWED_LOCAL_DEPENDENCIES = {
     CORE: {CORE, SUPPORT},
     SUPPORT: {SUPPORT},
     PROVIDER: {CORE, SUPPORT},
-    AGENT_TOOL: set(),
+    AGENT_TOOL: {CORE},
     APPLICATION_BOUNDARY: set(),
 }
 # boto3 is declared in pyproject.toml; botocore is its imported SDK boundary.
@@ -44,6 +44,7 @@ MODULE_CATEGORIES = {
     "retrieval.py": CORE,
     "risk_evidence.py": CORE,
     "bedrock.py": PROVIDER,
+    "agent_tools.py": AGENT_TOOL,
     "config.py": SUPPORT,
     "logging_config.py": SUPPORT,
 }
@@ -260,3 +261,34 @@ def test_policy_self_check_rejects_support_tunnel_even_without_import(tmp_path: 
     weakened[SUPPORT].add(PROVIDER)
     with pytest.raises(AssertionError, match="unsafe dependency policy"):
         validate_architecture(package, categories, weakened)
+
+
+def test_agent_tool_may_delegate_to_core(tmp_path: Path) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "agent_tools.py", "from .comparison import compare_historical_quotes\n")
+    _add_module(package, "comparison.py")
+    categories.update({"agent_tools.py": AGENT_TOOL, "comparison.py": CORE})
+    validate_architecture(package, categories)
+
+
+def test_agent_tool_rejects_unused_support_dependency(tmp_path: Path) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "agent_tools.py", "from .config import Settings\n")
+    _add_module(package, "config.py")
+    categories.update({"agent_tools.py": AGENT_TOOL, "config.py": SUPPORT})
+    with pytest.raises(AssertionError, match="agent_tools.py -> ai_quotation_intelligence.config"):
+        validate_architecture(package, categories)
+
+
+@pytest.mark.parametrize("source", [
+    "from .bedrock import BedrockConverseAdapter\n",
+    "import boto3\n",
+    "from botocore.config import Config\n",
+])
+def test_agent_tool_rejects_provider_and_sdk_imports(tmp_path: Path, source: str) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "agent_tools.py", source)
+    _add_module(package, "bedrock.py")
+    categories.update({"agent_tools.py": AGENT_TOOL, "bedrock.py": PROVIDER})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
