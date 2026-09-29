@@ -1644,11 +1644,11 @@ CURRENT
 Pre-C10 canonical maintenance (not C10 implementation): inspection found that
 the Roadmap omitted an explicit C10 Exit Gate even though the Card
 Specification makes that gate authoritative, and that C10 lacked the compact
-pre-implementation verification block required for C09 and later. The
-maintenance candidate adds the Roadmap gate and the derived verification
-block without authorizing or starting C10. Independent audit of this
-maintenance candidate is PENDING; C10 implementation tests and Exit Gate
-proof remain NOT_RUN / NOT_PROVEN.
+pre-implementation verification block required for C09 and later. That
+maintenance candidate added the gate and derived verification block without
+authorizing or starting C10; it was subsequently delivered through PR #27.
+C10 implementation tests and Exit Gate proof were NOT_RUN / NOT_PROVEN at
+that maintenance checkpoint. Separate explicit C10 start approval followed.
 
 ### 1. Card
 
@@ -1662,81 +1662,92 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE — implementation self-validated; independent audit and delivery pending
 
 ### 4. Human Start Approval
 
-NO
+YES — explicit human authorization for V1-C10 only; C11+ remain unauthorized
 
 ### 5. Files Changed
 
-NONE
+PROJECT_CONTROL.md; QUOTATION_CARD_EVIDENCE_MAP.md; CARD_LEARNING_AND_DECISION_LOG.md; src/ai_quotation_intelligence/quotation_agent.py (created); tests/test_quotation_agent.py (created); tests/test_architecture.py (updated); src/ai_quotation_intelligence/config.py and .env.example (bounded Bedrock output-token default correction). No C08/C09 provider/tool module, dependency, or C11+ implementation changed.
 
 ### 6. Commands Run
 
-NONE
+Original implementation validation: 45 C10 focused, 24 C09, 32 architecture, and 192 full pytest passed. After bounded independent-audit remediation: `.venv/bin/pytest -q tests/test_quotation_agent.py` (57 passed); `.venv/bin/pytest -q tests/test_agent_tools.py` (24 passed); `.venv/bin/pytest -q tests/test_architecture.py` (32 passed); `.venv/bin/pytest -q` (204 passed); `python3 scripts/reconcile_governance_views.py --write` and `--check` (PASS); `bash scripts/test_governance_harness.sh` (61 PASS / 0 FAIL); `bash scripts/quotation_session_bootstrap.sh` (127 PASS / 1 expected dirty-worktree WARN / 0 FAIL); Python compilation/import, shell syntax, changed-file secret-pattern scan, and `git diff --check` (PASS). Candidate identity is recomputed only after final validation/documentation.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — 57 C10 tests: original coverage plus unexpected final-assembly exception containment, forbidden and safe missing-information prose, the seven-call derivation invariant, and effective bounded Bedrock output configuration for a grounded structured final response.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS — C09 focused regression 24 passed; architecture 32 passed; full pytest 204 passed. C08 provider and C09 tool implementation code remain unchanged.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+PASS — scripted model actions drive genuine tool selection and multiple C09 calls; a mocked C08 Converse client proves the existing text adapter can supply the JSON protocol. No live Bedrock call was required or executed.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS (self-validation) — Core `calculate_quote` supplies the only authoritative estimated total; C09 owns historical, similarity, variance, statistics, and risk evidence. Model-proposed totals, invented evidence IDs, changed request arguments, approval/finalization, and unsupported risk text are rejected by tests. Missing evidence remains an explicit non-success status.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS (mocked) — C08 BedrockResult status/text/request identity are validated; C08's adapter implementation remains unchanged and provider SDK objects never enter Core or Agent. Only its existing output-token configuration default changed. Bedrock unavailable and provider exceptions return sanitized non-success. LIVE BEDROCK: NOT_RUN / NOT_REQUIRED for deterministic C10 validation.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS (self-validation) — allowlisted C09 tool dispatch; strict JSON with duplicate-key rejection; strict tool arguments; request data and IDs supplied by validated input, not by model; bounded seven-call loop with repeat rejection and derivation invariant; fixed safe success narratives and focused forbidden-prose tests; evidence-linked risk wording generated from C09 metrics; sanitized final-assembly/provider errors; no SDK import leakage. Static architecture tests verify forbidden directions. A default C08 Converse request now carries a bounded 1024 output-token budget, checked against a representative grounded final JSON without a live AWS call.
+
+Proportional C10 threat review (ELEVATED): protected assets are validated quotation inputs, Core totals, C09 evidence provenance, and human approval authority. Trust boundaries are user text → model prompt, Bedrock text → action parser, action → C09 tools, and C09 result → AgentResult. Attacks/failures include prompt injection, unknown/deferred tool requests, forged arguments or evidence IDs, invalid provider/tool output, repeated actions, and exception-detail leakage. Controls are strict action schemas, fixed tool allowlist and input construction, output identity/provenance checks, bounded execution, constrained success wording, Core arithmetic delegation, and sanitized non-success results. `tests/test_quotation_agent.py` and `tests/test_architecture.py` exercise these controls. Residual: C08 live generation behavior and later human review are not proven by these deterministic tests; independent C10 audit remains pending.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+Three original validation failures were preserved and resolved. First, focused pytest collection failed because `request` is a reserved pytest fixture name; the C10 fixture was renamed `agent_request`, then focused tests collected and passed. Second, the loop-limit test expected INVALID but C09 correctly returned INSUFFICIENT_EVIDENCE for cost statistics in the synthetic corpus before the limit; the test fixture was changed to use distinct valid tool actions, and the bounded-loop case passed. Third, bootstrap returned PASS=126/WARN=1/FAIL=1 because the C10 state update replaced the long `Application Implementation: V1-C01 BASELINE IMPLEMENTED` prefix that its read-only sanity check requires. PROJECT_CONTROL kept the true C10 state while restoring that established prefix; the bootstrap rerun returned PASS=127/WARN=1/FAIL=0. None was hidden as a first-pass success.
+
+The independent audit of the original C10 candidate reported PASS with actionable MEDIUM robustness/deployment-readiness findings and a LOW orchestration-limit documentation finding; that PASS is historical, not a certification of this changed candidate. Its observations were: `_final(...)` dispatch lacked uniform unexpected-exception containment; `_safe_prose` authority checks lacked focused tests; C08's 64-token default could truncate legitimate C10 final JSON; and seven-call rationale was not mechanically protected. Bounded remediation added an INVALID sanitized exception boundary, 7 forbidden and 2 safe prose cases, an explicit 3 + 2×2 limit explanation/invariant, and a 1024-token default in existing configuration and `.env.example`. The C08 adapter interface, C10 structured protocol, commercial authority, C09 provenance/tool allowlist, and C11+ boundaries were not changed. Focused, C09, architecture, and full pytest reruns passed at 57/24/32/204; reconciliation PASS, Governance Harness 61/0, bootstrap 127/1 expected WARN/0, compilation/import/shell syntax/security scan/diff PASS. Re-audit of the new identity is PENDING.
 
 ### 14. Exit Gate Evidence
 
-NONE
+Self-validated against the six Roadmap clauses:
 
-Exit Gate Status: NOT_PROVEN
+1. Model chooses only C09's five completed names; all five are exercised in `test_success_uses_all_available_c09_tools_and_preserves_core_commercial_truth`.
+2. Strict action/argument parsing and C09 output type, tool identity, request ID, and risk provenance checks precede use; malformed, unknown, deferred, and forged cases fail.
+3. Core calculates draft totals; C09 supplies historical outcomes and risk evidence; model numeric/commercial fields and unsupported factual risk wording cannot enter successful output.
+4. C09 insufficient evidence, absent risk evidence, and model-declared gaps return explicit non-success statuses.
+5. Success is rebuilt and validated as a typed `AgentResult` containing an unapproved `DraftQuote` and evidence-linked suggestions, never raw Bedrock text.
+6. Only draft status is constructed; approval, finalization, Excel, and C11+ tool requests fail.
+
+Exit Gate Status: PROVEN by implementation self-validation; independent verifier audit PENDING. This is not Card COMPLETE or delivery authorization.
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PENDING — implementation self-validation and learning record are current; independent audit and approved Git delivery have not occurred.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch: card/v1-c10-quotation-agent; start commit: 41bbceaffdafc257df4222fad297fbbf0221cc20. C10 candidate remains unstaged and uncommitted; push, PR, merge, and delivery are NOT_AUTHORIZED.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+The C09 corpus is synthetic and fixed; C10 does not generalize C09 to external historical stores. C08 exposes text, not native tool calls; C10 uses strict JSON over that text with no live Bedrock test. The 1024-token default is a bounded local baseline, not proof of live model behavior; explicit environment overrides can change it. Successful narrative wording is deliberately limited to three safe statements, a safety/expressiveness tradeoff to avoid unverifiable free-form factual claims. C11 review, C12 Excel, and C13+ remain outside C10.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+The strict model action envelope can support genuine tool selection without granting model authority over arguments, commercial values, evidence, or finalization. A valid test action must reach its target boundary before it can prove a later loop condition; the cost-statistics fixture initially proved an earlier evidence failure instead.
 
 ### 19. Completion Evidence
 
-NONE
+Implementation and self-validation evidence above; independent audit, delivery, final reconciliation, and Card COMPLETE remain pending.
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE — ready for focused independent C10 re-audit; delivery not authorized
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C10
 Learning Documentation Status:
-NOT_STARTED
+CURRENT — implementation rationale and observed failures recorded; independent audit and delivery pending
 
 ## V1-C11 — Human Review Gate
 
@@ -2653,7 +2664,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C07 | Risk Evidence Engine | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C08 | Amazon Bedrock Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C09 | Agent Tools | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C10 | Quotation Agent | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C10 | Quotation Agent | ACTIVE | YES | PASS | PROVEN | PENDING | PRESENT | ACTIVE — ready for focused independent C10 re-audit; delivery not authorized |
 | V1-C11 | Human Review Gate | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2670,7 +2681,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C09_COMPLETE
+Project Phase: V1_C10_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -2680,8 +2691,9 @@ V1-C06: COMPLETE
 V1-C07: COMPLETE
 V1-C08: COMPLETE
 V1-C09: COMPLETE
-V1-C10: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C10: ACTIVE
+V1-C11: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C10
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.

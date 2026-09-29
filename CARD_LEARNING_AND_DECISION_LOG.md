@@ -1193,12 +1193,12 @@ exist, and the global C09+ rule required a compact verification block that
 the C10 section lacked. The root cause was incomplete propagation of the
 later-Card verification template into these two canonical C10 owners. This
 could leave C10's completion criterion and independent verification plan
-ambiguous before authorization. The bounded fix adds the existing-scope Exit
-Gate and a derived, risk-based verification block; it does not choose an
-agent protocol, open architecture permissions, or grant C10 approval. The
+ambiguous before authorization. The bounded fix added the existing-scope Exit
+Gate and a derived, risk-based verification block without choosing an agent
+protocol, opening architecture permissions, or granting C10 approval. The
 lesson is to reconcile the Roadmap gate and specification verification fields
-before starting a Card. Independent audit of this maintenance change is
-PENDING; C10 remains unauthorized and unstarted.
+before starting a Card. That maintenance change was later independently
+audited and delivered through PR #27; separate C10 authorization followed.
 
 ### 1. Card
 
@@ -1214,63 +1214,192 @@ The project requires AI-assisted draft quotation intelligence, but orchestration
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+`quotation_agent.py` implements a bounded C10 model/tool loop. It parses one
+strict JSON action per model response, invokes only completed C09 tools with
+typed inputs reconstructed from the validated AgentRequest, validates C09
+outputs, and returns an evidence-linked `AgentResult` containing an
+unapproved `DraftQuote`. Existing Core `calculate_quote` supplies the draft
+total. C08's existing text adapter can be injected without adding native
+tool-use behavior or changing C08/C09.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The selected action protocol has `tool` and `final` forms with forbidden
+extra fields and duplicate JSON keys. The model can select a C09 tool and
+bounded non-authoritative options (metric or similarity limit); it cannot
+supply the request, identity, history, totals, or tool result. Final output
+selects evidence IDs, advisory severity, and one of three safe narrative
+statements; C10 derives risk wording from validated C09 evidence metrics.
+Seven tool calls plus one final model turn are permitted; an identical
+tool/argument pair fails on repetition. `TextModel` is a provider-neutral
+injected Protocol in the AGENT module; C08's BedrockConverseAdapter satisfies
+its runtime shape. AGENT imports CORE for domain contracts and the existing
+calculation owner, and AGENT_TOOL for C09 dispatch; it imports neither
+PROVIDER nor SUPPORT. No new dependency or C08 extension was needed.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The strict action shape makes selection genuinely model-driven without
+granting model execution authority. Reconstructing C09 inputs prevents
+model-generated arguments from overriding a validated quotation request.
+Directly calling Core's calculation owner is necessary because C09's draft
+creation tool is intentionally deferred; copying arithmetic into C10 would
+create a second commercial authority. Injecting the C08 adapter keeps its
+SDK and provider objects outside Agent and Core. Constrained success wording
+prevents arbitrary model prose from becoming an unsupported factual claim.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered an open-ended ReAct loop, native Bedrock tool use, a free-form
+model-generated draft, forwarding model-created commercial fields, adding a
+new C09 draft tool, and letting Agent import Provider/Support directly.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those alternatives either exceed the C08/C09 contracts, add unnecessary
+permissions or technology, make safety limits unclear, duplicate commercial
+authority, or accept unsupported model claims. A fixed chain was also
+rejected because C10 must let the model select among approved tools. The
+chosen bound allows the five available operations and the two metric
+variants while stopping repeated identical actions and further calls.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Existing Pydantic/domain contracts, Python standard-library JSON/regex,
+Core calculation, C09 AgentTools, and the C08 Bedrock adapter interface.
+No package, cloud service, or framework was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Pydantic matches the repository's strict typed-boundary convention. The
+standard-library parser supports explicit duplicate-key rejection. Core,
+C09, and C08 remain the actual capability owners, so the agent only
+orchestrates and validates at its trust boundaries.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Two focused-test failures and one governance smoke-check failure occurred. Pytest initially
+refused to collect `tests/test_quotation_agent.py` because its fixture was
+named `request`, a reserved pytest name. After collection was fixed, the
+loop-limit test returned INSUFFICIENT_EVIDENCE before reaching its intended
+limit assertion when it invoked cost statistics on the current synthetic
+corpus. Later, session bootstrap reported one FAIL when the live C10 state
+update shortened PROJECT_CONTROL's long implementation-status line. The
+observed failures and passing reruns are retained in the C10 Evidence Map;
+none was treated as a successful first run.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first failure was a test fixture naming collision. The second was a
+test-design mistake: a valid C09 evidence failure preempted the later C10
+orchestration limit that the test meant to exercise. It was not a C09
+calculation defect or grounds to fabricate cost observations. The bootstrap
+failure was an existing exact-prefix sanity check, not contradictory C10
+implementation evidence; the shorter but truthful status wording no longer
+contained `Application Implementation: V1-C01 BASELINE IMPLEMENTED`.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Renamed the fixture `agent_request`. Replaced the limit-test sequence with
+distinct valid C09 actions so each preceding tool call succeeds and the
+next requested call actually reaches the bound. Focused, architecture, C09
+regression, and full-suite reruns passed after the corrections. Risk
+suggestion text was also narrowed from model free text to fixed wording
+derived from C09 risk metrics after self-review identified the unsupported
+qualitative-claim path. The full truthful implementation-status sequence was
+restored in PROJECT_CONTROL and extended through C10, preserving the
+bootstrap's expected prefix without changing the read-only bootstrap script;
+bootstrap then passed apart from the expected dirty-worktree warning.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+QUOTATION_CARD_EVIDENCE_MAP.md → V1-C10 records the implementation paths,
+observed failures, passing commands, adversarial cases, Exit Gate mapping,
+and remaining limitations. `tests/test_quotation_agent.py` exercises real
+C09/Core behavior and a mocked C08 Converse transport; `tests/test_architecture.py`
+proves the AGENT category's local dependency directions.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The successful narrative is deliberately constrained to three safe
+statements, so it is less expressive than unrestricted model prose. C10
+relies on C09's verified synthetic history and does not make external data
+available. C08 remains text-only; the JSON protocol is prompt-and-parse,
+not native provider tool calling. No live Bedrock request was needed for
+deterministic validation. There is no retry/fallback agent framework, C11
+review transition, C12 Excel export, or C13+ infrastructure.
+
+### Bounded post-audit remediation (focused independent re-audit pending)
+
+The independent audit of the original C10 candidate was PASS with actionable
+MEDIUM robustness/deployment-readiness findings and a LOW maintainability
+finding. That historical PASS does not certify the changed candidate. The
+final-action dispatch called `_final(...)` outside the loop's uniform
+unexpected-exception boundary, so an unforeseen assembly error could escape
+`run()` and expose exception text through its caller. `_safe_prose` enforced
+authority limits but had no focused tests; its intended rejection and safe
+controls could silently regress. C08's 64-token configuration default was
+adequate for its earlier smoke response but could truncate C10's structured
+final JSON. Finally, the seven-call bound was correct but unexplained and
+unprotected if available tools or metric variants changed.
+
+The narrow fix wraps only `_final(...)` dispatch with sanitized typed INVALID
+failure for unexpected exceptions, retaining `_final`'s specific validation
+returns. Focused tests now exercise numeric, currency, percentage, approval,
+finalization, guarantee, and certainty text in `missing_information`, plus
+ordinary safe gaps and injected final-assembly failure. The loop remains seven
+calls: three single-call capabilities plus two metric-sensitive capabilities
+with hours/cost variants. A test asserts that derivation against C09's
+allowlist and the metric contract. Existing `Settings.bedrock_max_tokens` and
+`.env.example` move from 64 to a bounded 1024; the C08 adapter contract and
+provider isolation are unchanged. A deterministic test verifies the effective
+Converse request capacity exceeds a representative validated structured final
+response even under a conservative one-token-per-byte bound. The previous
+64-token baseline remains historical evidence, not a claimed passing runtime
+configuration. Explicit environment overrides and live Bedrock generation
+remain deployment-time considerations, not unobserved test successes.
+
+The chosen changes avoid a new error framework, prose policy expansion, C08
+adapter rewrite, arbitrary unbounded output setting, or autonomous-agent
+loop. The lesson is that a parser/final-construction boundary needs the same
+exception containment as provider/tool boundaries, and operational defaults
+must be tested against the larger consumer's actual response shape. The
+changed candidate requires its own focused independent re-audit before any
+delivery approval; C11 and later remain unauthorized.
+
+Observed post-remediation reruns were 57 C10 focused, 24 C09 regression, 32
+architecture, and 204 full pytest passes; reconciliation passed; Governance
+Harness passed 61/0; bootstrap passed 127 with its expected dirty-worktree
+warning and no failures; compilation/import, shell syntax, secret-pattern,
+and diff checks passed. These are local validation observations, not a new
+independent audit or live Bedrock result.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+For model-driven actions, validation must be at the execution boundary,
+not just in the prompt. The model may choose a tool, but cannot author its
+request identity, commercial inputs, historical evidence, or deterministic
+results. A test for a later safety limit must first use data that passes
+earlier owned-capability gates. Constraining model-authored factual prose
+is simpler and more reliable here than attempting open-ended semantic
+fact-checking with another model.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Keep the C09 tool allowlist, strict JSON/action validation, repeated-call
+guard, request/result identity checks, Core arithmetic delegation, and
+evidence-ID linkage intact. Do not replace the safe narrative selection
+with unrestricted prose without a separately justified and independently
+verified grounding mechanism. An AgentResult with status SUCCESS is still
+an unapproved draft; independent audit and Git delivery remain pending.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C11 may review this validated draft but must own explicit human approval;
+C12 owns final Excel generation after approval. C13+ may wire interfaces
+and runtime services without moving Provider SDK payloads into Core or
+granting C10 delivery/finalization authority. C17/C18 may later evaluate or
+generalize the agent's safety behavior, but C10 does not build those systems.
 
 ## V1-C11 — Human Review Gate
 
