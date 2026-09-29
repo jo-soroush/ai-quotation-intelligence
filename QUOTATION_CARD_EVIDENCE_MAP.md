@@ -1456,81 +1456,174 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE
+
+Implementation authorized; no completion or delivery claim.
 
 ### 4. Human Start Approval
 
-NO
+YES
+
+Explicit human authorization for V1-C09 implementation only.
 
 ### 5. Files Changed
 
-NONE
+`src/ai_quotation_intelligence/agent_tools.py` (new), `tests/test_agent_tools.py` (new),
+`tests/test_architecture.py`, `PROJECT_CONTROL.md`, this C09 Evidence Map section,
+and the C09 Learning Log section. No C01–C08 implementation or future-Card module changed.
 
 ### 6. Commands Run
 
-NONE
+`.venv/bin/pytest -q tests/test_agent_tools.py`; `.venv/bin/pytest -q
+tests/test_architecture.py`; `.venv/bin/pytest -q`; `bash
+scripts/test_governance_harness.sh`; `bash scripts/quotation_session_bootstrap.sh`;
+`python3 scripts/reconcile_governance_views.py --write` and `--check`;
+Python compilation/import smoke; shell syntax; `git diff --check`.
+`bash scripts/final_card_state_consistency.sh V1-C09 ACTIVE` and a
+changed-file secret-pattern/whitespace scan were also run.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — 24 C09 tool tests. Valid contracts, all five completed-tool delegations,
+typed outputs, deterministic repeatability, missing evidence, unavailable and
+unsupported operations, malformed delegated output, provenance, numeric
+tampering, rejection of caller-supplied historical records, no approval/Excel
+capability, and sanitized service failures passed.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+Historical pre-audit validation: 23 architecture tests passed; complete module
+registration and import-policy checks permitted Agent Tool → Core/Support,
+prohibited Core → Agent Tool and Agent Tool → Provider/SDK, and preserved the
+Support anti-laundering boundary. Full pytest: 138 passed after historical-input
+boundary correction. The later independent audit found that the Support
+allowance was unused; current policy permits Agent Tool → Core only, with a
+focused rejection fixture for Agent Tool → Support.
+Post-remediation rerun: C09 tools 24 passed, architecture 24 passed, combined
+48 passed, and full pytest 139 passed. Governance Harness PASS=61 / FAIL=0;
+reconciliation, ACTIVE-state consistency, compilation/import, shell syntax,
+secret-pattern scan, and `git diff --check` passed. Bootstrap reported
+PASS=127 / WARN=1 / FAIL=0; the warning is the expected undelivered dirty tree.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+PASS — existing C03–C07 owners are invoked and their exact results preserved.
+Every tool loads and validates the full C03 synthetic corpus internally;
+untrusted callers cannot supply or cherry-pick historical records. The C05 and C07
+insufficient-evidence semantics remain visible. C08 is not invoked.
+Risk classification: ELEVATED tool-execution boundary. Contract invariants,
+adversarial malformed-result/tampering cases, and failure injection were
+required and executed; no live Bedrock, property/fuzz/concurrency framework,
+or external-effect rollback was applicable to this pure local tool layer.
+Source adaptation: NOT_APPLICABLE — only existing in-repository capabilities
+and ordinary language/library constructs were used.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — no tool-owned arithmetic, invented rates/totals, missing-value
+substitution, fabricated risk evidence, approval, or finalization. Source IDs,
+quote IDs, data origin, full C03 corpus identity, and deterministic Core values are checked at output
+boundaries. Cost statistics with no actual costs fail as insufficient evidence.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS / LIVE BEDROCK NOT_APPLICABLE — C09 imports no Bedrock/provider SDK and
+does not issue model-driven tool calls; C08's bounded text result is not a
+structured tool-call contract.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS — fixed available-tool resolver rejects deferred and arbitrary methods;
+service errors expose only a failure code and tool/request identity, not
+exception text; no secrets, external writes, or provider payloads were added.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+An adversarial probe initially failed: a structurally valid comparison with
+the correct source ID but a forged numeric variance was accepted by the tool
+boundary (`.venv/bin/pytest -q
+tests/test_agent_tools.py::test_plausible_numeric_overrides_from_delegates_are_not_authoritative`,
+1 failed). Root cause: shape/provenance checks alone did not bind numeric
+results to the deterministic owner. C09 now compares delegated results with
+the existing Core owner's deterministic output; focused rerun passed (46
+combined C09/architecture tests). The full suite passed (137) after the
+additional whitespace-ID rejection case.
+
+A second adversarial probe initially failed: a caller-supplied historical
+record with an altered actual-hours value and unchanged source identity was
+accepted by `get_risk_evidence` (`.venv/bin/pytest -q
+tests/test_agent_tools.py::test_caller_cannot_supply_altered_historical_outcomes`,
+1 failed). Root cause: caller-controlled history was passed to Core and then
+used as the reference for exact output comparison. C09 removed history fields
+from all tool inputs; each tool now obtains and verifies the complete C03
+corpus internally. Focused C09 rerun passed (24 tests); combined C09/architecture
+rerun passed (47), and full pytest passed (138). This was a C09 trust-boundary
+defect, not a C03–C07 service defect.
+
+The first `bash scripts/final_card_state_consistency.sh V1-C09 ACTIVE` run
+failed three exact-state assertions because the active-Card, evidence-state,
+and approval lines included explanatory suffixes. The canonical parser expects
+bare `V1-C09`, `ACTIVE`, and `YES` values. The C09 state records were formatted
+accordingly; the rerun passed all seven ACTIVE-state assertions.
+
+Independent C09 audit reported PASS with one actionable LOW finding: the
+architecture policy allowed `AGENT_TOOL → SUPPORT` although the C09 module
+imports only Core. The bounded remediation removed only that unused policy
+edge and added a focused Support-import rejection fixture. The original audit
+PASS remains historical; this changed candidate requires independent re-audit
+before any delivery approval.
 
 ### 14. Exit Gate Evidence
 
-NONE
+Typed request/output models and five independently tested tool methods are
+implemented. Each returns traceable, validated Core data or raises a typed
+`ToolFailure`; no success is fabricated. Delegation is to C03 synthetic history,
+C05 comparison/statistics, C06 similarity, and C07 risk evidence. Core-owned
+calculation remains in C04/C05; no C09 total, invented evidence, approval,
+finalization, model tool-call loop, or Excel implementation exists.
+Tool inputs contain query parameters only, not historical evidence records.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: PROVEN by implementation self-validation; post-remediation independent re-audit PENDING
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PASS — bounded C09 implementation, focused/full/architecture/governance
+validation, failure-path and adversarial probes, Evidence Map, and Learning Log
+are current. This is not independent audit or Git delivery approval.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch: card/v1-c09-agent-tools; start commit: 5625eff2e6edc4cf8c498cf7d4569be84186bc96. No staging, delivery commit, push, PR, or merge for C09.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+All C09 tools currently use only C03's deterministic synthetic dataset; no
+caller-provided subset or general storage source is accepted. Draft
+creation/validation and Excel generation are deliberately
+deferred and rejected as unsupported. Exact Core re-execution at output
+boundaries favors trustworthiness over compute efficiency; revisit only with
+an authorized owner/contract change.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+C09 tool boundaries need both provenance checks and exact comparison to
+deterministic owners; type/shape validation alone cannot catch plausible
+numeric tampering. Source identity on a caller-controlled historical record
+does not make that record trusted. An explicit deferred-tool set is safer than placeholders
+that return apparent success for later-Card capabilities.
 
 ### 19. Completion Evidence
 
-NONE
+IMPLEMENTATION VALIDATED / INDEPENDENT AUDIT PENDING / GIT DELIVERY NOT
+AUTHORIZED. C09 is not COMPLETE; no commit, push, PR, or merge exists for C09.
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE — ready for independent C09 audit; not ready for Git delivery
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C09
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C10 — Quotation Agent
 
@@ -2536,7 +2629,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C06 | Similar Quote Retrieval | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C07 | Risk Evidence Engine | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C08 | Amazon Bedrock Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C09 | Agent Tools | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C09 | Agent Tools | ACTIVE | YES | PASS | PROVEN | PASS — self-validation | PRESENT | ACTIVE — ready for independent C09 audit; not ready for Git delivery |
 | V1-C10 | Quotation Agent | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C11 | Human Review Gate | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2554,7 +2647,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C08_COMPLETE
+Project Phase: V1_C09_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -2563,8 +2656,9 @@ V1-C05: COMPLETE
 V1-C06: COMPLETE
 V1-C07: COMPLETE
 V1-C08: COMPLETE
-V1-C09: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C09: ACTIVE
+V1-C10: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C09
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.

@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C08_COMPLETE
+Project Phase: V1_C09_ACTIVE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -59,12 +59,12 @@ Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED
-Active Card: NONE
-Active Card State: NONE
+Active Card: V1-C09
+Active Card State: ACTIVE
 Last COMPLETE Card: V1-C08 — Amazon Bedrock Integration
-Next Roadmap Card: V1-C09 — Agent Tools
-Next Card Authorized: NO — V1-C09 and later Cards remain unauthorized
-Implementation Authorization: NONE — authorization consumed by completion; V1-C09 and later Cards not authorized
+Next Roadmap Card: V1-C10 — Quotation Agent (not authorized)
+Next Card Authorized: NO — V1-C10 and later Cards remain unauthorized
+Implementation Authorization: GRANTED — explicit human authorization for V1-C09 implementation only; Git delivery not authorized
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
 Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
@@ -132,31 +132,31 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C08
-Title: Amazon Bedrock Integration
-State: COMPLETE
-Branch: card/v1-c08-amazon-bedrock-integration
-Start Commit: d1032e1f33156be0a8981ab2eec7f86f07852f08
-Delivery Commit: a29189d7d62145936aaa4f024ce8076a4bef30b7
-PR: MERGED — #18
-Merge Commit: def3367540ac17bfb9ab1f3acfb97fe6302bc656
-Human Start Approval: GRANTED — explicit human authorization for V1-C08
-Authorized Scope: V1-C08 — Amazon Bedrock Integration only
+Card ID: V1-C09
+Title: Agent Tools
+State: ACTIVE
+Branch: card/v1-c09-agent-tools
+Start Commit: 5625eff2e6edc4cf8c498cf7d4569be84186bc96
+Delivery Commit: NOT_CREATED
+PR: NOT_CREATED
+Merge Commit: NOT_CREATED
+Human Start Approval: GRANTED — explicit human authorization for V1-C09 implementation
+Authorized Scope: V1-C09 — Agent Tools only; no Git delivery or future-Card implementation
 ROADMAP_ALIGNMENT_GATE: PASS — pre-write inspection complete
-CARD_QUALITY_GATE: PASS — focused and full validation complete
+CARD_QUALITY_GATE: PASS — C09 implementation self-validation complete; independent audit and Git delivery pending
 ```
 
 Safe Checkpoint:
 
-C02 domain contracts, C03 synthetic history, C04 calculation, C05 historical comparison, C06 retrieval, C07 risk evidence, and C08 Bedrock integration were delivered and are complete. No later Card implementation has started and V1-C09 and later are not authorized.
+C02 domain contracts, C03 synthetic history, C04 calculation, C05 historical comparison, C06 retrieval, C07 risk evidence, and C08 Bedrock integration were delivered and are complete. V1-C09 implementation is authorized and active; V1-C10 and later remain unauthorized.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
 FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C02 delivery and final reconciliation verified on main.
 
 ## 6. Authorization Ledger
 
 ```
-Card Start: CONSUMED — V1-C08 completed
-Next Card: NOT_GRANTED — V1-C09 and later Cards remain unauthorized
+Card Start: GRANTED — V1-C09 implementation only
+Next Card: NOT_GRANTED — V1-C10 and later Cards remain unauthorized
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C04: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -164,6 +164,7 @@ V1-C05: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C06: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C07: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C08: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
+V1-C09: START APPROVAL GRANTED (CURRENT; IMPLEMENTATION ONLY)
 Architecture Change: NOT_GRANTED
 Material Scope Change: NOT_GRANTED
 Significant Technology Addition: NOT_GRANTED
@@ -194,7 +195,7 @@ Read-only inspection: ALLOWED
 Governance final audit: COMPLETE / READ_ONLY
 ```
 
-V1-C04, V1-C05, V1-C06, V1-C07, and V1-C08 implementation, validation, delivery, and reconciliation are complete. No later Card is authorized.
+V1-C04, V1-C05, V1-C06, V1-C07, and V1-C08 implementation, validation, delivery, and reconciliation are complete. V1-C09 is authorized for implementation only; no later Card is authorized.
 
 ## 7. Roadmap Position
 
@@ -202,18 +203,18 @@ V1-C04, V1-C05, V1-C06, V1-C07, and V1-C08 implementation, validation, delivery,
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration
-Active Card: NONE
-Next Roadmap Card: V1-C09 — Agent Tools
+Active Card: V1-C09
+Next Roadmap Card: V1-C10 — Quotation Agent (not authorized)
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
-Later Cards: V1-C09 and later NOT_AUTHORIZED
+Later Cards: V1-C10 and later NOT_AUTHORIZED
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
 
 ## 8. Current Blockers and Pending Control
 
-V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, and V1-C08 implementation, validation, Git delivery, and final reconciliation are complete. V1-C09 and later remain unauthorized.
+V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, and V1-C08 implementation, validation, Git delivery, and final reconciliation are complete. V1-C09 implementation is active; V1-C10 and later remain unauthorized.
 
 Governance remaining actions: NONE.
 
@@ -233,15 +234,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: V1-C07 identity, scope, ownership, dependency posture, boundaries, and explicit human authorization were verified before implementation.
+Reason: V1-C09 identity, scope, C01–C08 ownership, dependency posture, boundaries, and explicit human authorization were verified before implementation.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / V1-C07 pre-write inspection recorded in session
-Risk Map: COMPLETE / V1-C07 pre-write inspection recorded in session
-Reason: V1-C07 pre-write inspection completed before implementation.
+Contract Map: COMPLETE / V1-C09 pre-write inspection recorded in session
+Risk Map: COMPLETE / V1-C09 ELEVATED tool-execution boundary recorded in session
+Reason: V1-C09 pre-write inspection and CONTENT_ALIGNMENT_GATE passed before implementation.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -253,8 +254,8 @@ Canonical Guardrails:
 ```
 COMMERCIAL_AND_DATA_GUARDRAILS.md
 Status: CANONICAL
-Implementation validation: PASS — V1-C08 Bedrock Converse integration, provider isolation, response validation, configuration, bounded timeout/retry, security, and live Python smoke test
-Reason: Focused, related, full, mocked provider, import, configuration, governance, and live Bedrock validation passed; Core remains deterministic and provider-neutral.
+Implementation validation: PASS — V1-C09 tool input/output, delegation, provenance, failure, security, and authority boundaries
+Reason: Focused, architecture, full, adversarial, and governance validation passed; Core remains deterministic and provider-neutral.
 ```
 
 Do not mark runtime guardrails PASS without implementation evidence.
@@ -267,7 +268,7 @@ Initial Model Direction: Amazon Nova
 Repository Bedrock Implementation: IMPLEMENTED — provider-isolated Converse adapter
 Provider Contract: IMPLEMENTED — typed bounded adapter result
 Structured AI Schema: RESPONSE ENVELOPE VALIDATED; no C09+ agent schema introduced
-Agent Tools: NOT_IMPLEMENTED
+Agent Tools: IMPLEMENTED / UNDELIVERED — independent audit pending
 Quotation Agent: NOT_IMPLEMENTED
 AI runtime validation: PASS — Python Converse smoke test with amazon.nova-micro-v1:0 in us-east-1
 ```
@@ -288,11 +289,11 @@ Do not infer account configuration or credentials from local tools or external s
 ## 14. Test / Evaluation State
 
 ```
-tests/: C01 BASELINE, C02 DOMAIN, C03 SYNTHETIC DATA, C04 CALCULATION, C05 COMPARISON, C06 RETRIEVAL, C07 RISK EVIDENCE, and C08 BEDROCK TESTS CREATED
+tests/: C01–C08 tests and C09 AGENT TOOL tests CREATED
 pytest project baseline: ESTABLISHED
 Evaluation Harness implementation: NOT_STARTED
 Golden Case: NOT_STARTED
-Card tests: C01 BASELINE — 3 PASSED; C02 FULL SUITE — 14 PASSED; C03 focused tests — 5 PASSED; C04 focused tests — 11 PASSED; C05 focused tests — 10 PASSED; C06 focused tests — 8 PASSED; C07 focused tests — 11 PASSED; C08 focused tests — 9 PASSED; C04–C08 related tests — 51 PASSED; full suite — 70 PASSED (observed)
+Card tests: historical C01–C08 results remain in their Evidence Map sections; C09 focused — 24 PASSED; architecture — 23 PASSED; latest full suite — 138 PASSED (observed)
 ```
 
 Bootstrap inspection is not V1 Card test evidence.
@@ -304,10 +305,11 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, and V1-C08 PRESENT; later Cards NONE
+Implementation Evidence: V1-C01–V1-C08 COMPLETE; V1-C09 IMPLEMENTED / UNDELIVERED; V1-C10 and later NONE
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration
 V1-C01 CARD_QUALITY_GATE: PASS
-Later Card Quality Gates: NOT_RUN
+V1-C09 CARD_QUALITY_GATE: PASS — implementation self-validation; independent audit pending
+V1-C10 and later Quality Gates: NOT_RUN
 V1-C01 Exit Gate: PROVEN
 V1-C02 Exit Gate: PROVEN
 V1-C03 Exit Gate: PROVEN — dataset, schema, provenance, pattern, and scope checks passed
@@ -315,7 +317,8 @@ V1-C04 Exit Gate: PROVEN — deterministic arithmetic, reconciliation, and scope
 V1-C05 Exit Gate: PROVEN — deterministic variance, aggregate, missing-outcome, and scope checks passed
 V1-C06 Exit Gate: PROVEN — deterministic, bounded, explainable retrieval and empty/insufficient-result behavior passed
 V1-C07 Exit Gate: PROVEN — deterministic, traceable risk evidence and insufficient-evidence behavior passed
-Later Card Exit Gates: NOT_PROVEN
+V1-C09 Exit Gate: PROVEN by self-validation; independent audit pending
+V1-C10 and later Exit Gates: NOT_PROVEN
 ```
 
 Governance migration validation is not V1 implementation evidence.
@@ -323,7 +326,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C08_COMPLETE
+Checkpoint Type: V1_C09_ACTIVE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -332,8 +335,8 @@ Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
 Application implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED
-Active Card: NONE
-Active Card State: NONE
+Active Card: V1-C09
+Active Card State: ACTIVE
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -366,7 +369,7 @@ These are governance decisions, not implementation claims.
 | V1-C06 | Similar Quote Retrieval | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
 | V1-C07 | Risk Evidence Engine | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
 | V1-C08 | Amazon Bedrock Integration | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
-| V1-C09 | Agent Tools | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C09 | Agent Tools | ACTIVE | YES | PASS — self-validation | PRESENT — undelivered implementation evidence |
 | V1-C10 | Quotation Agent | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C11 | Human Review Gate | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -379,7 +382,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01 through V1-C08 are COMPLETE. V1-C09 and later remain not authorized.
+V1-C01 through V1-C08 are COMPLETE. V1-C09 implementation is authorized and active; V1-C10 and later remain not authorized.
 
 ## 19. Resume Protocol
 
@@ -411,16 +414,16 @@ Governance migration files have been migrated and reconciled. Strict governance 
 
 ```
 Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED
-Active Card: NONE
-Active Card State: NONE
-Next Roadmap Card: V1-C09 — Agent Tools
+Active Card: V1-C09
+Active Card State: ACTIVE
+Next Roadmap Card: V1-C10 — Quotation Agent (not authorized)
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: No Card is active; do not start V1-C09 automatically.
+Safe next action: Independently audit the V1-C09 candidate on its dedicated branch; do not stage or deliver without separate approval.
 
 Do not start any later Card automatically.
 
@@ -434,5 +437,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, AND V1-C08 ARE COMPLETE; V1-C09 AND LATER CARDS REQUIRE SEPARATE HUMAN APPROVAL.
+V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, AND V1-C08 ARE COMPLETE; V1-C09 IMPLEMENTATION IS AUTHORIZED; V1-C10 AND LATER CARDS REQUIRE SEPARATE HUMAN APPROVAL.
 ```
