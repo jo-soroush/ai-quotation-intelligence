@@ -1374,6 +1374,18 @@ warning and no failures; compilation/import, shell syntax, secret-pattern,
 and diff checks passed. These are local validation observations, not a new
 independent audit or live Bedrock result.
 
+The later human delivery instruction confirmed independent PASS for the exact
+remediated identity `80cf063ea390776f581b04744043d48fb15473194365ee527ed391dfe71f5893`
+and explicitly accepted the remaining LOW output-token sizing note as
+non-blocking. The frozen candidate was not edited. Worktree, staged-index,
+and committed-tree identity checks passed; delivery commit
+`68370daa4d9defcdb6cfd3455db1c26a9c4c3480` was pushed and merged in
+PR #28 as `ecb73841eeb80a863d0f969c66105d9b02226caa`. Post-merge on
+clean `main`, C10/C09/architecture/full pytest passed 57/24/32/204,
+Governance Harness passed 61/0, reconciliation passed, and bootstrap passed
+128/0/0. This outcome-only record is separate from the audited candidate;
+its own future Git identifiers are not prerequisites or embedded here.
+
 ### 16. What We Learned
 
 For model-driven actions, validation must be at the execution boundary,
@@ -1391,7 +1403,8 @@ guard, request/result identity checks, Core arithmetic delegation, and
 evidence-ID linkage intact. Do not replace the safe narrative selection
 with unrestricted prose without a separately justified and independently
 verified grounding mechanism. An AgentResult with status SUCCESS is still
-an unapproved draft; independent audit and Git delivery remain pending.
+an unapproved draft; the completed C10 delivery does not grant C11 approval
+or quotation-finalization authority.
 
 ### 18. Impact on Later Cards
 

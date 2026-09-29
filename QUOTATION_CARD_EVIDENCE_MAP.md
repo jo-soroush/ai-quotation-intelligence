@@ -1662,11 +1662,18 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-ACTIVE — implementation self-validated; independent audit and delivery pending
+COMPLETE
+
+The exact remediated C10 candidate was independently audited, human-approved,
+and delivered through PR #28. The accepted LOW token-limit sizing note remains
+non-blocking; no post-audit candidate content was changed.
 
 ### 4. Human Start Approval
 
-YES — explicit human authorization for V1-C10 only; C11+ remain unauthorized
+YES
+
+Explicit human authorization covered V1-C10 implementation and exact audited
+Git delivery only; V1-C11 and later remain unauthorized.
 
 ### 5. Files Changed
 
@@ -1675,6 +1682,12 @@ PROJECT_CONTROL.md; QUOTATION_CARD_EVIDENCE_MAP.md; CARD_LEARNING_AND_DECISION_L
 ### 6. Commands Run
 
 Original implementation validation: 45 C10 focused, 24 C09, 32 architecture, and 192 full pytest passed. After bounded independent-audit remediation: `.venv/bin/pytest -q tests/test_quotation_agent.py` (57 passed); `.venv/bin/pytest -q tests/test_agent_tools.py` (24 passed); `.venv/bin/pytest -q tests/test_architecture.py` (32 passed); `.venv/bin/pytest -q` (204 passed); `python3 scripts/reconcile_governance_views.py --write` and `--check` (PASS); `bash scripts/test_governance_harness.sh` (61 PASS / 0 FAIL); `bash scripts/quotation_session_bootstrap.sh` (127 PASS / 1 expected dirty-worktree WARN / 0 FAIL); Python compilation/import, shell syntax, changed-file secret-pattern scan, and `git diff --check` (PASS). Candidate identity is recomputed only after final validation/documentation.
+
+Post-merge on clean `main`: C10 focused 57 passed; C09 regression 24 passed;
+architecture 32 passed; full pytest 204 passed; Governance Harness 61/0;
+reconciliation check PASS; bootstrap 128 PASS / 0 WARN / 0 FAIL; Python
+compilation/import, shell syntax, and diff check PASS. GitHub reported no PR
+checks; no required branch protection or ruleset was configured.
 
 ### 7. Focused Tests
 
@@ -1700,13 +1713,13 @@ PASS (mocked) — C08 BedrockResult status/text/request identity are validated; 
 
 PASS (self-validation) — allowlisted C09 tool dispatch; strict JSON with duplicate-key rejection; strict tool arguments; request data and IDs supplied by validated input, not by model; bounded seven-call loop with repeat rejection and derivation invariant; fixed safe success narratives and focused forbidden-prose tests; evidence-linked risk wording generated from C09 metrics; sanitized final-assembly/provider errors; no SDK import leakage. Static architecture tests verify forbidden directions. A default C08 Converse request now carries a bounded 1024 output-token budget, checked against a representative grounded final JSON without a live AWS call.
 
-Proportional C10 threat review (ELEVATED): protected assets are validated quotation inputs, Core totals, C09 evidence provenance, and human approval authority. Trust boundaries are user text → model prompt, Bedrock text → action parser, action → C09 tools, and C09 result → AgentResult. Attacks/failures include prompt injection, unknown/deferred tool requests, forged arguments or evidence IDs, invalid provider/tool output, repeated actions, and exception-detail leakage. Controls are strict action schemas, fixed tool allowlist and input construction, output identity/provenance checks, bounded execution, constrained success wording, Core arithmetic delegation, and sanitized non-success results. `tests/test_quotation_agent.py` and `tests/test_architecture.py` exercise these controls. Residual: C08 live generation behavior and later human review are not proven by these deterministic tests; independent C10 audit remains pending.
+Proportional C10 threat review (ELEVATED): protected assets are validated quotation inputs, Core totals, C09 evidence provenance, and human approval authority. Trust boundaries are user text → model prompt, Bedrock text → action parser, action → C09 tools, and C09 result → AgentResult. Attacks/failures include prompt injection, unknown/deferred tool requests, forged arguments or evidence IDs, invalid provider/tool output, repeated actions, and exception-detail leakage. Controls are strict action schemas, fixed tool allowlist and input construction, output identity/provenance checks, bounded execution, constrained success wording, Core arithmetic delegation, and sanitized non-success results. `tests/test_quotation_agent.py` and `tests/test_architecture.py` exercise these controls. Residual: C08 live generation behavior and later human review are not proven by these deterministic tests; exact C10 content was independently audited before delivery.
 
 ### 13. Failures / Blockers
 
 Three original validation failures were preserved and resolved. First, focused pytest collection failed because `request` is a reserved pytest fixture name; the C10 fixture was renamed `agent_request`, then focused tests collected and passed. Second, the loop-limit test expected INVALID but C09 correctly returned INSUFFICIENT_EVIDENCE for cost statistics in the synthetic corpus before the limit; the test fixture was changed to use distinct valid tool actions, and the bounded-loop case passed. Third, bootstrap returned PASS=126/WARN=1/FAIL=1 because the C10 state update replaced the long `Application Implementation: V1-C01 BASELINE IMPLEMENTED` prefix that its read-only sanity check requires. PROJECT_CONTROL kept the true C10 state while restoring that established prefix; the bootstrap rerun returned PASS=127/WARN=1/FAIL=0. None was hidden as a first-pass success.
 
-The independent audit of the original C10 candidate reported PASS with actionable MEDIUM robustness/deployment-readiness findings and a LOW orchestration-limit documentation finding; that PASS is historical, not a certification of this changed candidate. Its observations were: `_final(...)` dispatch lacked uniform unexpected-exception containment; `_safe_prose` authority checks lacked focused tests; C08's 64-token default could truncate legitimate C10 final JSON; and seven-call rationale was not mechanically protected. Bounded remediation added an INVALID sanitized exception boundary, 7 forbidden and 2 safe prose cases, an explicit 3 + 2×2 limit explanation/invariant, and a 1024-token default in existing configuration and `.env.example`. The C08 adapter interface, C10 structured protocol, commercial authority, C09 provenance/tool allowlist, and C11+ boundaries were not changed. Focused, C09, architecture, and full pytest reruns passed at 57/24/32/204; reconciliation PASS, Governance Harness 61/0, bootstrap 127/1 expected WARN/0, compilation/import/shell syntax/security scan/diff PASS. Re-audit of the new identity is PENDING.
+The independent audit of the original C10 candidate reported PASS with actionable MEDIUM robustness/deployment-readiness findings and a LOW orchestration-limit documentation finding; that PASS is historical, not a certification of the changed candidate. Its observations were: `_final(...)` dispatch lacked uniform unexpected-exception containment; `_safe_prose` authority checks lacked focused tests; C08's 64-token default could truncate legitimate C10 final JSON; and seven-call rationale was not mechanically protected. Bounded remediation added an INVALID sanitized exception boundary, 7 forbidden and 2 safe prose cases, an explicit 3 + 2×2 limit explanation/invariant, and a 1024-token default in existing configuration and `.env.example`. The C08 adapter interface, C10 structured protocol, commercial authority, C09 provenance/tool allowlist, and C11+ boundaries were not changed. Focused, C09, architecture, and full pytest reruns passed at 57/24/32/204; reconciliation PASS, Governance Harness 61/0, bootstrap 127/1 expected WARN/0, compilation/import/shell syntax/security scan/diff PASS. The human delivery instruction subsequently identified exact remediated identity `80cf063ea390776f581b04744043d48fb15473194365ee527ed391dfe71f5893` as independently audited PASS and accepted the remaining LOW token-sizing note as non-blocking. No new content fix followed that audit.
 
 ### 14. Exit Gate Evidence
 
@@ -1719,15 +1732,15 @@ Self-validated against the six Roadmap clauses:
 5. Success is rebuilt and validated as a typed `AgentResult` containing an unapproved `DraftQuote` and evidence-linked suggestions, never raw Bedrock text.
 6. Only draft status is constructed; approval, finalization, Excel, and C11+ tool requests fail.
 
-Exit Gate Status: PROVEN by implementation self-validation; independent verifier audit PENDING. This is not Card COMPLETE or delivery authorization.
+Exit Gate Status: PROVEN by implementation validation, exact-identity independent audit, and approved delivery. No approval/finalization capability was added.
 
 ### 15. CARD_QUALITY_GATE
 
-PENDING — implementation self-validation and learning record are current; independent audit and approved Git delivery have not occurred.
+PASS — implementation, evidence, learning, required validation, exact-identity independent audit, accepted LOW residual, and approved PR #28 delivery are complete.
 
 ### 16. Git Evidence
 
-Branch: card/v1-c10-quotation-agent; start commit: 41bbceaffdafc257df4222fad297fbbf0221cc20. C10 candidate remains unstaged and uncommitted; push, PR, merge, and delivery are NOT_AUTHORIZED.
+Branch: `card/v1-c10-quotation-agent`; start commit `41bbceaffdafc257df4222fad297fbbf0221cc20`; audited identity `80cf063ea390776f581b04744043d48fb15473194365ee527ed391dfe71f5893`. Worktree, staged/index, and committed-tree verification matched that identity. Delivery commit `68370daa4d9defcdb6cfd3455db1c26a9c4c3480` was pushed; PR: MERGED — #28; Merge: COMPLETED — `ecb73841eeb80a863d0f969c66105d9b02226caa`. Post-merge local main and origin/main matched with 0/0 divergence and a clean tree before this separate outcome-only reconciliation.
 
 ### 17. Known Limitations
 
@@ -1739,15 +1752,15 @@ The strict model action envelope can support genuine tool selection without gran
 
 ### 19. Completion Evidence
 
-Implementation and self-validation evidence above; independent audit, delivery, final reconciliation, and Card COMPLETE remain pending.
+COMPLETE — implementation, validation, exact independently audited candidate, human-approved PR #28 merge, and this separate outcome-only state reconciliation. Final consistency remains subject to post-reconciliation runtime verification on clean main.
 
 ### 20. Recommended State
 
-ACTIVE — ready for focused independent C10 re-audit; delivery not authorized
+COMPLETE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C10
 Learning Documentation Status:
-CURRENT — implementation rationale and observed failures recorded; independent audit and delivery pending
+CURRENT
 
 ## V1-C11 — Human Review Gate
 
@@ -2664,7 +2677,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C07 | Risk Evidence Engine | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C08 | Amazon Bedrock Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C09 | Agent Tools | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C10 | Quotation Agent | ACTIVE | YES | PASS | PROVEN | PENDING | PRESENT | ACTIVE — ready for focused independent C10 re-audit; delivery not authorized |
+| V1-C10 | Quotation Agent | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C11 | Human Review Gate | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2681,7 +2694,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C10_ACTIVE
+Project Phase: V1_C10_COMPLETE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -2691,10 +2704,10 @@ V1-C06: COMPLETE
 V1-C07: COMPLETE
 V1-C08: COMPLETE
 V1-C09: COMPLETE
-V1-C10: ACTIVE
+V1-C10: COMPLETE
 V1-C11: NOT_AUTHORIZED / NOT_STARTED
-Active Card: V1-C10
-Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09
+Active Card: NONE
+Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
 <!-- END GENERATED: CURRENT_SUMMARY -->
