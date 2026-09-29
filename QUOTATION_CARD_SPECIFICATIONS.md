@@ -980,6 +980,77 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 
 Tool selection, required invocation, tool-result use, missing information, insufficient evidence, unsupported claims, invalid output, Bedrock unavailability, tool failure, structured result validation, unchanged deterministic numbers, and no approval bypass.
 
+Pre-implementation C10 verification block (derived from this Card sections
+2, 5, 7–9, 11–12; Roadmap V1-C10; PROJECT_PROFILE.md; and
+COMMERCIAL_AND_DATA_GUARDRAILS.md; this is a verification plan, not C10
+authorization or implementation evidence):
+
+- Risk Classification: ELEVATED for model-directed tool selection and the
+  commercial/evidence trust boundary. Reassess if implementation introduces
+  external or irreversible effects beyond this Card.
+- Escalation Triggers: agent autonomy and tool execution; untrusted model,
+  argument, and tool output; evidence provenance; commercial authority;
+  missing information and explicit failure; human approval boundary.
+- Canonical Sources: Roadmap V1-C10, this Card's sections 2–12,
+  PROJECT_PROFILE.md, COMMERCIAL_AND_DATA_GUARDRAILS.md, and the existing C08
+  provider and C09 tool contracts. These do not grant C11+ scope.
+- Acceptance Contract: Given a quotation request and available approved C09
+  tools, when the agent reasons and acts, then it selects only those tools,
+  validates selection, arguments, and results, and returns a grounded,
+  validated structured AgentResult for review. Given missing information,
+  insufficient evidence, invalid model/tool output, or unavailable or failed
+  capabilities, it surfaces the condition explicitly rather than fabricating
+  success. It never invents commercial values or evidence, changes
+  deterministic results, or approves/finalizes a quotation.
+- Critical Invariants: deterministic software, not the model, owns commercial
+  truth; only authorized C09 tools execute; model arguments and tool results
+  remain untrusted until validated; evidence retains provenance and missing
+  evidence stays visible; provider-specific objects do not become Core domain
+  state; orchestration is bounded and fails closed; C11+ ownership and human
+  approval remain outside C10. Verify with contract, adversarial, failure,
+  and architecture cases rather than prompt wording alone.
+- Verification Strategy: use deterministic request/result contract tests,
+  mocked Bedrock and C09 tool traces, malformed/contradictory output and
+  failure cases, bounded-orchestration checks, provenance and commercial
+  invariant checks, and the existing architecture boundary suite. Live
+  provider testing is evaluated against the eventual implementation and
+  available environment, not presumed by this pre-implementation block.
+- Advanced Verification Decision (reassess against the actual C10 design at
+  Card start; no implementation mechanism or new framework is prescribed):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Commercial authority, provenance, and bounded action must hold |
+  | Contract tests | REQUIRED | Validated tool and structured result boundaries |
+  | Integration | CONDITIONAL / EVALUATE | Evaluate whether mocked contracts suffice to prove component wiring |
+  | Generated property tests | CONDITIONAL / EVALUATE | Use if combinatorial routing or validated input space exceeds focused cases |
+  | Targeted mutation-resistance | CONDITIONAL / EVALUATE | Challenge consequential routing, failure, and approval assertions |
+  | Failure injection | REQUIRED | Bedrock/tool unavailability and invalid output must fail explicitly |
+  | Fuzzing | CONDITIONAL / EVALUATE | Evaluate if the chosen parser exposes a broad untrusted input surface |
+  | Differential | NOT_APPLICABLE | No equivalent second implementation is specified |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Needed if shared state or concurrent execution is introduced |
+  | Adversarial testing | REQUIRED | Probe invented values/evidence, unauthorized tools, and model override attempts |
+  | Threat modeling | REQUIRED | Model-directed tool use crosses a permission and trust boundary |
+  | Agent evals | CONDITIONAL / EVALUATE | Evaluate bounded C10 behavior; C17 evaluation infrastructure is not C10 scope |
+  | Rollback/recovery | CONDITIONAL / EVALUATE | Needed if actual C10 design introduces persistent or external effects |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal-state risk is specified |
+- Independent Verifier Expectations: inspect the frozen candidate against the
+  Roadmap Exit Gate and C10 contract, challenge false-green tests and
+  commercial/evidence authority, verify only available C09 tools are used,
+  inspect failure and architecture boundaries, and require re-audit after a
+  material correction.
+- Evidence / Traceability Requirements: link consequential tool-selection,
+  input/output validation, grounding, provenance, boundedness, failures,
+  commercial invariants, and prohibited approval claims to actual paths,
+  executed tests, and observed outcomes in the Evidence Map. Record material
+  design rationale and lessons in the Learning Log. Until C10 is authorized
+  and executed, these observations remain NOT_RUN / NOT_PROVEN.
+- Known Non-Scope: section 9 remains authoritative; C11 human review,
+  C12 final Excel export, C13+ interfaces, storage, deployment, observability,
+  evaluation infrastructure, and later platform work stay with their Cards.
+  No exact call count, wire schema, protocol placement, or new architecture
+  dependency permission is selected here.
+
 Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate

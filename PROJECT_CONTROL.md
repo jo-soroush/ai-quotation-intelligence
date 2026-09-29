@@ -273,7 +273,7 @@ Initial Model Direction: Amazon Nova
 Repository Bedrock Implementation: IMPLEMENTED — provider-isolated Converse adapter
 Provider Contract: IMPLEMENTED — typed bounded adapter result
 Structured AI Schema: RESPONSE ENVELOPE VALIDATED; no C09+ agent schema introduced
-Agent Tools: IMPLEMENTED / UNDELIVERED — independent audit pending
+Agent Tools: IMPLEMENTED / DELIVERED — independently audited; PR #25 merged, reconciliation PR #26 merged
 Quotation Agent: NOT_IMPLEMENTED
 AI runtime validation: PASS — Python Converse smoke test with amazon.nova-micro-v1:0 in us-east-1
 ```

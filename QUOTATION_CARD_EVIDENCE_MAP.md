@@ -1641,6 +1641,15 @@ CURRENT
 
 ## V1-C10 — Quotation Agent
 
+Pre-C10 canonical maintenance (not C10 implementation): inspection found that
+the Roadmap omitted an explicit C10 Exit Gate even though the Card
+Specification makes that gate authoritative, and that C10 lacked the compact
+pre-implementation verification block required for C09 and later. The
+maintenance candidate adds the Roadmap gate and the derived verification
+block without authorizing or starting C10. Independent audit of this
+maintenance candidate is PENDING; C10 implementation tests and Exit Gate
+proof remain NOT_RUN / NOT_PROVEN.
+
 ### 1. Card
 
 V1-C10 — Quotation Agent
