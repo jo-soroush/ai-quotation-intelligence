@@ -518,6 +518,15 @@ avoid unsupported claims
 
 The agent must be a genuine tool-using component rather than a fixed chain labeled as an agent.
 
+### Exit Gate
+
+* the agent understands a quotation request and selects only C09's available tools
+* tool selection and tool results are validated before use
+* commercial totals, historical outcomes, and risk evidence are never computed or invented by the model
+* missing or insufficient evidence is surfaced explicitly rather than silently omitted
+* the returned successful result is a validated structured AgentResult rather than unvalidated model text
+* no final approval or autonomous finalization occurs
+
 ---
 
 # Phase 4 — Governance and Output

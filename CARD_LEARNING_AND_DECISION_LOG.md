@@ -1187,6 +1187,19 @@ remains unauthorized.
 
 ## V1-C10 — Quotation Agent
 
+Pre-implementation governance finding (not C10 implementation): the C10
+Specification referred to an authoritative Roadmap Exit Gate that did not
+exist, and the global C09+ rule required a compact verification block that
+the C10 section lacked. The root cause was incomplete propagation of the
+later-Card verification template into these two canonical C10 owners. This
+could leave C10's completion criterion and independent verification plan
+ambiguous before authorization. The bounded fix adds the existing-scope Exit
+Gate and a derived, risk-based verification block; it does not choose an
+agent protocol, open architecture permissions, or grant C10 approval. The
+lesson is to reconcile the Roadmap gate and specification verification fields
+before starting a Card. Independent audit of this maintenance change is
+PENDING; C10 remains unauthorized and unstarted.
+
 ### 1. Card
 
 V1-C10 — Quotation Agent
