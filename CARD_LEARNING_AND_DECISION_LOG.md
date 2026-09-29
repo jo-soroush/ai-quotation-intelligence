@@ -1138,8 +1138,8 @@ passed on focused rerun (24 C09 tests).
 The bounded audit remediation narrowed `AGENT_TOOL` to `{CORE}` and added an
 architecture fixture that rejects Agent Tool → Support. No tool behavior or
 other category policy changed. Because candidate content changed, independent
-re-audit of the remediated candidate is pending; the earlier audit PASS is not
-represented as approval of this new identity.
+re-audit of the remediated candidate was required; the earlier audit PASS was
+not treated as approval of the new identity.
 
 ### 14. Validation / Evidence References
 
@@ -1148,7 +1148,9 @@ recovery, commands, focused C09 24 passed, architecture 23 passed, full pytest
 138 passed, Governance Harness 61 passed / 0 failed,
 and C09 Exit Gate proof. The later audit LOW and bounded remediation are
 recorded there with post-remediation C09 24 passed, architecture 24 passed,
-full pytest 139 passed, and independent re-audit pending.
+full pytest 139 passed. Subsequent human delivery approval identified the
+remediated identity as independently audited; exact staged and committed
+verification passed before push.
 
 ### 15. Tradeoffs and Limitations
 
@@ -1156,7 +1158,8 @@ Exact owner re-execution costs additional deterministic work, but keeps the
 boundary robust against injected numeric tampering and creates no second
 formula. History retrieval is limited to C03 synthetic records; there is no
 general storage/repository capability yet. C08 remains unused because C09
-does not own an agent protocol. Independent audit and delivery are pending.
+does not own an agent protocol. The independent-audit and delivery gates
+were subsequently satisfied for the exact remediated identity.
 
 ### 16. What We Learned
 
@@ -1177,8 +1180,10 @@ the C03-only restriction or accept model-supplied history in C09.
 
 C10 receives bounded, tested local tool interfaces without receiving agent
 reasoning or selection logic. C11–C20 remain untouched; their capabilities
-must be implemented and approved in their own Cards. C09 is active and ready
-for independent audit, not complete or authorized for Git delivery.
+must be implemented and approved in their own Cards. C09 was delivered by
+commit `3dee2d0345e783ad491e8683204a071ad010b8c4` through PR #25, merged
+as `d0f0f70f385c2e876512ce9706d5ffd33ef3664a`. C09 is complete; C10
+remains unauthorized.
 
 ## V1-C10 — Quotation Agent
 
