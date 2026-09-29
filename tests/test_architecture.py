@@ -15,17 +15,20 @@ PACKAGE = Path(__file__).resolve().parents[1] / "src" / PACKAGE_NAME
 CORE = "CORE"
 PROVIDER = "PROVIDER"
 AGENT_TOOL = "AGENT_TOOL"
+AGENT = "AGENT"
 APPLICATION_BOUNDARY = "APPLICATION_BOUNDARY"
 SUPPORT = "SUPPORT"
-CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, APPLICATION_BOUNDARY, SUPPORT}
-FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, APPLICATION_BOUNDARY}
-# Empty future-category policies are deliberate; C09 permits Agent Tools to
-# delegate to Core without granting Core a reverse dependency or SDK access.
+CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, AGENT, APPLICATION_BOUNDARY, SUPPORT}
+FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, APPLICATION_BOUNDARY}
+# C10 may orchestrate C09 and call Core's existing calculation/domain owners.
+# C08's adapter is injected through a provider-neutral client protocol, so
+# Agent requires no Provider or Support import permission.
 ALLOWED_LOCAL_DEPENDENCIES = {
     CORE: {CORE, SUPPORT},
     SUPPORT: {SUPPORT},
     PROVIDER: {CORE, SUPPORT},
     AGENT_TOOL: {CORE},
+    AGENT: {CORE, AGENT_TOOL},
     APPLICATION_BOUNDARY: set(),
 }
 # boto3 is declared in pyproject.toml; botocore is its imported SDK boundary.
@@ -45,6 +48,7 @@ MODULE_CATEGORIES = {
     "risk_evidence.py": CORE,
     "bedrock.py": PROVIDER,
     "agent_tools.py": AGENT_TOOL,
+    "quotation_agent.py": AGENT,
     "config.py": SUPPORT,
     "logging_config.py": SUPPORT,
 }
@@ -160,7 +164,7 @@ def test_unclassified_new_module_fails_closed(tmp_path: Path, relative_path: str
     [
         ("bedrock_adapter.py", PROVIDER, "from ai_quotation_intelligence import bedrock_adapter"),
         ("agent_tools.py", AGENT_TOOL, "import ai_quotation_intelligence.agent_tools"),
-        ("quotation_agent.py", AGENT_TOOL, "from .. import quotation_agent"),
+        ("quotation_agent.py", AGENT, "from .. import quotation_agent"),
         ("tooling/__init__.py", AGENT_TOOL, "from ai_quotation_intelligence import tooling"),
         ("api.py", APPLICATION_BOUNDARY, "from ai_quotation_intelligence.api import route"),
     ],
@@ -208,6 +212,7 @@ def test_root_package_reexport_cannot_hide_provider_import(tmp_path: Path) -> No
     [
         ("bedrock_adapter.py", PROVIDER),
         ("agent_tools.py", AGENT_TOOL),
+        ("quotation_agent.py", AGENT),
         ("api.py", APPLICATION_BOUNDARY),
     ],
 )
@@ -277,6 +282,55 @@ def test_agent_tool_rejects_unused_support_dependency(tmp_path: Path) -> None:
     _add_module(package, "config.py")
     categories.update({"agent_tools.py": AGENT_TOOL, "config.py": SUPPORT})
     with pytest.raises(AssertionError, match="agent_tools.py -> ai_quotation_intelligence.config"):
+        validate_architecture(package, categories)
+
+
+def test_agent_may_use_only_existing_core_and_agent_tool_owners(tmp_path: Path) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "quotation_agent.py",
+                "from .calculation import calculate_quote\nfrom .agent_tools import AgentTools\n")
+    _add_module(package, "calculation.py")
+    _add_module(package, "agent_tools.py")
+    categories.update({"quotation_agent.py": AGENT, "calculation.py": CORE, "agent_tools.py": AGENT_TOOL})
+    validate_architecture(package, categories)
+
+
+@pytest.mark.parametrize(("target", "category"), [
+    ("bedrock.py", PROVIDER),
+    ("config.py", SUPPORT),
+])
+def test_agent_rejects_unused_provider_and_support_dependencies(
+    tmp_path: Path, target: str, category: str
+) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "quotation_agent.py", f"from . import {Path(target).stem}\n")
+    _add_module(package, target)
+    categories.update({"quotation_agent.py": AGENT, target: category})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
+
+
+@pytest.mark.parametrize("source", ["import boto3\n", "from botocore.config import Config\n"])
+def test_agent_rejects_provider_sdk_imports(tmp_path: Path, source: str) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "quotation_agent.py", source)
+    categories["quotation_agent.py"] = AGENT
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
+
+
+@pytest.mark.parametrize(("source_path", "category"), [
+    ("agent_tools.py", AGENT_TOOL),
+    ("bedrock.py", PROVIDER),
+])
+def test_agent_tool_and_provider_cannot_depend_on_agent(
+    tmp_path: Path, source_path: str, category: str
+) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "quotation_agent.py")
+    _add_module(package, source_path, "from .quotation_agent import QuotationAgent\n")
+    categories.update({"quotation_agent.py": AGENT, source_path: category})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
         validate_architecture(package, categories)
 
 

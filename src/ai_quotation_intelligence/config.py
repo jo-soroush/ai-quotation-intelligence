@@ -13,7 +13,7 @@ class Settings:
     log_level: str = "INFO"
     aws_region: str = "us-east-1"
     bedrock_model_id: str = "amazon.nova-micro-v1:0"
-    bedrock_max_tokens: int = 64
+    bedrock_max_tokens: int = 1024
     bedrock_temperature: float = 0.0
     bedrock_connect_timeout: int = 5
     bedrock_read_timeout: int = 30
