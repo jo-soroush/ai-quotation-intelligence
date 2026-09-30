@@ -1594,6 +1594,29 @@ unauthorized and unstarted.
 
 ## V1-C12 — Excel Generation
 
+Pre-implementation canonical maintenance (not C12 implementation): read-only
+preflight was BLOCKED by the missing authoritative Roadmap Exit Gate, missing
+C09+ verification block, unsupported Roadmap role field, and unbound
+historical-value fields. The root cause was treating a conceptual workbook
+outline as if delivered C02–C11 models carried every listed field. Inspection
+found no `QuoteItem.role`; C03's local role word appears only inside a
+description and cannot be recovered as approved line-item data. C11's
+approved result binds evidence IDs and risk suggestions, not historical
+estimated/actual values, variance, or comparison records. The bounded fix
+adds the C12 gate and verification plan, makes the existing three sheet names
+the V1 required set, marks role optional/unsupported, and limits historical
+content to evidence references demonstrably bound to the approved result.
+The alternative of fetching C09 history after approval was rejected for V1:
+it could select or attach evidence the human never reviewed. The alternative
+of deriving role from prose or history was rejected as fabrication. C12 must
+use C11's held approval gate, render static Core-owned numbers, make
+formula-like text inert, and fail visibly; bytes/path output, styling, and
+least-privilege export architecture remain decisions for authorized C12
+implementation. openpyxl is specified but not added in this maintenance;
+no AWS action is needed. This avoids inventing data or approval authority
+while preserving the mandatory Excel business output. C12 remains
+NOT_AUTHORIZED / NOT_STARTED; no implementation or Exit Gate proof is claimed.
+
 ### 1. Card
 
 V1-C12 — Excel Generation

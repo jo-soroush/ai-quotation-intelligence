@@ -578,7 +578,12 @@ Generate the requested quotation document using openpyxl.
 Draft_Quote.xlsx
 ```
 
-### Recommended Sheets
+This is an example filename, not a required path or naming convention. The
+required artifact is a loadable `.xlsx` workbook; its return representation
+and any local file handling are C12 implementation decisions. No S3 output is
+required by C12.
+
+### Required V1 Sheets
 
 ```text
 Quotation
@@ -590,32 +595,53 @@ Historical Evidence
 
 ```text
 work item
-role
 estimated hours
 hourly rate
 estimated cost
 total
 ```
 
+Include quotation identity and explicit currency. The displayed commercial
+values must come from the approved, validated quotation and reconcile with
+Core. A per-item `role` is optional/unsupported in V1 because `QuoteItem` has
+no role field; it must not be inferred from descriptions, model text, or
+historical records. Do not silently substitute a role value.
+
 ### Risk Analysis Sheet
 
 ```text
-risk
-area
+risk suggestion
 severity indicator
-historical pattern
-suggestion
+bound evidence ID references
 ```
+
+Render only risk content and evidence links carried by the approved result.
+Do not invent an area or historical pattern that the approved result does not
+contain.
 
 ### Historical Evidence Sheet
 
 ```text
-historical quote IDs
-estimated values
-actual values
-variance
-comparison summary
+approved historical evidence ID references
+links between those IDs and approved risk suggestions
 ```
+
+The approved C11/C10 result currently binds evidence IDs, not historical
+quote records, estimated/actual values, variances, or comparison summaries.
+Those richer fields are unsupported for C12 V1 unless a later canonical
+contract binds them to the reviewed result. C12 must not perform a new
+historical search or select new evidence after approval. The sheet must make
+the limited evidence-reference scope visible rather than fabricate or imply
+missing historical metrics; synthetic history must never be presented as real.
+
+### Exit Gate
+
+* only current, revalidated C11-approved state can produce a final workbook; copied review metadata, an APPROVED-looking status, or stale/modified state is insufficient
+* the result is a valid `.xlsx` workbook produced through the approved Excel boundary, with the three required V1 sheets and only supported, approved content
+* workbook commercial values reconcile exactly with deterministic Core truth; export does not invent or alter hours, rates, currency, item costs, totals, evidence, or approval state
+* absent role or historical metrics are not fabricated; evidence references and synthetic-history limitations remain explicit
+* untrusted text is rendered inert as spreadsheet content, not executable formulas; workbook validation or reconciliation failure is explicit and blocks final export
+* C12 does not implement FastAPI, S3, deployment, UI, persistence, Bedrock reasoning, autonomous approval, or later-Card scope
 
 ---
 
