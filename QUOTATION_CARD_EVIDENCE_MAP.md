@@ -1950,6 +1950,31 @@ CURRENT
 
 ## V1-C12 — Excel Generation
 
+Pre-C12 canonical maintenance, not C12 implementation: the read-only C12
+preflight was BLOCKED. The Roadmap lacked the authoritative C12 Exit Gate
+referenced by the specification; the required C09+ pre-implementation
+verification block was absent; the Roadmap listed a per-item role that no
+`QuoteItem` provides; and it listed historical figures not bound into the
+C11-approved `AgentResult`. This bounded maintenance adds the Roadmap gate
+and derived verification block. It makes the three V1 sheets required, treats
+role as unsupported/optional, and limits the Historical Evidence sheet to
+approved evidence IDs and their approved risk-suggestion links. C12 may not
+search for or select new evidence after approval. C11's held
+`require_approved(current=...)` gate, not a copied record or status, is the
+export eligibility boundary. The workbook must use static Core-derived
+commercial values, inert untrusted text, and explicit failure. `Draft_Quote.xlsx`
+is an example name. No source code, dependency, or architecture permission is
+added; C12 remains NOT_AUTHORIZED / NOT_STARTED. Maintenance validation and
+candidate identity are kept distinct from implementation proof. Observed
+maintenance validation: architecture tests 42 passed; full pytest 246 passed;
+Governance Harness 61 PASS / 0 FAIL; generated-view reconciliation `--write`
+and `--check` PASS; session bootstrap 127 PASS / 1 expected modified-worktree
+WARN / 0 FAIL; Python syntax/import (31 files), shell syntax, changed-file
+credential-pattern scan, and `git diff --check` PASS. The resulting candidate
+identity is computed and reported outside this candidate to avoid
+self-reference. C12 implementation tests and Exit Gate proof remain NOT_RUN /
+NOT_PROVEN.
+
 ### 1. Card
 
 V1-C12 — Excel Generation

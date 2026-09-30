@@ -1263,17 +1263,38 @@ This is a contract description, not a claim that prior Cards or this Card are co
 
 ### 7. Design Decision
 
-Authoritative numeric cells come from validated deterministic state; final export requires approved state and reconciliation.
+Authoritative numeric cells come from validated deterministic Core state;
+final export requires a fresh C11 approval-eligibility check against the
+current result and exact reconciliation. C12 V1 renders static authoritative
+values; workbook formulas are not a second business-rule authority.
 
 ### 8. Implementation Scope
 
-- generate workbook with planned Quotation, Risk Analysis, and Historical Evidence sheets
-- write validated quotation fields
-- include evidence references where applicable
-- reconcile workbook totals with deterministic totals
-- reject invalid or unapproved export state
-- preserve quotation identity/version where appropriate
-- use openpyxl as the planned library
+- generate a valid `.xlsx` workbook with the required V1 Quotation, Risk
+  Analysis, and Historical Evidence sheets; their minimum semantic content is
+  defined in the Roadmap, not by fixed cell coordinates or styling
+- use C11's held approval eligibility gate against the current validated
+  `AgentResult` before export; a copied `ReviewRecord`, a status value, or an
+  approval-looking Quote is not export authority; reject rejected, unreviewed,
+  stale, or modified state. C11's gate is in-memory/same-process in V1
+- write only validated quotation identity, currency, work items, hours, rates,
+  and static Core-derived item costs and total; reconcile the workbook's
+  commercial values exactly with deterministic Core results
+- render only risk suggestions and evidence IDs bound to that approved
+  result. The Historical Evidence sheet records those IDs and their approved
+  suggestion links; it does not claim historical quote IDs, estimated/actual
+  values, variance, or comparison details absent from the approved payload.
+  C12 does not independently search for or select evidence after approval
+- treat `role` as optional/unsupported for V1 because `QuoteItem` has no such
+  field; never infer or fabricate it from other text or history
+- render untrusted text inert, including formula-like leading `=`, `+`, `-`,
+  or `@`, without prescribing an escaping mechanism; preserve only supported
+  provenance and never present synthetic history as real
+- fail explicitly on invalid state, workbook validation, or reconciliation;
+  use openpyxl as the specified C12 library after implementation approval.
+  Its dependency is not added by this pre-C12 maintenance. Output bytes versus
+  a local path and local file handling remain implementation decisions;
+  `Draft_Quote.xlsx` is an example name, not a mandatory path
 
 ### 9. Out of Scope
 
@@ -1282,6 +1303,9 @@ Authoritative numeric cells come from validated deterministic state; final expor
 - AWS deployment
 - UI
 - new commercial calculations inside the workbook
+- persistence, reviewer authentication infrastructure, email, Bedrock
+  reasoning, autonomous approval, multi-agent workflow, and C18's general
+  guardrail platform
 
 ### 10. Dependencies
 
@@ -1291,13 +1315,96 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 
 ### 11. Tests / Evaluation
 
-Workbook creation, required sheets, expected fields, numeric reconciliation, approval requirement, invalid-state rejection, evidence traceability, and no numeric authority from model output.
+Workbook creation/loadability with openpyxl; the three required sheets and
+their supported fields; semantic content, sheet-set, and contract-required
+ordering repeatability without byte-identical ZIP requirements; exact Core
+numeric reconciliation; held C11 approval gate, rejected/unreviewed and
+stale/modified input rejection; bound evidence-reference traceability and
+synthetic-source honesty; unsupported role/historical-field non-fabrication;
+inert untrusted/formula-like text; explicit validation/export failures; no
+numeric authority from model text or workbook formulas; no C13+ behavior.
+
+Pre-implementation C12 verification block (derived from this Card, Roadmap
+V1-C12, PROJECT_PROFILE.md, COMMERCIAL_AND_DATA_GUARDRAILS.md, and delivered
+C02/C04/C09/C10/C11 contracts; this is a verification plan, not C12
+authorization or implementation evidence):
+
+- Risk Classification: ELEVATED because final Excel export crosses the human
+  approval and commercial-output boundaries. A bypass, changed draft, or
+  incorrect workbook total could produce a consequential false quotation.
+- Escalation Triggers: approval bypass or stale replay; numeric or currency
+  drift; invented role/history/evidence; formula interpretation of untrusted
+  text; synthetic history represented as real; invalid workbook or failure
+  treated as successful final export; C13+ scope leakage.
+- Canonical Sources: Roadmap V1-C12 and its Exit Gate, this Card's sections
+  2–12, PROJECT_PROFILE.md, COMMERCIAL_AND_DATA_GUARDRAILS.md, Core C04
+  arithmetic, C10 `AgentResult`, and C11 `ReviewSession.require_approved`.
+- Acceptance Contract: Given a current validated C10 result and held C11
+  approval, when C12 rechecks eligibility, it may render a loadable `.xlsx`
+  with the three required sheets, static Core-derived commercial values,
+  approved risk/evidence references, and explicit provenance limitations.
+  Without approval or with rejected, changed, or stale input, export fails.
+  Unsupported role or historical figures are not fabricated. Invalid workbook
+  content, formula-active untrusted text, or total mismatch cannot succeed.
+- Critical Invariants: no current C11 approval means no final Excel (Roadmap
+  V1-C12; Guardrails G16/G40); C11 eligibility is not inferred from a copied
+  record or status (delivered C11 boundary); Excel numbers equal Core truth
+  (G15/G22); evidence is only approved/bound evidence (G08/G09/G33);
+  synthetic provenance is not misrepresented (G11); text cannot become an
+  executable formula; missing commercial or historical values are not
+  silently filled (G04/G05/G19/G29). Verify with contract, reconciliation,
+  changed-input, provenance, and adversarial export cases.
+- Verification Strategy: focus on approved export, all denied approval states,
+  stale/modified data, exact item/total reconciliation, workbook loadability,
+  sheet/content checks, evidence links, unsupported-field absence, formula
+  injection, deterministic semantic output, failure propagation, and
+  architecture isolation. Regress C11 review and Core arithmetic without
+  requiring AWS, S3, API, UI, or byte-identical workbook files.
+- Advanced Verification Decision (reassess against actual C12 implementation;
+  no new framework is prescribed):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Final numbers and approval eligibility must remain exact |
+  | Contract tests | REQUIRED | Workbook and C11 input boundaries must validate |
+  | Integration | REQUIRED | Reopen the produced workbook and exercise the C11-to-export path |
+  | Generated property tests | CONDITIONAL / EVALUATE | Use if numeric/text combinations outgrow focused cases |
+  | Targeted mutation-resistance | REQUIRED | Challenge approval bypass and reconciliation assertions |
+  | Failure injection | REQUIRED | Invalid workbook and delegated validation failures must not export |
+  | Fuzzing | CONDITIONAL / EVALUATE | Consider for broad untrusted spreadsheet text inputs |
+  | Differential | NOT_APPLICABLE | No second equivalent exporter is specified |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Assess if shared state or file writes are introduced |
+  | Adversarial testing | REQUIRED | Probe forged approval, stale evidence, formulas, and numeric drift |
+  | Threat modeling | REQUIRED | Approval and spreadsheet output are consequential boundaries |
+  | Agent evals | NOT_APPLICABLE | C12 does not own model quality or C17 evaluation |
+  | Rollback/recovery | CONDITIONAL / EVALUATE | Assess if persistent files or external effects are introduced |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal-state requirement is specified |
+- Independent Verifier Expectations: inspect the frozen candidate against
+  the Roadmap gate, C11 held-approval use, Core reconciliation, safe text,
+  supported evidence only, three-sheet loadability, and no C13+ or unused
+  architecture permission; challenge tests that could pass on a copied
+  approval record, invented field, or plausible but wrong workbook number.
+- Evidence / Traceability Requirements: link observed C11 eligibility,
+  current-result binding, Core totals, workbook cells/sheets, evidence IDs,
+  synthetic-source disclosure, text safety, failure cases, and exact executed
+  tests to the Evidence Map. Preserve decisions and limitations in the
+  Learning Log. Until C12 is authorized and executed these remain NOT_RUN /
+  NOT_PROVEN.
+- Known Non-Scope: section 9 remains authoritative. Exact cell coordinates,
+  styling, file path/bytes API, architecture category/import directions,
+  approval-gate injection, and output persistence policy remain C12
+  implementation decisions under least privilege. No tax/VAT/discount logic,
+  new historical search, authentication, S3/API/UI, or generalized guardrail
+  platform is added. Byte-identical `.xlsx` output is not required.
 
 Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require a valid reconciled workbook generated from approved validated state.
+The Roadmap Exit Gate requires a valid reconciled `.xlsx` workbook generated
+only from current C11-approved state, with required supported content,
+non-fabrication, safe text, and explicit failure. This section expands that
+gate without adding a second approval or commercial authority.
 
 The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
 Before Card COMPLETE:
