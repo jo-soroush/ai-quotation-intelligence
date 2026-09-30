@@ -1764,6 +1764,21 @@ CURRENT
 
 ## V1-C11 — Human Review Gate
 
+Pre-C11 canonical maintenance (not C11 implementation): read-only preflight
+on clean `main` at `ad7dc32e59512ce0c1ff7f2873c9307558472991`
+reported BLOCKED because the Roadmap omitted the authoritative C11 Exit Gate
+and this Card's specification omitted the required C09+ pre-implementation
+verification block. This maintenance candidate adds only those derived
+contract/verification records; C11 implementation, tests, and Exit Gate proof
+remain NOT_RUN / NOT_PROVEN. PROJECT_CONTROL.md continues to own the live
+NOT_AUTHORIZED / NOT_STARTED state. Observed maintenance validation:
+`python scripts/reconcile_governance_views.py --write` and `--check` PASS;
+Governance Harness PASS=61/FAIL=0; session bootstrap PASS=127/WARN=1/FAIL=0
+(the WARN is the expected modified worktree); full pytest 204 passed;
+architecture tests 32 passed; `git diff --check`, shell syntax, Python
+compile/import, and changed-line secret-pattern checks passed. These are
+maintenance validation results, not C11 implementation or Exit Gate proof.
+
 ### 1. Card
 
 V1-C11 — Human Review Gate
