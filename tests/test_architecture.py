@@ -16,19 +16,23 @@ CORE = "CORE"
 PROVIDER = "PROVIDER"
 AGENT_TOOL = "AGENT_TOOL"
 AGENT = "AGENT"
+REVIEW = "REVIEW"
 APPLICATION_BOUNDARY = "APPLICATION_BOUNDARY"
 SUPPORT = "SUPPORT"
-CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, AGENT, APPLICATION_BOUNDARY, SUPPORT}
-FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, APPLICATION_BOUNDARY}
+CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, AGENT, REVIEW, APPLICATION_BOUNDARY, SUPPORT}
+FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, REVIEW, APPLICATION_BOUNDARY}
 # C10 may orchestrate C09 and call Core's existing calculation/domain owners.
 # C08's adapter is injected through a provider-neutral client protocol, so
 # Agent requires no Provider or Support import permission.
+# C11 review may use Core contracts/arithmetic only; Agent, Agent Tool,
+# Provider, Support, Core, and future Application modules cannot import Review.
 ALLOWED_LOCAL_DEPENDENCIES = {
     CORE: {CORE, SUPPORT},
     SUPPORT: {SUPPORT},
     PROVIDER: {CORE, SUPPORT},
     AGENT_TOOL: {CORE},
     AGENT: {CORE, AGENT_TOOL},
+    REVIEW: {CORE},
     APPLICATION_BOUNDARY: set(),
 }
 # boto3 is declared in pyproject.toml; botocore is its imported SDK boundary.
@@ -49,6 +53,7 @@ MODULE_CATEGORIES = {
     "bedrock.py": PROVIDER,
     "agent_tools.py": AGENT_TOOL,
     "quotation_agent.py": AGENT,
+    "human_review.py": REVIEW,
     "config.py": SUPPORT,
     "logging_config.py": SUPPORT,
 }
@@ -151,6 +156,41 @@ def test_actual_package_tree_has_complete_classification_and_valid_imports() -> 
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
 
 
+def test_human_review_is_separate_authority_with_core_only_dependency() -> None:
+    assert MODULE_CATEGORIES["human_review.py"] == REVIEW
+    assert ALLOWED_LOCAL_DEPENDENCIES[REVIEW] == {CORE}
+    validate_architecture(PACKAGE, MODULE_CATEGORIES)
+    for category in CATEGORIES - {REVIEW}:
+        assert REVIEW not in ALLOWED_LOCAL_DEPENDENCIES[category]
+
+
+@pytest.mark.parametrize("source_path,category", [
+    ("quotation_agent.py", AGENT),
+    ("agent_tools.py", AGENT_TOOL),
+    ("bedrock.py", PROVIDER),
+    ("config.py", SUPPORT),
+    ("api.py", APPLICATION_BOUNDARY),
+])
+def test_nonreview_boundaries_cannot_import_human_approval(
+    tmp_path: Path, source_path: str, category: str
+) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, source_path, "from .human_review import ReviewSession\n")
+    _add_module(package, "human_review.py")
+    categories.update({source_path: category, "human_review.py": REVIEW})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
+
+
+def test_review_cannot_import_agent_or_provider_sdk(tmp_path: Path) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "human_review.py", "from .quotation_agent import QuotationAgent\nimport boto3\n")
+    _add_module(package, "quotation_agent.py")
+    categories.update({"human_review.py": REVIEW, "quotation_agent.py": AGENT})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
+
+
 @pytest.mark.parametrize("relative_path", ["new_core.py", "new_package/__init__.py"])
 def test_unclassified_new_module_fails_closed(tmp_path: Path, relative_path: str) -> None:
     package, categories = _fixture_package(tmp_path)
@@ -165,6 +205,7 @@ def test_unclassified_new_module_fails_closed(tmp_path: Path, relative_path: str
         ("bedrock_adapter.py", PROVIDER, "from ai_quotation_intelligence import bedrock_adapter"),
         ("agent_tools.py", AGENT_TOOL, "import ai_quotation_intelligence.agent_tools"),
         ("quotation_agent.py", AGENT, "from .. import quotation_agent"),
+        ("human_review.py", REVIEW, "from .. import human_review"),
         ("tooling/__init__.py", AGENT_TOOL, "from ai_quotation_intelligence import tooling"),
         ("api.py", APPLICATION_BOUNDARY, "from ai_quotation_intelligence.api import route"),
     ],
@@ -213,6 +254,7 @@ def test_root_package_reexport_cannot_hide_provider_import(tmp_path: Path) -> No
         ("bedrock_adapter.py", PROVIDER),
         ("agent_tools.py", AGENT_TOOL),
         ("quotation_agent.py", AGENT),
+        ("human_review.py", REVIEW),
         ("api.py", APPLICATION_BOUNDARY),
     ],
 )
@@ -298,6 +340,7 @@ def test_agent_may_use_only_existing_core_and_agent_tool_owners(tmp_path: Path) 
 @pytest.mark.parametrize(("target", "category"), [
     ("bedrock.py", PROVIDER),
     ("config.py", SUPPORT),
+    ("human_review.py", REVIEW),
 ])
 def test_agent_rejects_unused_provider_and_support_dependencies(
     tmp_path: Path, target: str, category: str
