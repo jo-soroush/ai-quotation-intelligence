@@ -1444,63 +1444,138 @@ Consequential commercial finalization requires a visible human decision, while a
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+An in-memory deterministic `ReviewSession` accepts only a revalidated C10
+`AgentResult` with a successful draft, reconciled Core total, consistent
+request/quote identity, and consistent evidence links. A separate existing
+`ApprovalDecision` supplies one explicit reviewer action. The session returns
+a structured `ReviewRecord` and exposes `require_approved(current=...)` as
+its sole finalization-eligibility check. It does not export, persist, call
+Bedrock, or authenticate a person.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Architecture Before: AGENT may import CORE; no C11 review module existed.
+Change Introduced: `human_review.py` is classified REVIEW, with REVIEW → CORE
+as its only allowed local direction. All other local categories are barred
+from importing REVIEW. Architecture After: C11 can revalidate using existing
+domain and calculation owners, while C10 Agent and C09 Agent Tool cannot
+acquire review authority through their existing Core permissions.
+
+The exact C10 `AgentResult` is the input, not a free-standing `DraftQuote`:
+its status, request identity, evidence links, and draft can be checked
+together. The session stores an exact validated JSON snapshot, not merely a
+quote ID or a new hash/version scheme. A decision compares a fresh current
+result with that snapshot. `ApprovalDecision` retains its optional reason
+and timestamp; C11 never invents either. Only AWAITING_REVIEW may transition
+once to APPROVED or REJECTED; a changed draft needs a new validated session.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+It is the smallest local authority gate that can distinguish an unsuccessful
+C10 outcome from a reviewable draft, detect commercial/evidence substitution,
+and preserve an inspectable human decision without creating persistence or
+identity infrastructure. `calculate_quote_total` is called only to verify
+Core-owned arithmetic; C11 does not calculate or override a total itself.
+`ReviewRecord` is an audit copy, not authority; eligibility is checked by
+the session against the current result and its held decision.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Using `DraftQuote` alone; storing only quote/request IDs; a hash or version
+service; mutating the draft into an approved draft; classifying Review as
+CORE; and adding authentication, a database, or an event store.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+`DraftQuote` alone loses the C10 success/failure envelope. IDs alone do not
+detect changed hours, rates, totals, evidence, or narrative. Exact local
+snapshot comparison suffices without a new hash/version service. `DraftQuote`
+forbids approved status, so the reviewed draft stays DRAFT while a separate
+validated Quote and decision carry the resulting state. CORE placement would
+allow Agent → CORE to import approval code. Authentication and persistence
+belong to later authorized boundaries, not C11.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Existing Python standard library, Pydantic/domain models, and Core
+calculation service; no new dependency or AWS service.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+They were already owned and tested by C02/C04/C10, and allow strict typed
+round-trip validation and deterministic commercial reconciliation without a
+second arithmetic or provider implementation.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first Card-start reconciliation failed with `Active Card has incompatible
+lifecycle state: V1-C11` after `IN_PROGRESS` was used in the control status
+table. Initial C11 code placed review in CORE and focused tests passed, but
+source review found that this would permit C10 Agent to import approval code.
+An initial `ReviewRecord.finalization_eligible` property also read a mutable
+returned Quote copy, allowing caller-side mutation to change that apparent
+eligibility without changing the held human decision.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The reconciliation tool's lifecycle vocabulary accepts `ACTIVE`, not
+`IN_PROGRESS`. The existing AGENT → CORE architecture permission is too broad
+to place human approval authority in CORE. Pydantic frozen records do not
+deep-freeze nested mutable Quote models, so a derived eligibility flag on a
+returned audit copy was not an authority-safe boundary.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The control/evidence state now uses `ACTIVE`, and reconciliation passes.
+Approval code moved to a distinct REVIEW category with REVIEW → CORE only;
+architecture tests reject imports from Agent, Agent Tool, Provider, Support,
+Core, and application boundaries. The copy-derived eligibility property was
+removed; `ReviewSession.require_approved` now checks the held decision and
+exact current result, with a regression showing mutation of a returned
+rejection record cannot grant eligibility.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+QUOTATION_CARD_EVIDENCE_MAP.md → V1-C11 records the failed and passing
+reconciliation, focused/adversarial and architecture tests, and final broad
+validation once executed. Initial focused C11 and architecture rerun: 73
+passed. Independent audit and Git delivery remain pending.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+`reviewer_id` is a required caller assertion, not proof of authentication;
+the trusted future caller must ensure it comes from a real human action, not
+model output. C11 can bind to the validated C10 result it receives, but cannot
+cryptographically prove that a caller supplied genuine C10 output. Evidence
+source records are validated by C10/C09; C11 preserves their IDs and checks
+internal consistency rather than fetching history again. One session rejects
+repeat decisions, but cross-process replay/idempotency requires a future
+persistent boundary. No timestamp is generated when the existing optional
+field is absent. Returned audit copies are mutable; only the held session's
+`require_approved` check grants eligibility.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+An import category is an authority boundary, not merely a code-organization
+label. A green behavior test does not prove that a future Agent cannot import
+approval through an otherwise allowed dependency. Snapshot binding and an
+explicit human action prevent silent promotion of a changed draft in this
+local boundary, while authentication remains a separate trust obligation.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+C12/C13 must not treat a copied `ReviewRecord`, a QuoteStatus, a C10 message,
+or a reviewer string alone as approval. They must use the held approval gate
+against the current validated result and supply reviewer identity from a
+trusted human-facing boundary. If persistence is later added, define replay,
+concurrency, and stale-decision semantics explicitly before deployment.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C12 may consume only approved validated state after explicit permission to
+depend on REVIEW is justified. C13 may supply the authenticated human action
+and current result, but no application dependency was opened in C11. C14+
+storage/deployment and C18 general guardrails remain separate Card work.
 
 ## V1-C12 — Excel Generation
 

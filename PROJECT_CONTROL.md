@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C10_COMPLETE
+Project Phase: V1_C11_ACTIVE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / UNDELIVERED
+Active Card: V1-C11 — Human Review Gate
+Active Card State: ACTIVE / SELF_VALIDATED; independent audit pending
 Last COMPLETE Card: V1-C10 — Quotation Agent
-Next Roadmap Card: V1-C11 — Human Review Gate (not authorized)
-Next Card Authorized: NO — V1-C11 and later Cards remain unauthorized
-Implementation Authorization: NONE — authorization consumed by completion; V1-C11 and later Cards not authorized
+Next Roadmap Card: V1-C11 — Human Review Gate (active)
+Next Card Authorized: YES — V1-C11 implementation only; V1-C12 and later not authorized
+Implementation Authorization: GRANTED — V1-C11 only; no C12+ implementation or Git delivery approval
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
 Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
@@ -132,31 +132,31 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C10
-Title: Quotation Agent
-State: COMPLETE
-Branch: card/v1-c10-quotation-agent
-Start Commit: 41bbceaffdafc257df4222fad297fbbf0221cc20
-Delivery Commit: 68370daa4d9defcdb6cfd3455db1c26a9c4c3480
-PR: MERGED — #28
-Merge Commit: ecb73841eeb80a863d0f969c66105d9b02226caa
-Human Start Approval: GRANTED — explicit human authorization for V1-C10 implementation
-Authorized Scope: V1-C10 — Quotation Agent only; no C11+ implementation
-ROADMAP_ALIGNMENT_GATE: PASS — C10 pre-write contract and risk inspection complete
-CARD_QUALITY_GATE: PASS — exact audited C10 candidate delivered through PR #28; post-merge validation passed
+Card ID: V1-C11
+Title: Human Review Gate
+State: ACTIVE / SELF_VALIDATED; independent audit pending
+Branch: card/v1-c11-human-review-approval
+Start Commit: d09e57a0ed22819ae7b7e46a4e25433b74de33ec
+Delivery Commit: NONE — C11 delivery not authorized
+PR: NONE — C11 delivery not authorized
+Merge Commit: NONE — C11 delivery not authorized
+Human Start Approval: GRANTED — explicit human authorization for V1-C11 implementation
+Authorized Scope: V1-C11 human review/approval only; no C12+ implementation
+ROADMAP_ALIGNMENT_GATE: PASS — C11 contract/risk inspection and clean baseline verified before implementation
+CARD_QUALITY_GATE: NOT_RUN — independent audit and delivery pending
 ```
 
 Safe Checkpoint:
 
-C02 domain contracts through C10 Quotation Agent were delivered and are complete. V1-C11 and later remain unauthorized.
+C02 domain contracts through C10 Quotation Agent were delivered and are complete. V1-C11 implementation is authorized and in progress; C12 and later remain unauthorized.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
 FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C02 delivery and final reconciliation verified on main.
 
 ## 6. Authorization Ledger
 
 ```
-Card Start: CONSUMED — V1-C10 completed
-Next Card: NOT_GRANTED — V1-C11 and later Cards remain unauthorized
+Card Start: GRANTED — V1-C11 implementation only
+Next Card: NOT_GRANTED — V1-C12 and later Cards remain unauthorized
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C04: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -166,8 +166,9 @@ V1-C07: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C08: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C09: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C10: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
+V1-C11: START APPROVAL GRANTED (ACTIVE; IMPLEMENTATION ONLY)
 V1-C10 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #28 merged
-Architecture Change: NOT_GRANTED — C10 approved change delivered
+Architecture Change: GRANTED WITHIN C11 SCOPE — REVIEW category with REVIEW → CORE only; no C12+ permission
 Material Scope Change: NOT_GRANTED
 Significant Technology Addition: NOT_GRANTED
 Sensitive Credential Use: NOT_GRANTED
@@ -207,7 +208,7 @@ PR: MERGED — #28 (C10 delivery)
 Merge: COMPLETED — ecb73841eeb80a863d0f969c66105d9b02226caa (C10 delivery)
 ```
 
-V1-C04 through V1-C10 implementation, validation, and approved delivery are complete. V1-C11 and later remain unauthorized.
+V1-C04 through V1-C10 implementation, validation, and approved delivery are complete. V1-C11 is active; V1-C12 and later remain unauthorized.
 
 ## 7. Roadmap Position
 
@@ -215,18 +216,18 @@ V1-C04 through V1-C10 implementation, validation, and approved delivery are comp
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent
-Active Card: NONE
-Next Roadmap Card: V1-C11 — Human Review Gate (not authorized)
+Active Card: V1-C11 — Human Review Gate
+Next Roadmap Card: V1-C11 — Human Review Gate (active)
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
-Later Cards: V1-C11 and later NOT_AUTHORIZED
+Later Cards: V1-C12 and later NOT_AUTHORIZED
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
 
 ## 8. Current Blockers and Pending Control
 
-V1-C02 through V1-C10 implementation, validation, and Git delivery are complete. V1-C11 and later remain unauthorized.
+V1-C02 through V1-C10 implementation, validation, and Git delivery are complete. V1-C11 implementation is active; V1-C12 and later remain unauthorized.
 
 Governance remaining actions: NONE.
 
@@ -246,15 +247,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: V1-C10 identity, scope, C01–C09 ownership, dependency posture, boundaries, and explicit human authorization were verified before implementation.
+Reason: V1-C11 identity, scope, C01–C10 ownership, human authority and commercial boundaries, clean base, and explicit human authorization were verified before implementation.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / V1-C10 pre-write inspection recorded in session
-Risk Map: COMPLETE / V1-C10 ELEVATED agent-orchestration boundary recorded in session
-Reason: V1-C10 pre-write inspection, CONTENT_ALIGNMENT_GATE, and SOURCE_ADAPTATION_GATE (NOT_APPLICABLE) passed before implementation.
+Contract Map: COMPLETE / V1-C11 pre-write inspection recorded in session
+Risk Map: COMPLETE / V1-C11 ELEVATED human-approval authority boundary recorded in session
+Reason: V1-C11 Roadmap/specification, C10/domain contracts, commercial guardrails, and least-privilege architecture were inspected; requested work remains C11-only. Source Adaptation: NOT_APPLICABLE.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -266,8 +267,8 @@ Canonical Guardrails:
 ```
 COMMERCIAL_AND_DATA_GUARDRAILS.md
 Status: CANONICAL
-Implementation validation: PASS — V1-C09 tool input/output, delegation, provenance, failure, security, and authority boundaries
-Reason: Focused, architecture, full, adversarial, and governance validation passed; Core remains deterministic and provider-neutral.
+Implementation validation: SELF_VALIDATION_PASS — V1-C11 explicit human decision, Core total reconciliation, provenance binding, stale-result rejection, and failure/authority boundaries
+Reason: C11 focused, C10/C09 regression, architecture, full, adversarial, and governance validation passed; independent audit and delivery remain pending.
 ```
 
 Do not mark runtime guardrails PASS without implementation evidence.
@@ -282,6 +283,7 @@ Provider Contract: IMPLEMENTED — typed bounded adapter result
 Structured AI Schema: C08 response envelope validated; C10 strict provider-neutral JSON actions and typed AgentResult independently audited and delivered
 Agent Tools: IMPLEMENTED / DELIVERED — independently audited; PR #25 merged, reconciliation PR #26 merged
 Quotation Agent: IMPLEMENTED / DELIVERED — independently audited; PR #28 merged
+Human Review Gate: IMPLEMENTED / UNDELIVERED — self-validated C11 candidate; independent audit pending
 AI runtime validation: PASS — Python Converse smoke test with amazon.nova-micro-v1:0 in us-east-1
 ```
 
@@ -301,11 +303,11 @@ Do not infer account configuration or credentials from local tools or external s
 ## 14. Test / Evaluation State
 
 ```
-tests/: C01–C09 tests and C10 QUOTATION AGENT tests CREATED
+tests/: C01–C09 tests, C10 QUOTATION AGENT tests, and C11 HUMAN REVIEW tests CREATED
 pytest project baseline: ESTABLISHED
 Evaluation Harness implementation: NOT_STARTED
 Golden Case: NOT_STARTED
-Card tests: historical C01–C09 results remain in their Evidence Map sections; C10 focused — 57 PASSED; C09 regression — 24 PASSED; architecture — 32 PASSED; full suite — 204 PASSED (observed after bounded C10 audit remediation)
+Card tests: historical C01–C09 results remain in their Evidence Map sections; C11 focused — 32 PASSED; C10 regression — 57 PASSED; C09 regression — 24 PASSED; architecture — 42 PASSED; full suite — 246 PASSED (C11 self-validation; independent audit pending)
 ```
 
 Bootstrap inspection is not V1 Card test evidence.
@@ -317,7 +319,7 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01–V1-C10 COMPLETE; V1-C11 and later NONE
+Implementation Evidence: V1-C01–V1-C10 COMPLETE; V1-C11 CANDIDATE SELF_VALIDATED / UNDELIVERED; V1-C12 and later NONE
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent
 V1-C01 CARD_QUALITY_GATE: PASS
 V1-C09 CARD_QUALITY_GATE: PASS — implementation validation, independent audit, and approved delivery
@@ -338,7 +340,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C10_COMPLETE
+Checkpoint Type: V1_C11_ACTIVE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -346,9 +348,9 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01–V1-C10 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application implementation: V1-C01–V1-C10 IMPLEMENTED / DELIVERED; V1-C11 IMPLEMENTED / UNDELIVERED
+Active Card: V1-C11 — Human Review Gate
+Active Card State: ACTIVE / SELF_VALIDATED; independent audit pending
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -383,7 +385,7 @@ These are governance decisions, not implementation claims.
 | V1-C08 | Amazon Bedrock Integration | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
 | V1-C09 | Agent Tools | COMPLETE | YES | PASS | PRESENT — implementation, validation, and delivery evidence |
 | V1-C10 | Quotation Agent | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
-| V1-C11 | Human Review Gate | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C11 | Human Review Gate | ACTIVE | YES | NOT_RUN | PRESENT — self-validation; audit/delivery pending |
 | V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C14 | Amazon S3 Integration | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -394,7 +396,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01 through V1-C10 are COMPLETE. V1-C11 and later remain not authorized.
+V1-C01 through V1-C10 are COMPLETE. V1-C11 implementation is authorized and in progress; V1-C12 and later remain not authorized.
 
 ## 19. Resume Protocol
 
@@ -425,17 +427,17 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01–V1-C10 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
-Next Roadmap Card: V1-C11 — Human Review Gate (not authorized)
+Application Implementation: V1-C01–V1-C10 IMPLEMENTED / DELIVERED; V1-C11 IMPLEMENTED / UNDELIVERED
+Active Card: V1-C11 — Human Review Gate
+Active Card State: ACTIVE / SELF_VALIDATED; independent audit pending
+Next Roadmap Card: V1-C11 — Human Review Gate (active)
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: STOP after final C10 completion-state consistency verification; V1-C11 requires separate explicit human authorization.
+Safe next action: continue only the explicitly authorized V1-C11 implementation on its dedicated branch; independent audit and separate Git delivery approval remain pending. V1-C12 requires separate explicit human authorization.
 
 Do not start any later Card automatically.
 
@@ -449,5 +451,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, AND V1-C10 ARE COMPLETE; V1-C11 AND LATER CARDS REQUIRE SEPARATE HUMAN APPROVAL.
+V1-C01 THROUGH V1-C10 ARE COMPLETE; V1-C11 IMPLEMENTATION IS EXPLICITLY AUTHORIZED AND ACTIVE; V1-C12 AND LATER REQUIRE SEPARATE HUMAN APPROVAL.
 ```

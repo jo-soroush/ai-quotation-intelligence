@@ -1791,51 +1791,99 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE — C11 implementation authorized; independent audit and delivery pending
 
 ### 4. Human Start Approval
 
-NO
+YES — explicit human C11 implementation authorization; no Git delivery approval
 
 ### 5. Files Changed
 
-NONE
+`src/ai_quotation_intelligence/human_review.py` (new),
+`tests/test_human_review.py` (new), `tests/test_architecture.py`,
+`PROJECT_CONTROL.md`, this Evidence Map, and
+`CARD_LEARNING_AND_DECISION_LOG.md`. No C12+ application or dependency file.
 
 ### 6. Commands Run
 
-NONE
+`.venv/bin/pytest -q tests/test_human_review.py` (32 passed),
+`tests/test_quotation_agent.py` (57 passed), `tests/test_agent_tools.py`
+(24 passed), `tests/test_architecture.py` (42 passed), and full
+`.venv/bin/pytest -q` (246 passed). Governance Harness 61 PASS / 0 FAIL;
+reconciliation `--write` and `--check` PASS after the preserved first
+failure; bootstrap 127 PASS / 1 expected dirty-tree WARN / 0 FAIL; shell
+syntax, 31 Python compile/import checks, changed-file secret-pattern scan,
+new-file whitespace scan, and `git diff --check` PASS.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — 32 C11 tests against a real C10 result backed by C09/Core and a
+scripted model. Approval/rejection, malformed input, status, identity,
+evidence, stale result, repeat decision, record tampering, failure
+sanitization, and explicit reviewer action were exercised.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS — C10 focused 57; C09 focused 24; architecture 42 (including REVIEW
+classification and forbidden import directions); full suite 246.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+SELF_VALIDATION — a successful C10 `AgentResult` can enter one review session;
+only an explicit validated `ApprovalDecision` yields APPROVED or REJECTED;
+`require_approved` rejects no decision, rejection, and changed current
+results. Independent evaluation remains pending.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS (self-validation) — Core `calculate_quote_total` reconciles the draft
+before review; approval/rejection changes status only, not items, rates,
+hours, total, origin, or evidence links. Changed inputs invalidate the old
+session and need a newly revalidated draft.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS (self-validation) — C11 has no Bedrock/client import or invocation and
+does not extract a human decision from C10 narrative/model text. C10 result
+status and evidence are revalidated at the C11 boundary.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS (self-validation) — tests reject fabricated identity/evidence,
+unsuccessful C10 outcomes, stale approvals, repeated/opposite decisions,
+malformed human action, and record-copy authority tampering. Error codes
+exclude internal exception text. Architecture tests keep Agent, Agent Tool,
+Provider, Support, Core, and future Application modules from importing REVIEW.
+Changed-file secret-pattern, syntax/import, and whitespace checks passed.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+First `reconcile_governance_views.py --write` and `--check` failed:
+`Active Card has incompatible lifecycle state: V1-C11`. The Card-start
+status table used `IN_PROGRESS`; the existing reconciliation contract
+requires `ACTIVE`. Changing only the lifecycle vocabulary produced PASS on
+both reruns. No application behavior was implicated.
+
+Initial architecture self-validation was green with `human_review.py`
+classified CORE, but source review found that existing AGENT → CORE would
+permit future Agent imports of approval code. The module was moved to a
+dedicated REVIEW category with REVIEW → CORE only; 42 architecture tests
+then passed. An initial audit-copy eligibility property was also removed
+because nested Quote values are mutable; the held session remains the sole
+eligibility gate, tested against a tampered returned rejection record.
 
 ### 14. Exit Gate Evidence
 
-NONE
+SELF_VALIDATION: explicit human action and one validated approve/reject
+transition (`test_explicit_human_approval_preserves_core_truth_and_provenance`,
+`test_human_rejection_is_visible_and_not_eligible`); AI/model text cannot
+impersonate an action (`test_invalid_action_and_model_text_cannot_impersonate_human`);
+only a revalidated successful draft enters review (unsuccessful and malformed
+result tests); Core arithmetic is unchanged (approval and changed-input
+tests); exact C10 snapshot binds quote/request/evidence identity (mutation
+and stale-decision tests); invalid transitions and copy-tampering fail;
+no C12+ module/action was added. Independent audit and approved Git delivery
+are still pending.
 
 Exit Gate Status: NOT_PROVEN
 
@@ -1845,15 +1893,24 @@ NOT_RUN
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Start base `d09e57a0ed22819ae7b7e46a4e25433b74de33ec`; branch
+`card/v1-c11-human-review-approval`. No C11 stage, commit, push, PR, or merge.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+`reviewer_id` is caller-asserted, not authenticated; a trusted future caller
+must obtain it from an actual human action. C11 cannot prove the caller
+supplied genuine C10 output or independently reconstruct C09 source records.
+It preserves and checks the received validated result/evidence links. Repeat
+decisions are blocked within one in-memory session; durable cross-process
+replay/concurrency policy requires a later authorized persistence boundary.
+The returned `ReviewRecord` is an inspectable copy, not an authority token.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+CURRENT — architecture authority separation, snapshot binding, lifecycle
+vocabulary failure, and audit-copy mutability are explained in the C11
+Learning and Decision Log.
 
 ### 19. Completion Evidence
 
@@ -1861,11 +1918,11 @@ NONE
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE — not COMPLETE or delivered
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C11
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C12 — Excel Generation
 
@@ -2693,7 +2750,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C08 | Amazon Bedrock Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C09 | Agent Tools | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C10 | Quotation Agent | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C11 | Human Review Gate | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C11 | Human Review Gate | ACTIVE | YES | PASS | NOT_PROVEN | NOT_RUN | PRESENT | ACTIVE — not COMPLETE or delivered |
 | V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C14 | Amazon S3 Integration | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2709,7 +2766,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C10_COMPLETE
+Project Phase: V1_C11_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -2720,8 +2777,9 @@ V1-C07: COMPLETE
 V1-C08: COMPLETE
 V1-C09: COMPLETE
 V1-C10: COMPLETE
-V1-C11: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C11: ACTIVE
+V1-C12: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C11
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
