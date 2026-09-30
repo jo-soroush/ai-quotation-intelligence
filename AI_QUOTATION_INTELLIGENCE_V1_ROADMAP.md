@@ -556,6 +556,16 @@ Final Export
 - human approves
 - approval state must be explicit
 
+### Exit Gate
+
+* final quotation finalization remains blocked without an explicit human review decision
+* approval and rejection are explicit, validated human actions; AI, agents, models, and tools cannot create or impersonate approval
+* only a valid or revalidated quotation draft enters review; invalid, unavailable, or insufficient C10 results cannot become approvable success
+* review cannot change authoritative deterministic commercial calculations, and changed commercial inputs require revalidation
+* the reviewed quote and evidence identity and provenance remain bound to the decision
+* approval and rejection state is represented explicitly, and invalid transitions are rejected
+* C11 establishes review and finalization eligibility without implementing C12+ export, transport, storage, deployment, or UI responsibilities
+
 ---
 
 ## V1-C12 — Excel Generation

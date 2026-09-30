@@ -1416,6 +1416,20 @@ generalize the agent's safety behavior, but C10 does not build those systems.
 
 ## V1-C11 — Human Review Gate
 
+Pre-implementation governance finding (not C11 implementation): read-only
+C11 preflight was BLOCKED by two missing canonical records. The specification
+called the Roadmap Exit Gate authoritative, but the C11 Roadmap section had
+no explicit gate; the global C09+ verification rule also had not been applied
+to C11. The root cause was incomplete propagation of the later-Card gate and
+verification template, leaving the completion criterion and independent
+verification plan ambiguous before authorization. This bounded maintenance
+adds an existing-scope Exit Gate and an ELEVATED, derived verification block.
+It does not choose an exact transition matrix, reviewer authentication or
+storage mechanism, draft-version scheme, architecture placement, or C12+
+capability. The prevention lesson is to reconcile the Roadmap gate and
+specification verification block before human Card-start authorization;
+actual C11 implementation, audit, and delivery remain future work.
+
 ### 1. Card
 
 V1-C11 — Human Review Gate

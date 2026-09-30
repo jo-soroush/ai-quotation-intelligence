@@ -1135,6 +1135,79 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 
 Unapproved finalization blocked, approve path, reject path, invalid transitions, agent self-approval blocked, changed-input invalidation where applicable, and approval not altering deterministic totals.
 
+Pre-implementation C11 verification block (derived from this Card sections
+2, 5, 7–12; Roadmap V1-C11; PROJECT_PROFILE.md;
+COMMERCIAL_AND_DATA_GUARDRAILS.md; and existing domain/C10 contracts; this is
+a verification plan, not C11 authorization or implementation evidence):
+
+- Risk Classification: ELEVATED because human approval is a consequential
+  commercial authority boundary; a bypass could permit unauthorized
+  finalization or falsely attribute a decision to a human.
+- Escalation Triggers: approval/authorization bypass, substituted or changed
+  draft or evidence, invalid upstream result, invalid state transition,
+  deterministic-total mutation, and future-Card finalization leakage.
+- Canonical Sources: Roadmap V1-C11, this Card's sections 2–12,
+  PROJECT_PROFILE.md, COMMERCIAL_AND_DATA_GUARDRAILS.md, and existing
+  DraftQuote, AgentResult, ApprovalDecision, and QuoteStatus contracts.
+- Acceptance Contract: Given a valid or revalidated draft and an explicit
+  human review action, when review occurs, then approve or reject is recorded
+  as an explicit validated state bound to the reviewed quote and evidence,
+  without changing deterministic commercial results. Given absent human
+  action, invalid or unsuccessful C10 output, changed commercial inputs,
+  substituted evidence, or an invalid transition, review must not produce
+  approvable success or finalization eligibility. AI, agents, models, and
+  tools cannot impersonate the human decision; C12+ export is not performed.
+- Critical Invariants: no human approval means no final quotation (Roadmap
+  V1-C11; Guardrail G16); approval is human-only and never overrides
+  arithmetic (G17/G39); invalid or changed drafts require validation before
+  review (this Card sections 5 and 8); reviewed quote/evidence identity and
+  provenance remain bound to the decision (G08 and Roadmap V1-C11); explicit
+  approve/reject state and invalid-transition rejection remain visible (this
+  Card section 8). Verify with deterministic contract, changed-input,
+  provenance, and adversarial authority cases.
+- Verification Strategy: focused approve/reject and approval-required cases;
+  invalid-transition and changed-input cases; unsuccessful C10 result,
+  substituted draft/evidence, and AI self-approval attempts; deterministic
+  total preservation; relevant C10/domain regression and architecture checks.
+  Test the chosen review boundary without requiring C12+ infrastructure.
+- Advanced Verification Decision (reassess against actual C11 design at Card
+  start; no new testing framework or implementation mechanism is prescribed):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Approval and commercial authority must remain separate |
+  | Contract tests | REQUIRED | Review inputs, decisions, and state boundaries must validate |
+  | Integration | CONDITIONAL / EVALUATE | Evaluate actual C10-to-review and later finalization boundary wiring |
+  | Generated property tests | CONDITIONAL / EVALUATE | Use if transition/input combinations exceed focused examples |
+  | Targeted mutation-resistance | REQUIRED | Challenge consequential approval and invalid-transition checks |
+  | Failure injection | REQUIRED | Invalid or unavailable upstream results and failed validation must not approve |
+  | Fuzzing | CONDITIONAL / EVALUATE | Evaluate if the chosen boundary adds a broad untrusted input surface |
+  | Differential | NOT_APPLICABLE | No second equivalent review implementation is specified |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Evaluate if shared or persistent decision state is introduced |
+  | Adversarial testing | REQUIRED | Probe impersonation, substituted drafts/evidence, and bypass |
+  | Threat modeling | REQUIRED | Human authority is a consequential trust boundary |
+  | Agent evals | NOT_APPLICABLE | C11 does not own agent quality or C17 evaluation infrastructure |
+  | Rollback/recovery | CONDITIONAL / EVALUATE | Evaluate if decisions gain persistent or external effects |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal-state requirement is specified |
+- Independent Verifier Expectations: inspect the frozen candidate against
+  the Roadmap Exit Gate and this contract; challenge false-green approval,
+  invalid-transition, provenance, changed-input, and commercial-truth tests;
+  verify no C12+ capability or unapproved architecture permission was added.
+- Evidence / Traceability Requirements: link the review decision boundary,
+  input/result validation, quote/evidence identity, deterministic-total
+  preservation, approval-required behavior, failure paths, and prohibited
+  autonomous approval to actual paths, executed tests, and observed results
+  in the Evidence Map. Preserve material rationale in the Learning Log.
+  Until C11 is separately authorized and executed, these remain NOT_RUN /
+  NOT_PROVEN.
+- Known Non-Scope: section 9 remains authoritative. Excel generation,
+  FastAPI, S3, deployment, UI, multi-agent workflow, autonomous approval,
+  C18's general guardrail platform, and C12+ infrastructure/workflows remain
+  outside C11. Exact transition matrix, terminality, repeated decisions,
+  re-review, draft-version binding, reviewer identity mechanism, audit
+  storage, timestamp policy, architecture placement, and error taxonomy are
+  deferred to authorized C11 implementation and must satisfy the gate.
+
 Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate
