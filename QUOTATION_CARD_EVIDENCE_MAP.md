@@ -2209,6 +2209,26 @@ NOT_RUN
 
 NONE RECORDED FOR IMPLEMENTATION
 
+Pre-implementation read-only C13 preflight: BLOCKED. Inspection found no
+authoritative C13 Roadmap Exit Gate, no mandatory C09+ verification block in
+the C13 specification, ambiguous approve/reject transport despite C11's
+explicit two-way decision contract, and no stated cross-request handling for
+the held in-memory C11 session required by C12. This maintenance candidate
+adds the Roadmap gate and verification block, makes the six listed routes V1
+requirements, identifies `/approve` as an explicit APPROVED/REJECTED decision
+transport, and permits bounded single-process state without granting it
+approval authority. These are canonical contract corrections, not C13
+implementation or Exit Gate proof. Independent audit of this candidate is
+PENDING; C13 remains NOT_STARTED and human start approval remains NO.
+
+Maintenance validation observed on `maintenance/pre-c13-canonical-remediation`:
+governance reconciliation `--write` and `--check` PASS; Governance Harness
+PASS=61/FAIL=0; `.venv/bin/pytest -q` 321 passed; architecture tests 57
+passed; bootstrap PASS=127/WARN=1/FAIL=0 (expected undelivered working-tree
+warning); shell syntax, Python compilation/import smoke, changed-diff secret
+pattern scan, and `git diff --check` PASS. These results validate the
+maintenance candidate, not C13 implementation or its Exit Gate.
+
 ### 14. Exit Gate Evidence
 
 NONE

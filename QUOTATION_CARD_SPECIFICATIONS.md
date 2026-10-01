@@ -1468,6 +1468,24 @@ FastAPI is transport only. API models must not become Core domain ownership.
 - keep business logic in application/domain services
 - avoid secrets in responses
 
+The Roadmap's six V1 routes are required transport surfaces. Its historical
+`/approve` path carries an explicit APPROVED or REJECTED `ApprovalDecision`;
+the path itself never selects approval. Analysis/draft may invoke existing
+C10 capabilities, review delegates the caller's decision to C11, and export
+returns validated C12 `.xlsx` bytes only after C12 checks the held C11
+`ReviewSession` against the current `AgentResult`. Client-supplied status,
+copied `ReviewRecord`, or model text cannot substitute for that authority.
+The reviewer reference remains caller-asserted, not authenticated by C13.
+
+A bounded process-local association may carry the current validated result
+and held review session across requests in the supported single-process V1
+runtime. It owns neither commercial truth nor approval. Repeated/concurrent
+requests must preserve C11's one-decision, transition, and freshness rules
+and C12's approval check. Restart loses this state; multi-process sharing,
+durability, and persistent storage are not C13 guarantees. Exact registry,
+locking, schema, status-code, response-header, and dependency-injection
+choices remain implementation decisions.
+
 ### 9. Out of Scope
 
 - S3 adapter implementation
@@ -1475,6 +1493,9 @@ FastAPI is transport only. API models must not become Core domain ownership.
 - CloudWatch-specific observability
 - UI
 - duplicated business logic in endpoints
+- database, Redis, S3-backed or other persistent/distributed session storage
+- authentication infrastructure, email, multi-agent expansion, new commercial arithmetic, or autonomous approval
+- C17 evaluation or C18 generalized guardrail platform
 
 ### 10. Dependencies
 
@@ -1485,6 +1506,83 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 ### 11. Tests / Evaluation
 
 Request validation, invalid payloads, happy path, agent failure mapping, approval-required mapping, reject/approve behavior, transport/domain separation, and no endpoint business-logic duplication.
+
+C09+ pre-implementation verification block (derived contract and plan, not
+C13 implementation, authorization, or test evidence):
+
+- Risk Classification: ELEVATED because this transport crosses AI failure,
+  human approval, process-local state, and final Excel delivery boundaries;
+  a bypass or leaked internal failure could expose consequential output.
+- Escalation Triggers: client-forged approval or commercial state; stale or
+  repeated review/export; concurrent decision bypass; C10 failure treated as
+  success; malformed/oversized input; raw exception, secret, or provider-data
+  leakage; C14+ infrastructure or business logic entering handlers.
+- Canonical Sources: Roadmap V1-C13 and its Exit Gate, this Card's sections
+  2–12, PROJECT_PROFILE.md, COMMERCIAL_AND_DATA_GUARDRAILS.md, delivered
+  C10 `AgentRequest`/`AgentResult`, C11 `ApprovalDecision`/`ReviewSession`,
+  C12 `export_approved_quote`, and domain models.
+- Acceptance Contract: Given a valid request, when a required route executes,
+  then typed input is validated and an existing owner supplies the result;
+  analysis/draft cannot approve, explicit approve/reject goes through C11,
+  and export succeeds only through C12's current-result approval gate. Given
+  malformed input, unknown process-local quote/session, C10 INVALID,
+  UNAVAILABLE, or INSUFFICIENT_EVIDENCE, C11 transition/freshness failure,
+  C12 approval/reconciliation/export failure, or unexpected internal failure,
+  the API returns a deterministic sanitized failure and no fabricated success.
+  The six Roadmap routes remain distinct; no automatic draft-to-approval or
+  approval-to-export chain is implied.
+- Critical Invariants: HTTP data is untrusted until validated (G36); no AI,
+  route name, copied record, or client status creates human approval (G16/G39);
+  final export uses current approved validated state (G40); commercial values
+  remain Core-owned and Excel reconciliation remains C12-owned (G15/G17);
+  process-local state cannot bypass C11 freshness/one-decision checks;
+  provider-specific data remains outside Core and sanitized at transport.
+  Verify by route contracts, authority-bypass, failure, state, and
+  architecture tests.
+- Verification Strategy: test each required route, typed request/response
+  and OpenAPI construction, invalid input, explicit approve/reject, C10/C11/C12
+  failure mapping, missing/stale/repeated/concurrent session behavior,
+  approval-gated workbook delivery, sanitized unexpected errors, and
+  transport-only import/ownership boundaries. Test lightweight health
+  without a live Bedrock call. Do not require C14+ infrastructure.
+- Advanced Verification Decision (reassess against the authorized C13 design;
+  this does not prescribe a framework):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Approval/export and response mapping must not vary by transport path |
+  | Contract tests | REQUIRED | The six routes and typed HTTP boundaries must be exercised |
+  | Integration | REQUIRED | Cross-request C10-to-C11-to-C12 flow must preserve held authority |
+  | Generated property tests | CONDITIONAL / EVALUATE | Use if payload/state combinations outgrow focused cases |
+  | Targeted mutation-resistance | REQUIRED | Challenge approval/export gate and failure-mapping tests |
+  | Failure injection | REQUIRED | Delegated and unexpected errors must stay sanitized and fail closed |
+  | Fuzzing | CONDITIONAL / EVALUATE | Consider for broad untrusted JSON surfaces |
+  | Differential | NOT_APPLICABLE | No second equivalent API is specified |
+  | Concurrency/race | REQUIRED | Same-process repeated/concurrent decisions must not bypass C11 |
+  | Adversarial testing | REQUIRED | Probe forged status/records, stale state, and authority escalation |
+  | Threat modeling | REQUIRED | HTTP exposure crosses consequential authority boundaries |
+  | Agent evals | NOT_APPLICABLE | C10/C17 own model quality, not C13 transport |
+  | Rollback/recovery | CONDITIONAL / EVALUATE | Assess process-local loss and any actual external effects |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal-state requirement is specified |
+- Independent Verifier Expectations: inspect each route's real delegation,
+  C11/C12 gate use, same-process state and concurrent behavior, sanitized
+  failures, absence of copied-metadata authority, and least-privilege imports;
+  challenge tests that pass despite skipped approval or duplicate business
+  logic. No live AWS or C14+ proof substitutes for these checks.
+- Evidence / Traceability Requirements: record actual route contracts,
+  request/response and failure cases, C11 session identity/freshness,
+  C12 workbook gate, concurrency checks, security probes, architecture
+  results, executed commands, and limitations in the Evidence Map; record
+  design rationale and any real failure/root-cause/fix in the Learning Log.
+  Until C13 is separately authorized and executed, these are NOT_RUN /
+  NOT_PROVEN.
+- Known Non-Scope: section 9 remains authoritative. Exact HTTP schemas,
+  status codes, MIME/Content-Disposition/filename, process-local registry
+  and locking mechanism, sync/async routes, health body, CORS configuration,
+  dependency set, and architecture permissions are C13 implementation
+  decisions under least privilege. Health does not require a live Bedrock or
+  AWS call. No database, Redis, persistence, authentication platform, S3,
+  deployment, UI, or C18-wide guardrail platform is added.
 
 Test not run != PASS. Design intent != implementation evidence.
 

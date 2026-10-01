@@ -651,7 +651,7 @@ missing historical metrics; synthetic history must never be presented as real.
 
 Expose the system through a clean API layer.
 
-### Initial Endpoints
+### V1 Required Endpoints
 
 ```text
 POST /quotes/analyze
@@ -663,6 +663,36 @@ GET  /health
 ```
 
 FastAPI must remain a delivery layer rather than contain core business logic.
+
+`POST /quotes/analyze` and `POST /quotes/draft` expose existing analysis and
+draft capabilities without granting approval. `GET /quotes/{id}` retrieves the
+process-held quotation/review view; it does not reconstruct authority from
+client data. Despite its historical path name, `POST /quotes/{id}/approve` is
+the human review-decision route: its explicit, validated C11
+`ApprovalDecision` may be APPROVED or REJECTED. The route name never implies
+approval. `POST /quotes/{id}/export` delivers C12's validated `.xlsx` bytes
+only after the current C11 approval gate succeeds. `GET /health` reports
+lightweight API/process health without requiring a live Bedrock or AWS call.
+
+For V1, a bounded process-local association may retain the current validated
+`AgentResult` and held C11 `ReviewSession` across HTTP requests. That
+association is not commercial or approval authority: C11 owns the decision,
+and C12 must recheck approval against the current result. Repeated or
+concurrent requests in the supported single-process runtime must not bypass
+C11's one-decision, transition, or freshness checks. Process restart loses
+this state; shared state across workers/processes and persistent session
+storage are not guaranteed by C13.
+
+### Exit Gate
+
+* the required V1 routes expose only the approved quotation workflow through typed, validated HTTP contracts
+* handlers remain adapters and do not own commercial arithmetic, AI reasoning, evidence discovery, approval authority, or Excel business logic
+* C10 failures map to explicit, sanitized transport responses; malformed HTTP input cannot reach authoritative operations
+* approve and reject require an explicit caller decision delegated to C11; client status, copied review records, model text, and route names cannot create approval authority
+* export delegates to C12 using the held C11 session and current `AgentResult`; stale or modified review state cannot export
+* cross-request process-local state and concurrent or repeated requests preserve C11 transition/freshness and C12 approval checks without claiming durable or multi-process authority
+* unexpected internal or provider failures cannot expose secrets, raw provider payloads, or internal exception details
+* required endpoints are contract-tested; C13 introduces no C14+ storage, deployment, observability, or UI infrastructure
 
 ---
 

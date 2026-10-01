@@ -1856,6 +1856,33 @@ NOT YET RECORDED — complete from actual implementation experience.
 
 NOT YET RECORDED — complete from actual implementation experience.
 
+### Pre-implementation canonical maintenance
+
+The read-only C13 preflight was BLOCKED before authorization: the Roadmap
+lacked its authoritative Exit Gate, the C09+ verification block was absent,
+the listed `/approve` route did not explain how C11 rejection travels over
+HTTP, and the contract did not explain how C11's held in-memory session reaches
+later C12 export requests. The root cause was a C13 transport outline that
+preceded the delivered C11/C12 authority contracts, leaving cross-request
+authority and verification implicit.
+
+The bounded correction retains the six existing routes. The historically
+named `/approve` route transports an explicit APPROVED or REJECTED C11
+decision; naming cannot grant approval. A bounded process-local association
+may retain the current validated result and held review session, but C11/C12
+remain the authority and must recheck transitions, freshness, and approval.
+This is preferable to adding a duplicate rejection route or pretending a
+copied approval record is a token. It also avoids prematurely introducing
+database, Redis, or distributed-session infrastructure. Restart loses V1
+process-local state, and multi-worker coherence is not claimed.
+
+The Roadmap gate and C09+ verification block now make those boundaries
+auditable without fixing HTTP schema, status-code, locking, or dependency
+choices before C13 implementation. No API code, dependency, architecture
+permission, or C13 start authorization is introduced. The maintenance
+candidate awaits independent audit; the C13 implementation learning fields
+above remain NOT YET RECORDED.
+
 ## V1-C14 — Amazon S3 Integration
 
 ### 1. Card
