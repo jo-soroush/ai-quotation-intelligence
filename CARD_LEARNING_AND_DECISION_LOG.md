@@ -1766,6 +1766,22 @@ history in a later workbook would require a new approved evidence-binding
 contract before human review, not a C12 post-approval search. Durable review
 authority across processes remains a separate future design decision.
 
+Delivery outcome: the exact C12 candidate identity
+`a65b6a34cc4a689b0dcbd16eb49d6c60d8c2a88b30ef34223de2fdac083b9e7f`
+received independent audit PASS. The human approver accepted the LOW direct
+multi-link test-coverage note and the documented V1 in-memory approval,
+caller-asserted reviewer, bound-reference-only history, and fail-closed
+numeric representation limits without changing the frozen candidate. Staged
+and committed-tree identities matched; delivery commit
+`9af4c84fdd66cad27eab6f63445beb2e895fe9bf` was pushed and merged
+through PR #34 as `c828f00af069c3de83cc327fd6ee0feb3c89aee6`.
+Clean-main post-merge C12/C11/C10/C09 tests passed 60/32/57/24,
+architecture passed 57, full pytest passed 321, Governance Harness passed
+61/0, reconciliation passed, bootstrap passed 128/0/0, and dependency,
+openpyxl import, syntax, security, and diff checks passed. This separate
+outcome-only reconciliation records C12 completion; C13 remains unauthorized
+and unstarted.
+
 ## V1-C13 — FastAPI Application
 
 ### 1. Card
