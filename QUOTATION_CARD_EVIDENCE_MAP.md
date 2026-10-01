@@ -2408,7 +2408,30 @@ NOT_RUN
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+NONE RECORDED FOR IMPLEMENTATION.
+
+Pre-implementation read-only C14 preflight: BLOCKED before authorization by
+the missing authoritative Roadmap Exit Gate and missing C09+ verification
+block. It also identified ambiguity in the primary persistable artifact/input
+and retrieval authority. This canonical maintenance resolves those contract
+gaps only; C14 remains NOT_STARTED / NOT_AUTHORIZED. The user reports that no
+S3 bucket currently exists; no AWS calls or resource changes were performed,
+and bucket absence is not a blocker. Exact key format, duplicate/idempotency
+policy, integrity mechanism, architecture category, and IAM details remain
+implementation decisions.
+
+Independent audit of the original documentation candidate
+`4d3f48ebd8f4f5dbda1852c083ca003321588dc6f39f30856365565190715fc8` returned
+PASS with one MEDIUM finding: C14's Advanced Verification Decision was less
+complete than the established C09–C13 per-technique tables and did not
+explicitly decide Threat Modeling. One LOW process note observed that the
+candidate was initially on `main`. The candidate was moved without content
+change to `maintenance/pre-c14-canonical-remediation` (the original identity
+was reverified there); the focused remediation expanded only the C14
+Advanced Verification Decision using the established 14-technique taxonomy.
+Threat Modeling is REQUIRED due to C14's ELEVATED storage trust boundary;
+real/live AWS remains optional supplementary evidence. No C14 implementation,
+dependency, architecture, or authorization change was made.
 
 ### 14. Exit Gate Evidence
 

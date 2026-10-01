@@ -2028,6 +2028,52 @@ NOT YET RECORDED — complete from actual implementation experience.
 
 NOT YET RECORDED — complete from actual implementation experience.
 
+### Pre-implementation canonical maintenance history
+
+The C14 read-only preflight was BLOCKED because the Roadmap had no
+authoritative Exit Gate and the C14 specification lacked the required C09+
+verification block. It also left unclear whether storage could receive
+arbitrary bytes and whether retrieval required an authenticated user. The
+root cause was that the existing C14 outline described generic S3 persistence
+without binding the quotation artifact to delivered C12 or separating
+storage identity from approval authority.
+
+This bounded documentation correction makes C12's validated `.xlsx` bytes
+the primary V1 quotation artifact and places storage composition after that
+boundary. C14 validates storage identity/integrity and never re-runs C11
+approval or C12 workbook/commercial rules. Retrieval is through the storage
+contract using identity validated by application composition; possession of
+free-form key text is not authority, and no anonymous public endpoint or
+authentication system is introduced. This avoids granting storage a new
+approval role or requiring C14 to import C10/C11.
+
+The maintenance keeps low-level choices open: key encoding, checksum or
+other integrity mechanism, duplicate/idempotency policy, sync/async design,
+exact IAM details, storage architecture category, and configuration names.
+It requires those decisions to be deterministic, explicit, and tested when
+C14 is separately authorized. A local deterministic test boundary is
+mandatory; live AWS is optional, so the user's lack of a bucket is not a
+blocker. No bucket, credentials, dependencies, architecture permissions,
+application code, or C14 authorization were changed. Earlier preflight
+history remains BLOCKED; C14 remains NOT_AUTHORIZED / NOT_STARTED.
+
+### Independent-audit follow-up
+
+The independent audit of the original documentation candidate
+`4d3f48ebd8f4f5dbda1852c083ca003321588dc6f39f30856365565190715fc8` passed
+with one MEDIUM finding: the C14 Advanced Verification Decision did not match
+the explicit per-technique depth used by C09–C13 and left Threat Modeling
+undecided despite C14's ELEVATED risk. A LOW process note also observed that
+the candidate was initially on `main`. The working tree was moved intact to
+`maintenance/pre-c14-canonical-remediation`; the original identity was
+reverified before this content change. The specification now uses the same
+14-technique table structure and taxonomy, with decisions derived from C14's
+storage, identity, integrity, credential, and no-overwrite boundaries rather
+than copied Card verdicts. Threat Modeling is REQUIRED; live AWS remains
+optional and is not needed for implementation, independent audit, or the Exit
+Gate. No other C14 contract was reopened, and no application, dependency, or
+architecture change was made. C14 remains NOT_AUTHORIZED / NOT_STARTED.
+
 ## V1-C15 — AWS Deployment
 
 ### 1. Card
