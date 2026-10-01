@@ -5,12 +5,14 @@ description = "Local-first AI quotation intelligence system baseline"
 requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.35,<2.0",
+    "fastapi>=0.115,<1.0",
     "openpyxl>=3.1,<4.0",
     "pydantic>=2.0,<3.0",
 ]
 
 [project.optional-dependencies]
 dev = [
+    "httpx>=0.27,<1.0",
     "pytest>=8.0,<9.0",
 ]
 

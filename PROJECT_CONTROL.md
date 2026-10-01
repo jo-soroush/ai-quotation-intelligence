@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C12_COMPLETE
+Project Phase: V1_C13_ACTIVE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / UNDELIVERED
+Active Card: V1-C13 — FastAPI Application
+Active Card State: ACTIVE
 Last COMPLETE Card: V1-C12 — Excel Generation
-Next Roadmap Card: V1-C13 — FastAPI Application (not authorized)
-Next Card Authorized: NO — V1-C13 and later Cards remain unauthorized
-Implementation Authorization: NONE — V1-C12 authorization consumed by completion; V1-C13 and later Cards not authorized
+Next Roadmap Card: V1-C13 — FastAPI Application (active)
+Next Card Authorized: NO — V1-C14 and later Cards remain unauthorized
+Implementation Authorization: GRANTED — V1-C13 only, by explicit human Card-start approval
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
 Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
@@ -106,10 +106,10 @@ Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 Git repository: YES
 .git present: YES
 Current Git branch, HEAD, upstream, remote, synchronization, and working-tree state: query Git at runtime; do not treat values embedded in this tracked file as current Git truth
-Application package: V1-C01–V1-C12 IMPLEMENTED / DELIVERED
-tests/: V1-C01–V1-C12 CREATED / PASS
+Application package: V1-C01–V1-C12 IMPLEMENTED / DELIVERED; V1-C13 IMPLEMENTED / UNDELIVERED
+tests/: V1-C01–V1-C12 CREATED / PASS; V1-C13 added / implementation self-validation PASS, independent audit pending
 pyproject.toml: CREATED
-requirements: pyproject.toml project dependencies and dev extra; openpyxl added for V1-C12
+requirements: pyproject.toml project dependencies and dev extra; openpyxl added for V1-C12, FastAPI/httpx for V1-C13
 CI: NOT_CREATED
 ```
 
@@ -118,7 +118,7 @@ Implementation posture:
 ```
 Bedrock Integration: IMPLEMENTED — C08 adapter; delivery complete
 S3 Integration: NOT_STARTED
-FastAPI: NOT_STARTED
+FastAPI: IMPLEMENTED / UNDELIVERED — C13 self-validation passed; independent audit pending
 Excel Generation: IMPLEMENTED / DELIVERED — independently audited; PR #34 merged
 AWS Deployment: NOT_STARTED
 CloudWatch: NOT_STARTED
@@ -132,31 +132,32 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C12
-Title: Excel Generation
-State: COMPLETE
-Branch: card/v1-c12-excel-generation
-Start Commit: 70f4eca6c6dd0c9db91a944e1d927e15600b7611
-Delivery Commit: 9af4c84fdd66cad27eab6f63445beb2e895fe9bf
-PR: MERGED — #34
-Merge Commit: c828f00af069c3de83cc327fd6ee0feb3c89aee6
-Human Start Approval: GRANTED — explicit human authorization for V1-C12 implementation
-Authorized Scope: V1-C12 Excel generation/export only; no V1-C13+ implementation
-ROADMAP_ALIGNMENT_GATE: PASS — C12 contract/risk inspection and clean baseline verified before implementation
-CARD_QUALITY_GATE: PASS — exact audited C12 candidate delivered through PR #34; post-merge validation passed
+Card ID: V1-C13
+Title: FastAPI Application
+State: ACTIVE
+Branch: card/v1-c13-fastapi-api-layer
+Start Commit: 48428e2b303421580820f5195a7fc3a5a3f9419c
+Initial Working Tree State: CLEAN
+Delivery Commit: NOT_CREATED
+PR: NOT_CREATED
+Merge Commit: NOT_CREATED
+Human Start Approval: GRANTED — explicit human authorization for V1-C13 implementation
+Authorized Scope: V1-C13 FastAPI transport and process-local C11/C12 workflow only; no V1-C14+ implementation or Git delivery
+ROADMAP_ALIGNMENT_GATE: PASS — C13 contract/risk inspection, delivered owners, clean base, and explicit approval verified before implementation
+CARD_QUALITY_GATE: NOT_RUN — independent audit and delivery pending
 ```
 
 Safe Checkpoint:
 
-C02 domain contracts through C12 Excel Generation were delivered and are complete. V1-C13 and later remain unauthorized.
+C02 domain contracts through C12 Excel Generation were delivered and are complete. V1-C13 is authorized and active; V1-C14 and later remain unauthorized.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
 FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C02 delivery and final reconciliation verified on main.
 
 ## 6. Authorization Ledger
 
 ```
-Card Start: CONSUMED — V1-C12 completed
-Next Card: NOT_GRANTED — V1-C13 and later Cards remain unauthorized
+Card Start: GRANTED — V1-C13 FastAPI Application only
+Next Card: NOT_GRANTED — V1-C14 and later Cards remain unauthorized
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C04: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -169,9 +170,9 @@ V1-C10: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C11: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C12: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C10 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #28 merged
-Architecture Change: NOT_GRANTED — C12 approved EXPORT change delivered; no V1-C13+ permission
+Architecture Change: GRANTED ONLY WITHIN V1-C13 — minimum actual APPLICATION_BOUNDARY imports; no V1-C14+ permission
 Material Scope Change: NOT_GRANTED
-Significant Technology Addition: NOT_GRANTED — approved C12 openpyxl dependency delivered; no V1-C13+ addition authorized
+Significant Technology Addition: GRANTED ONLY WITHIN V1-C13 — minimum FastAPI/runtime/test dependencies; no V1-C14+ addition authorized
 Sensitive Credential Use: NOT_GRANTED
 External Write/Action Capability: NOT_GRANTED
 Commit: COMPLETED — 266884504a40584d9d7497a648beb1268c8f827f (C04 delivery)
@@ -219,7 +220,7 @@ PR: MERGED — #34 (C12 delivery)
 Merge: COMPLETED — c828f00af069c3de83cc327fd6ee0feb3c89aee6 (C12 delivery)
 ```
 
-V1-C04 through V1-C12 implementation, validation, and approved delivery are complete. V1-C13 and later remain unauthorized.
+V1-C04 through V1-C12 implementation, validation, and approved delivery are complete. V1-C13 is authorized for implementation only; V1-C14 and later remain unauthorized.
 
 ## 7. Roadmap Position
 
@@ -227,18 +228,18 @@ V1-C04 through V1-C12 implementation, validation, and approved delivery are comp
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation
-Active Card: NONE
-Next Roadmap Card: V1-C13 — FastAPI Application (not authorized)
+Active Card: V1-C13 — FastAPI Application
+Next Roadmap Card: V1-C13 — FastAPI Application (active)
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
-Later Cards: V1-C13 and later NOT_AUTHORIZED
+Later Cards: V1-C14 and later NOT_AUTHORIZED
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
 
 ## 8. Current Blockers and Pending Control
 
-V1-C02 through V1-C12 implementation, validation, and Git delivery are complete. V1-C13 and later remain unauthorized.
+V1-C02 through V1-C12 implementation, validation, and Git delivery are complete. V1-C13 is active and undelivered; V1-C14 and later remain unauthorized.
 
 Governance remaining actions: NONE.
 
@@ -258,15 +259,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: V1-C11 identity, scope, C01–C10 ownership, human authority and commercial boundaries, clean base, and explicit human authorization were verified before implementation.
+Reason: V1-C13 identity, six-route contract, C10–C12 ownership, authority and security boundaries, clean base, and explicit human authorization were verified before implementation.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / V1-C11 pre-write inspection recorded in session
-Risk Map: COMPLETE / V1-C11 ELEVATED human-approval authority boundary recorded in session
-Reason: V1-C11 Roadmap/specification, C10/domain contracts, commercial guardrails, and least-privilege architecture were inspected; requested work remains C11-only. Source Adaptation: NOT_APPLICABLE.
+Contract Map: COMPLETE / V1-C13 pre-write inspection recorded in session
+Risk Map: COMPLETE / V1-C13 ELEVATED transport, approval, and process-local-state boundary recorded in session
+Reason: V1-C13 Roadmap/specification, C10–C12/domain contracts, commercial guardrails, and least-privilege architecture were inspected; requested work remains C13-only. Source Adaptation: NOT_APPLICABLE.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -330,7 +331,7 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01–V1-C12 COMPLETE; V1-C13 and later NONE
+Implementation Evidence: V1-C01–V1-C12 COMPLETE; V1-C13 ACTIVE / NOT_PROVEN; V1-C14 and later NONE
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation
 V1-C01 CARD_QUALITY_GATE: PASS
 V1-C09 CARD_QUALITY_GATE: PASS — implementation validation, independent audit, and approved delivery
@@ -351,7 +352,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C12_COMPLETE
+Checkpoint Type: V1_C13_ACTIVE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -360,8 +361,8 @@ Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
 Application implementation: V1-C01–V1-C12 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Active Card: V1-C13 — FastAPI Application
+Active Card State: ACTIVE
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -398,7 +399,7 @@ These are governance decisions, not implementation claims.
 | V1-C10 | Quotation Agent | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
 | V1-C11 | Human Review Gate | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
 | V1-C12 | Excel Generation | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
-| V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C13 | FastAPI Application | ACTIVE | YES | NOT_RUN | PENDING |
 | V1-C14 | Amazon S3 Integration | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C15 | AWS Deployment | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C16 | CloudWatch Observability | NOT_STARTED | NO | NOT_RUN | PENDING |
@@ -407,7 +408,7 @@ These are governance decisions, not implementation claims.
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01 through V1-C12 are COMPLETE. V1-C13 and later remain unauthorized.
+V1-C01 through V1-C12 are COMPLETE. V1-C13 is active under explicit human authorization; V1-C14 and later remain unauthorized.
 
 ## 19. Resume Protocol
 
@@ -439,16 +440,16 @@ Governance migration files have been migrated and reconciled. Strict governance 
 
 ```
 Application Implementation: V1-C01–V1-C12 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
-Next Roadmap Card: V1-C13 — FastAPI Application (not authorized)
+Active Card: V1-C13 — FastAPI Application
+Active Card State: ACTIVE
+Next Roadmap Card: V1-C13 — FastAPI Application (active)
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: STOP after final V1-C12 completion-state consistency verification; V1-C13 requires separate explicit human authorization.
+Safe next action: Request independent audit of the exact V1-C13 candidate; stop before staging or delivery pending separate human approval.
 
 Do not start any later Card automatically.
 
@@ -462,5 +463,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01 THROUGH V1-C12 ARE COMPLETE; V1-C13 AND LATER REQUIRE SEPARATE HUMAN APPROVAL.
+V1-C01 THROUGH V1-C12 ARE COMPLETE; V1-C13 IMPLEMENTATION IS AUTHORIZED; V1-C14 AND LATER REQUIRE SEPARATE HUMAN APPROVAL.
 ```

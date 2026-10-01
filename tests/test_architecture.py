@@ -28,7 +28,8 @@ FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, REVIEW, EXPORT, APPLICATION_
 # C11 review may use Core contracts/arithmetic only; Agent, Agent Tool,
 # Provider, Support, Core, and future Application modules cannot import Review.
 # C12 export needs only C11's held approval gate and Core's domain/arithmetic;
-# no other existing category may import Export.
+# no other existing category except C13's application adapter may import Export.
+# C13 uses an injected C10 runner protocol; only Core, Review, and Export are imported.
 ALLOWED_LOCAL_DEPENDENCIES = {
     CORE: {CORE, SUPPORT},
     SUPPORT: {SUPPORT},
@@ -37,7 +38,7 @@ ALLOWED_LOCAL_DEPENDENCIES = {
     AGENT: {CORE, AGENT_TOOL},
     REVIEW: {CORE},
     EXPORT: {CORE, REVIEW},
-    APPLICATION_BOUNDARY: set(),
+    APPLICATION_BOUNDARY: {CORE, REVIEW, EXPORT},
 }
 # boto3 is declared in pyproject.toml; botocore is its imported SDK boundary.
 PROVIDER_SDK_ROOTS = {"boto3", "botocore"}
@@ -59,6 +60,7 @@ MODULE_CATEGORIES = {
     "quotation_agent.py": AGENT,
     "human_review.py": REVIEW,
     "excel_export.py": EXPORT,
+    "api.py": APPLICATION_BOUNDARY,
     "config.py": SUPPORT,
     "logging_config.py": SUPPORT,
 }
@@ -165,7 +167,7 @@ def test_human_review_is_separate_authority_with_core_only_dependency() -> None:
     assert MODULE_CATEGORIES["human_review.py"] == REVIEW
     assert ALLOWED_LOCAL_DEPENDENCIES[REVIEW] == {CORE}
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
-    for category in CATEGORIES - {REVIEW, EXPORT}:
+    for category in CATEGORIES - {REVIEW, EXPORT, APPLICATION_BOUNDARY}:
         assert REVIEW not in ALLOWED_LOCAL_DEPENDENCIES[category]
 
 
@@ -173,8 +175,36 @@ def test_excel_export_has_only_review_and_core_dependencies() -> None:
     assert MODULE_CATEGORIES["excel_export.py"] == EXPORT
     assert ALLOWED_LOCAL_DEPENDENCIES[EXPORT] == {CORE, REVIEW}
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
-    for category in CATEGORIES - {EXPORT}:
+    for category in CATEGORIES - {EXPORT, APPLICATION_BOUNDARY}:
         assert EXPORT not in ALLOWED_LOCAL_DEPENDENCIES[category]
+
+
+def test_api_least_privilege_and_no_reverse_authority() -> None:
+    assert MODULE_CATEGORIES["api.py"] == APPLICATION_BOUNDARY
+    assert ALLOWED_LOCAL_DEPENDENCIES[APPLICATION_BOUNDARY] == {CORE, REVIEW, EXPORT}
+    for category in CATEGORIES - {APPLICATION_BOUNDARY}:
+        assert APPLICATION_BOUNDARY not in ALLOWED_LOCAL_DEPENDENCIES[category]
+    validate_architecture(PACKAGE, MODULE_CATEGORIES)
+
+
+@pytest.mark.parametrize("source", [
+    "from .bedrock import BedrockConverseAdapter\n",
+    "from .agent_tools import AgentTools\n",
+    "from .quotation_agent import QuotationAgent\n",
+    "from .config import Settings\n",
+    "import boto3\n",
+])
+def test_api_rejects_provider_tool_support_or_sdk_import(tmp_path: Path, source: str) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "api.py", source)
+    for path, category in (("bedrock.py", PROVIDER), ("agent_tools.py", AGENT_TOOL),
+                           ("quotation_agent.py", AGENT),
+                           ("config.py", SUPPORT)):
+        _add_module(package, path)
+        categories[path] = category
+    categories["api.py"] = APPLICATION_BOUNDARY
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
 
 
 @pytest.mark.parametrize("source", [
@@ -204,7 +234,6 @@ def test_export_rejects_agent_tool_provider_and_support_imports(
     ("calculation.py", CORE), ("human_review.py", REVIEW),
     ("quotation_agent.py", AGENT), ("agent_tools.py", AGENT_TOOL),
     ("config.py", SUPPORT), ("bedrock.py", PROVIDER),
-    ("api.py", APPLICATION_BOUNDARY),
 ])
 def test_other_categories_cannot_import_export(
     tmp_path: Path, source_path: str, category: str,
@@ -222,7 +251,6 @@ def test_other_categories_cannot_import_export(
     ("agent_tools.py", AGENT_TOOL),
     ("bedrock.py", PROVIDER),
     ("config.py", SUPPORT),
-    ("api.py", APPLICATION_BOUNDARY),
 ])
 def test_nonreview_boundaries_cannot_import_human_approval(
     tmp_path: Path, source_path: str, category: str

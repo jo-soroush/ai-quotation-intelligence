@@ -1798,63 +1798,121 @@ Clients need a stable workflow interface, but the transport layer must not becom
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+`api.py` exposes the six Roadmap routes through an injected FastAPI factory.
+Analysis and draft call C10; the draft route retains the validated result and
+held C11 `ReviewSession` in a bounded process-local store. The decision route
+passes an explicit caller APPROVED/REJECTED action to C11. Export calls C12
+with the held session and current result and returns C12-validated `.xlsx`
+bytes. GET returns a serialized, reviewable draft plus minimal process state;
+health checks only the API process.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The factory requires an injected C10-compatible runner instead of importing
+Bedrock or constructing C09/C10 internals. Transport input forbids extra
+fields and excludes status, totals, evidence IDs, and approval objects. A
+128-entry store keyed by C10's quote ID holds deep-copied results and the
+actual C11 session; duplicate IDs and capacity exhaustion fail closed. One
+process-local reentrant lock serializes reads, review decisions, and export
+against that held pair. C11/C12, not the lock or store, determine authority.
+
+Failure mapping is deterministic: malformed/domain input and C10 INVALID or
+INSUFFICIENT_EVIDENCE → 422; C10 UNAVAILABLE/delegated agent exception → 503;
+unknown ID → 404; duplicate ID, invalid transition, stale or missing approval,
+or export reconciliation → 409; unexpected/malformed internal output → 500.
+Responses contain bounded codes, not raw exception text. A 64 KiB body cap
+and bounded transport text/list fields are local HTTP protections.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+It exposes the required workflow without giving the API direct commercial,
+model, approval, evidence-search, or workbook authority. The store only
+bridges HTTP requests; C11 rechecks the current result for decisions and C12
+rechecks approval on every export. Fixed `Draft_Quote.xlsx` disposition avoids
+caller-controlled paths or response-header construction.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered a global Bedrock-backed singleton, direct C10 import permission,
+client-returned approval records, one endpoint that drafts/approves/exports,
+persistent/distributed sessions, and filesystem workbook output. Also
+considered a separate ASGI server dependency for local serving.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+They add hidden provider coupling, permit authority forgery, collapse the
+human step, or enter C14+/deployment scope. A server can be supplied at the
+deployment/composition boundary later; C13 proves the ASGI app contract
+without adding `uvicorn` solely for prestige.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+FastAPI runtime, existing Pydantic/domain/C10–C12 contracts, existing
+openpyxl through C12, and `httpx` as the FastAPI TestClient dev dependency.
+No new AWS service, SDK, database, or persistence library.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+FastAPI is the authorized HTTP framework; its typed validation and response
+models serve the six-route transport contract. `httpx` supports deterministic
+in-process HTTP contract tests. Existing C11/C12 implementations remain the
+only approval and export eligibility owners.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The initial focused architecture run failed two legacy assertions: they
+assumed no application boundary could import REVIEW or EXPORT. The initial
+API GET view also exposed only IDs/status, leaving no reviewable draft content.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those assertions represented the pre-C13 import graph, not C13's approved
+adapter role. The first GET response modeled authority isolation but omitted
+the safe serialized data a human needs to inspect before deciding.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Narrowed APPLICATION_BOUNDARY to actual CORE/REVIEW/EXPORT imports only,
+updated the reverse-direction assertions, and added negative import tests
+for AGENT, AGENT_TOOL, PROVIDER, SUPPORT, and SDK imports. GET now returns a
+serialized deep copy of the draft; the API accepts no copied draft or
+approval-looking object as authority. Focused tests were rerun and passed.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+See `QUOTATION_CARD_EVIDENCE_MAP.md` → V1-C13 for executed route,
+architecture, regression, security, governance, and candidate-identity
+results. The initial architecture failure and proving rerun remain recorded.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Restart loses process-local state; workers do not share it. Reviewer ID is
+caller-asserted, not authenticated. The API is not deployed, has no S3 or
+durable session, and a live C10/Bedrock composition still needs existing AWS
+credentials/access. The app factory requires an injected runner; a later
+deployment may provide server startup. HTTP body buffering is capped at
+64 KiB. `httpx` TestClient currently emits a Starlette deprecation warning;
+tests remain passing, and changing HTTP test clients is outside this Card.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Process-local retention is not the same as approval authority. Explicit
+transport allowlists, held-session checks, and a lock around decision/export
+give the thin API enough workflow continuity without duplicating C11/C12.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Do not deploy multiple workers and imply shared review state. Do not accept
+JSON-shaped `ReviewRecord`, APPROVED status, or C10 text as human action.
+If durable sessions/authentication are later authorized, preserve C11/C12's
+freshness and approval gates rather than replacing them with stored flags.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C14 may persist artifacts only under separate authorization; C15 may compose
+the injected ASGI app with a server/deployment runtime. Neither gains an
+approval bypass. Authentication, distributed state, and C18-wide protections
+remain separate scope.
 
 ### Pre-implementation canonical maintenance
 
@@ -1876,12 +1934,11 @@ copied approval record is a token. It also avoids prematurely introducing
 database, Redis, or distributed-session infrastructure. Restart loses V1
 process-local state, and multi-worker coherence is not claimed.
 
-The Roadmap gate and C09+ verification block now make those boundaries
-auditable without fixing HTTP schema, status-code, locking, or dependency
-choices before C13 implementation. No API code, dependency, architecture
-permission, or C13 start authorization is introduced. The maintenance
-candidate awaits independent audit; the C13 implementation learning fields
-above remain NOT YET RECORDED.
+The Roadmap gate and C09+ verification block made those boundaries auditable
+without fixing HTTP schema, status-code, locking, or dependency choices before
+C13 implementation. That separate maintenance change introduced no API code,
+dependency, architecture permission, or C13 start authorization; it was
+independently audited PASS and delivered in PR #36 before this Card start.
 
 ## V1-C14 — Amazon S3 Integration
 
