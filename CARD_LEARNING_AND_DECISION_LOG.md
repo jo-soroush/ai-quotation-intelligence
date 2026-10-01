@@ -2131,8 +2131,14 @@ architecture 69; Governance Harness 61/0, governance reconciliation PASS,
 bootstrap 128/0/0, and dependency/import/syntax/security/diff checks PASS.
 No S3 bucket or AWS resource was created; live S3 and IAM behavior remain
 unverified and are not C14 completion requirements. This reconciliation
-records only delivery/completion state. The deterministic final Card-state
-gate and synchronized-main checks are run after its delivery.
+records only delivery/completion state. The first final Card-state gate run
+after PR #42 merged failed because it requires exact `COMPLETE` / `YES`
+Evidence Map lines, a focused-test table value of `PASS`, exact recommended
+and learning status labels, and explicit `PR: MERGED` / `Merge: COMPLETED`
+delivery evidence. The facts were present but descriptive suffixes and the
+numeric test count did not satisfy the deterministic parser. This bounded
+follow-up normalizes those labels and records the failure and cause; the gate
+is rerun after the follow-up merges on synchronized main.
 
 ### Pre-implementation canonical maintenance history
 
