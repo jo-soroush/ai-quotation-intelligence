@@ -771,6 +771,92 @@ deployment validation
 
 The local version must continue to function independently.
 
+### Exit Gate
+
+C15 may be COMPLETE only when evidence proves all of the following:
+
+* the delivered C13 FastAPI application is deployable through the approved
+  API Gateway → AWS Lambda → FastAPI direction, while local/non-Lambda
+  execution continues to work independently;
+* deployment changes infrastructure only: the six C13 routes, request and
+  response contracts, approval rules, ReviewSession authority, C12 export
+  authority, commercial arithmetic, agent reasoning, and C14 storage
+  authority are unchanged;
+* deployment configuration is externalized, AWS credentials are not
+  hard-coded, committed, packaged, or supplied as static application
+  access-key configuration, and Lambda uses AWS-native temporary
+  credentials/execution-role semantics;
+* deployer identity is separate from the Lambda runtime identity, and
+  deployment and runtime permissions are least-privilege and justified by
+  actual operations; no Bedrock or S3 permission is granted merely because
+  those capabilities exist in the repository;
+* deployment is reproducible from repository-controlled configuration and
+  procedure, not dependent on undocumented Console-only state;
+* Lambda startup/import compatibility is validated locally before live
+  deployment; the API Gateway → Lambda → FastAPI route is proven, including
+  correct binary `.xlsx` response handling for the existing C13 export route
+  through the selected adapter path;
+* the existing C13 process-local state limitation remains explicit: C15
+  does not claim durable, shared, multi-instance-safe, or production-safe
+  review workflow state, and does not add persistence to solve it;
+* exposure is bounded for a non-production deployment, commercial routes
+  are not intentionally exposed as an unrestricted anonymous production
+  service, access control is considered before external exposure, and
+  unrestricted CORS is not introduced;
+* a repeatable bounded recovery procedure can redeploy the prior known-good
+  artifact/configuration after a failed deployment; C16+ observability or
+  other future-Card infrastructure is not introduced;
+* local/simulated evidence is distinguished from live AWS evidence. Before
+  C15 is COMPLETE, a real Lambda deployment and real API Gateway integration
+  must exist in the approved AWS target account/region, and a real HTTPS
+  `GET /health` through API Gateway must return the expected C13 health
+  response. Record the target region, stable
+  deployment identifiers, status, response, timestamp, confirmation that
+  no static AWS credential was embedded, and confirmation that local mode
+  still works. This smoke proves deployment reachability only, not Bedrock,
+  S3, or full quotation-workflow readiness;
+* live AWS deployment is required for this final Exit Gate, but live Bedrock
+  invocation and live S3 workflow are not. Actual infrastructure evidence
+  is never inferred from local emulation.
+
+The C13 in-memory workflow limitation is accepted for this V1 deployment.
+Lambda cold starts, execution-environment replacement, and routing across
+environments can lose or fail to share that state. Reserved concurrency of
+one does not guarantee sequential requests reuse one environment, and
+provisioned concurrency does not make process memory durable. A full live
+analyze → draft → approve → export workflow is therefore not required for
+this Exit Gate; any single-environment run is supplementary evidence only.
+
+After separate C15 start authorization, local implementation and independent
+code/configuration audit may begin without AWS resources or live AWS. Before
+live resource creation, separate explicit human approval is required, with
+the planned resources, cost-sensitive
+services, and teardown posture presented. Final live proof requires an AWS
+account, standard AWS authentication, a target region, and sufficient deployer
+permissions. A real deployment is a non-production test target, not a claim
+of public-production readiness. The selected AWS-native exposure control,
+deployment mechanism, and implementation details remain C15 decisions.
+
+AWS preparation decision: B — local implementation can begin without
+additional AWS setup; AWS account/authentication, target region, and sufficient
+deployer permissions are required only before final live deployment evidence.
+Startup configuration must be distinguished from configuration needed only
+when an optional provider feature is invoked. An S3 bucket is not required
+unless separately authorized runtime composition actually uses C14.
+Whether `/health` itself is publicly reachable or invoked through controlled
+deployment access is an implementation decision and does not make quotation
+routes safe for unrestricted public access. Secrets Manager or Parameter Store
+is not automatically required absent a separately established application
+secret need.
+
+No C14 auto-wiring is implied: C15 does not change the C13 export route into
+an S3 upload, and an S3 bucket is not required to begin C15 or perform the
+mandatory `/health` smoke. Runtime S3 or Bedrock permissions are justified
+only if actual authorized runtime composition uses those capabilities.
+Default platform logs needed to diagnose startup do not authorize the C16
+observability platform. AWS-provided HTTPS is sufficient; custom domains,
+Route53, and ACM custom certificates are not required.
+
 ---
 
 # Phase 6 — Reliability, Evaluation and Operations

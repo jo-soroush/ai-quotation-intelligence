@@ -2260,6 +2260,34 @@ NOT YET RECORDED — complete from actual implementation experience.
 
 NOT YET RECORDED — complete from actual implementation experience.
 
+### Pre-C15 Canonical Remediation — Governance Decision
+
+The C15 read-only preflight was BLOCKED because the Roadmap lacked an
+authoritative deployment Exit Gate and the specification lacked the required
+C09+ verification block. Four contract ambiguities also needed resolution:
+C13 process-local ReviewSession state under Lambda, real AWS evidence,
+deployment exposure, and reproducibility. This was documentation-only work;
+C15 remains unauthorized and no deployment or AWS action was performed.
+
+The deployment contract keeps API Gateway → Lambda → FastAPI and requires
+the six C13 routes and authority contracts to remain unchanged. Lambda's
+multiple execution environments are not a persistence solution: reserved
+concurrency does not guarantee environment reuse, provisioned concurrency
+does not make memory durable, and a full cloud analyze→draft→approve→export
+workflow is not required. Live AWS is unnecessary for implementation or
+initial code audit but required for final C15 completion, proven by a real
+API Gateway HTTPS `/health` request to an integrated Lambda. This is
+reachability evidence only; Bedrock and S3 live calls are not required.
+
+The C15 deployment is a bounded non-production target, not unrestricted
+production readiness. It must be reproducible from repository-controlled
+procedure, separate deployer and runtime identities, use justified
+least-privilege permissions, keep configuration external, preserve local
+execution, and preserve binary XLSX semantics. A separate human approval is
+required before resource-creating AWS actions. The exact deployment tool,
+adapter, API Gateway type, runtime settings, and access-control mechanism
+remain implementation decisions rather than maintenance-time choices.
+
 ## V1-C16 — CloudWatch Observability
 
 ### 1. Card
