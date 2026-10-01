@@ -2167,47 +2167,97 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE — authorized implementation on `card/v1-c13-fastapi-api-layer`; not audited or delivered
 
 ### 4. Human Start Approval
 
-NO
+YES — explicit V1-C13 implementation authorization; Git delivery not authorized
 
 ### 5. Files Changed
 
-NONE
+`PROJECT_CONTROL.md`, `QUOTATION_CARD_EVIDENCE_MAP.md`,
+`CARD_LEARNING_AND_DECISION_LOG.md`, `pyproject.toml`,
+`tests/test_architecture.py`; created `src/ai_quotation_intelligence/api.py`
+and `tests/test_api.py`. No C14+ source, provider adapter, Core commercial
+calculation, review, or export implementation changed.
 
 ### 6. Commands Run
 
-NONE
+`.venv/bin/pip install -e '.[dev]'`; `.venv/bin/pip check`;
+`.venv/bin/pytest -q tests/test_api.py`; separate C09–C12 and architecture
+focused pytest invocations; `.venv/bin/pytest -q`;
+`bash scripts/test_governance_harness.sh` (failure and proving rerun);
+`.venv/bin/python scripts/reconcile_governance_views.py --write` and
+`--check`; `bash scripts/quotation_session_bootstrap.sh`;
+`.venv/bin/python -m compileall -q src tests`; `bash -n` on the two
+governance shell scripts; `git diff --check`; package import/version smoke;
+targeted credential and forbidden-import scans.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — `tests/test_api.py`: 23 passed. Exact six routes, OpenAPI and health,
+C10 status mapping, real C10→C11→C12 workflow, workbook reload, explicit
+approval/rejection, stale result, repeated/concurrent decisions, process-
+local loss, capacity/duplicate rejection, mass-assignment and oversized-body
+denial, C11 gate mutation, C12 failure mapping, and sanitized injected
+failures were exercised.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS — separate suites: C12 60 passed; C11 32 passed; C10 57 passed;
+C09 24 passed; architecture 61 passed. Full suite: 348 passed, one
+FastAPI/Starlette TestClient deprecation warning, no failures.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+SELF-VALIDATED / INDEPENDENT AUDIT PENDING — six-route transport adapter
+delegates to C10/C11/C12. A real C10 scripted-model run plus real C11 held
+session and C12 workbook gates exercises cross-request success and rejection.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — transport input excludes client-assigned totals, evidence, approval,
+and actual-outcome fields; domain/C10 validate request and result; C11
+revalidates the successful draft; C12 rechecks approval and Core-owned
+commercial/workbook truth. No C13 arithmetic or fresh evidence discovery.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — C10 INVALID/UNAVAILABLE/INSUFFICIENT_EVIDENCE map to explicit
+422/503/422 failures. The API imports no C08 SDK or C09 Agent Tools and
+requires an injected C10-compatible runner; no live Bedrock call was used.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS in focused tests — client status/record/total/evidence mass assignment,
+missing reviewer, invalid decision, stale/repeated decision, unapproved or
+rejected export, capacity overflow, request-size overflow, provider/internal
+exception leakage, fixed safe XLSX response headers, and unsupported future
+routes were challenged. Same-process lock permits one concurrent decision.
+Targeted changed-file credential-pattern scan had no matches; `api.py` has no
+direct boto3/botocore, C09 Agent Tools, S3, Lambda, API Gateway, or CloudWatch
+reference. Python compilation, shell syntax, and API/package import smoke
+passed. FastAPI 0.142.2, httpx 0.28.1, openpyxl 3.1.5; `pip check` passed.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+First architecture run (`.venv/bin/pytest -q tests/test_architecture.py`):
+2 failed / 53 passed. The pre-C13 tests asserted that no Application module
+could import REVIEW or EXPORT. C13 legitimately delegates to both. The tests
+were narrowed to allow APPLICATION_BOUNDARY while adding negative probes for
+unneeded AGENT, AGENT_TOOL, PROVIDER, SUPPORT, and SDK imports; rerun 61
+passed. No implementation authority was broadened beyond actual imports.
+
+First Governance Harness run: PASS=36/FAIL=25. The Card-start update had
+removed `Delivery Commit`, `PR`, and `Merge Commit` fields from the Active
+Card Record. Temporary fixture construction requires those labels even before
+delivery. Restored each as `NOT_CREATED` without inventing future Git IDs;
+rerun PASS=61/FAIL=0. The original failures remain historical evidence.
+
+Session bootstrap: PASS=127/WARN=1/FAIL=0. The WARN is the expected dirty
+working tree for an undelivered implementation candidate, not a test or
+Card-completion PASS. Governance generated-view reconciliation `--write`
+and `--check` both passed; `git diff --check` passed.
 
 Pre-implementation read-only C13 preflight: BLOCKED. Inspection found no
 authoritative C13 Roadmap Exit Gate, no mandatory C09+ verification block in
@@ -2218,8 +2268,9 @@ adds the Roadmap gate and verification block, makes the six listed routes V1
 requirements, identifies `/approve` as an explicit APPROVED/REJECTED decision
 transport, and permits bounded single-process state without granting it
 approval authority. These are canonical contract corrections, not C13
-implementation or Exit Gate proof. Independent audit of this candidate is
-PENDING; C13 remains NOT_STARTED and human start approval remains NO.
+implementation or Exit Gate proof. The separate maintenance candidate was
+independently audited PASS with no findings and delivered in PR #36. This
+historical preflight does not prove C13 implementation.
 
 Maintenance validation observed on `maintenance/pre-c13-canonical-remediation`:
 governance reconciliation `--write` and `--check` PASS; Governance Harness
@@ -2231,37 +2282,53 @@ maintenance candidate, not C13 implementation or its Exit Gate.
 
 ### 14. Exit Gate Evidence
 
-NONE
+Self-validation: six exact routes and typed input/output (`test_api.py`);
+handlers delegate to existing C10/C11/C12 and do not import C09, provider,
+or Core arithmetic (`api.py`, architecture suite); C10 failures and malformed
+HTTP inputs are sanitized; decision payload, not `/approve` URL, chooses
+APPROVED/REJECTED through C11; C12 receives the held C11 session plus
+current result and rejects stale/unapproved state; bounded store and lock
+preserve one-decision semantics; injected provider/internal failures return
+bounded codes; no C14+ module or service. Independent audit remains PENDING.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: PROVEN
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PENDING — implementation self-validation passed, but independent audit,
+human Git delivery approval, delivery, and completion reconciliation have
+not occurred. C13 is not COMPLETE.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+NOT_OBSERVED_FOR_THIS_CARD — C13 branch created from `48428e2b303421580820f5195a7fc3a5a3f9419c`; no C13 delivery authorized
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+Process-local store is lost on restart and not shared across workers;
+reviewer ID is caller-asserted rather than authenticated. No deployment,
+server command, S3, or persistence is provided. Existing AWS access would
+be needed to compose a live Bedrock runner; no live call was required.
+TestClient currently emits one Starlette deprecation warning for `httpx`.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+See the C13 Learning / Decision Log: the store is transport continuity,
+not approval; C11/C12 gates remain load-bearing; legacy architecture and
+governance fixture assumptions needed bounded state-aware corrections.
 
 ### 19. Completion Evidence
 
-NONE
+NOT_COMPLETE — no independent audit, GIT_DELIVERY_APPROVAL, commit, PR,
+merge, or outcome-only final reconciliation for C13.
 
 ### 20. Recommended State
 
-NOT_STARTED
+READY_FOR_INDEPENDENT_AUDIT
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C13
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C14 — Amazon S3 Integration
 
@@ -2911,7 +2978,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C10 | Quotation Agent | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C11 | Human Review Gate | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C12 | Excel Generation | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C13 | FastAPI Application | ACTIVE | YES | PASS | PROVEN | NOT_RUN | PRESENT | READY_FOR_INDEPENDENT_AUDIT |
 | V1-C14 | Amazon S3 Integration | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C15 | AWS Deployment | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C16 | CloudWatch Observability | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2925,7 +2992,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C12_COMPLETE
+Project Phase: V1_C13_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -2938,8 +3005,9 @@ V1-C09: COMPLETE
 V1-C10: COMPLETE
 V1-C11: COMPLETE
 V1-C12: COMPLETE
-V1-C13: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C13: ACTIVE
+V1-C14: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C13
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
