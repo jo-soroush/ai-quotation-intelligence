@@ -2665,6 +2665,24 @@ CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
 Learning Documentation Status:
 NOT_STARTED
 
+### Pre-C15 Canonical Remediation (Documentation Only)
+
+The read-only C15 preflight was BLOCKED by the missing authoritative
+Roadmap Exit Gate and missing mandatory C09+ verification block. It also
+identified unspecified treatment of C13 process-local state under Lambda,
+whether real AWS is required for the final gate, public/private deployment
+and access control, and reproducibility versus Console-only setup.
+
+This maintenance adds the C15 Roadmap Exit Gate and complete verification
+block, and resolves those points as an accepted V1 process-local-state
+limitation, local-first implementation/audit with live AWS required only for
+the final Exit Gate, a bounded non-production access boundary, and
+repository-controlled reproducibility. No implementation, AWS resource,
+dependency, or architecture permission was added. C14 remains COMPLETE;
+Active Card remains NONE; C15 remains NOT_AUTHORIZED / NOT_STARTED.
+Validation results for this documentation candidate are recorded only after
+they are actually run.
+
 ## V1-C16 — CloudWatch Observability
 
 ### 1. Card

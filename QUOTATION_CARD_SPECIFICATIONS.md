@@ -1885,9 +1885,105 @@ Deployment configuration validation, startup/import compatibility, basic deploye
 
 Test not run != PASS. Design intent != implementation evidence.
 
+### 11A. Pre-Implementation Verification (C09+)
+
+- Risk Classification: ELEVATED — deployment crosses public-cloud exposure,
+  IAM and credential boundaries, Lambda process lifetime/scaling, binary
+  API response handling, configuration, deployment drift, and potentially
+  billable live-resource creation. A false live-deployment claim would also
+  invalidate the Card's central evidence.
+- Escalation Triggers: unexpected public exposure; static credential or
+  secret leakage; unjustified wildcard/overprivileged IAM; any claim that
+  Lambda makes C13 process-local review state durable; undocumented
+  Console-only deployment state; binary workbook corruption; unapproved
+  resource creation; or evidence that claims live AWS proof from local
+  emulation.
+- Canonical Sources: this C15 specification and its Roadmap Exit Gate;
+  delivered C13 API and its process-local state contract; delivered C14
+  storage boundary; PROJECT_PROFILE.md; COMMERCIAL_AND_DATA_GUARDRAILS.md;
+  QUOTATION_ENGINEERING_HARNESS.md; and PROJECT_CONTROL.md for live state
+  and authorization.
+- Acceptance Contract: Given the delivered C13 application and a
+  repository-controlled, externalized deployment configuration, when C15
+  validates locally and deploys with separate deployer/runtime identities,
+  then API Gateway → Lambda → FastAPI starts and serves the unchanged C13
+  routes, preserves the existing binary `.xlsx` export response through the
+  selected adapter, and a real HTTPS API Gateway `GET /health` returns the
+  expected C13 response. Local execution remains functional. Failures are
+  explicit and sanitized; live proof is not claimed from simulation.
+  Completion additionally requires the Roadmap Exit Gate's real AWS
+  evidence and approved live-resource action. No deployment behavior may
+  imply durable C13 state, production readiness, or new C13 authority.
+- Critical Invariants: C13's six routes and contracts remain unchanged;
+  C11/C12 authority is not bypassed; process-local state may be lost or
+  isolated across Lambda environments; no persistence is added; credentials
+  are not static or embedded; deployer and runtime identities are distinct;
+  runtime IAM is least privilege and justified by composed features; config
+  is external; deployment is repeatable from repository-controlled
+  procedure; binary XLSX semantics are preserved; no unrestricted CORS or
+  anonymous production claim; local mode remains usable; local/simulated
+  proof remains distinct from live AWS evidence.
+- Verification Strategy: validate deployment manifests/procedure and
+  external configuration locally; import/build the Lambda entrypoint;
+  simulate API Gateway events through the adapter, including `/health` and
+  binary XLSX behavior; regress all six C13 routes and existing authority
+  boundaries; inspect IAM/configuration, package contents, credentials,
+  error exposure, CORS, and reproducibility; preserve local execution.
+  Separately record a real Lambda/API Gateway deployment and HTTPS `/health`
+  response before the final Exit Gate. No live Bedrock or S3 call is needed.
+- Advanced Verification Decision (reassess against the authorized C15
+  design; live AWS remains required only for final Exit Gate deployment
+  evidence, not for implementation tests or initial independent code audit):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | C13 route/authority invariants, credential separation, local-mode behavior, and the process-local-state limitation must remain explicit and stable |
+  | Contract tests | REQUIRED | Lambda/API Gateway adapter behavior must preserve the delivered HTTP contracts, including health and binary XLSX response semantics |
+  | Integration | REQUIRED | Locally simulated API Gateway events must traverse the selected adapter into FastAPI; final live AWS integration is separately required by the Exit Gate |
+  | Generated property tests | CONDITIONAL / EVALUATE | Evaluate if deployment-event or configuration shapes have a meaningful combinatorial space beyond representative contract cases |
+  | Targeted mutation-resistance | REQUIRED | Challenge route preservation, credential/config checks, binary response encoding, and safeguards against false live-deployment evidence |
+  | Failure injection | REQUIRED | Exercise import/startup, configuration, adapter, and deployment-response failures and prove explicit sanitized failure rather than false success |
+  | Fuzzing | CONDITIONAL / EVALUATE | Evaluate if the chosen adapter/configuration parser exposes broad untrusted event or manifest parsing surfaces |
+  | Differential | NOT_APPLICABLE | No second equivalent deployment adapter/runtime is required as an oracle |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Evaluate deployment-specific parallel invocation effects, while explicitly not treating concurrency settings as durable/shared C13 state |
+  | Adversarial testing | REQUIRED | Probe public exposure, overprivileged identity, static-secret packaging, response transformation, permissive CORS, and state-loss claims |
+  | Threat Modeling | REQUIRED | ELEVATED deployment crosses cloud exposure, IAM, credentials, package/configuration, API response, process-local state, drift, and evidence-truth boundaries |
+  | Agent evals | NOT_APPLICABLE | C15 owns deployment and transport integration, not model quality or C17 evaluation |
+  | Rollback/recovery | REQUIRED | A repeatable bounded redeployment of the prior known-good artifact/configuration is required after failed deployment |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal proof requirement is specified; explicit contracts, local simulation, security review, and live reachability evidence are required |
+
+- Independent Verifier Expectations: inspect exact deployment files and
+  permissions; independently simulate the API Gateway/Lambda adapter path,
+  `/health`, and binary XLSX handling; confirm local mode and all C13 routes
+  remain unchanged; challenge static-credential leakage, runtime IAM scope,
+  public exposure/CORS, deployment reproducibility, rollback, process-local
+  state claims, and the distinction between simulated and live evidence.
+  Before completion, verify actual Lambda/API Gateway identifiers and a
+  real HTTPS `/health` response; do not treat local emulation as live proof.
+- Evidence / Traceability: distinguish local tests, simulated adapter
+  evidence, independent configuration review, and live AWS observations.
+  Live evidence records region, stable Lambda/API Gateway identifiers,
+  HTTPS status and expected body, timestamp, no-static-credential
+  confirmation, and local-mode regression, without recording secrets.
+  Record resource/cost and teardown decisions only after separate human
+  approval. External adapter/deployment references follow
+  SOURCE_ADAPTATION_TRACEABILITY.md; reference-only study is not runtime
+  evidence.
+- Known Non-Scope: C13 route/schema/authority changes; C14 automatic
+  composition or S3 upload; Bedrock invocation; durable ReviewSession or
+  other database/DynamoDB/Redis state; sticky sessions or distributed
+  correctness; production HA; authentication platforms; unrestricted public
+  production API; UI, email, multi-agent work, commercial logic, approval or
+  Excel changes; C16 observability platform; C17 evaluation; C18 generalized
+  guardrails; C20 frontend; ECS/EKS/Kubernetes; custom domain/Route53/ACM;
+  CloudFront; and deployment tools/adapters not yet selected.
+
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require evidence-backed deployment of the approved API direction while preserving local execution and least-privilege boundaries.
+The Roadmap Exit Gate is authoritative and must be proven exactly. Its
+real-AWS deployment requirement, live `/health` evidence, accepted
+process-local-state limitation, access boundary, and C13/C14 authority
+protections must not be weakened by implementation convenience.
 
 The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
 Before Card COMPLETE:
