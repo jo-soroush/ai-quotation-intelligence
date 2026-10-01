@@ -719,6 +719,28 @@ evaluation artifacts
 
 Access must be controlled through IAM.
 
+### Exit Gate
+
+C14 may be COMPLETE only when all of the following are independently proven:
+
+* provider-isolated persistence and retrieval operate through a storage contract and S3 adapter; deterministic local validation remains possible
+* the V1 generated quotation artifact comes from the already validated C12 `.xlsx` export boundary, not arbitrary caller-supplied commercial content
+* C14 accepts storage-ready artifact bytes and validated storage identity; it does not recreate C11 approval checks or require C11/C10 review objects
+* object identity/key derivation is deterministic and validated; arbitrary caller-controlled S3 keys or path/prefix-like untrusted input cannot control the storage namespace or collide across artifacts
+* duplicate/idempotency behavior is explicit, deterministic, documented, tested, and never silently overwrites an existing artifact
+* retrieval has explicit missing-object behavior and validates storage identity/integrity at the storage boundary without duplicating C12 workbook or commercial validation
+* provider/service, access/credential, malformed-response, duplicate, and integrity failures are explicit and sanitized; no raw boto3/botocore object or exception becomes Core/domain authority
+* credentials are obtained through the standard AWS credential provider chain, never hard-coded, persisted, logged, or exposed; least privilege is preserved
+* C14 does not make objects public, set public ACLs, or add public sharing; bucket provisioning and encryption configuration remain runtime/deployment concerns
+* deterministic local tests prove the adapter without network or real AWS; live S3 validation is optional supplementary evidence and is not an Exit Gate prerequisite
+* C14 remains independently composable: no C13 route change or automatic `/quotes/{id}/export` upload is introduced
+* no C15+ deployment, observability, evaluation, UI, or other infrastructure is introduced
+
+For the V1 quotation artifact flow, the validated C12 workbook is the primary
+persistable artifact. C14 does not make the contents commercially
+authoritative merely because an object exists in S3. The bucket is supplied
+through runtime configuration; C14 does not provision or manage it.
+
 ---
 
 ## V1-C15 — AWS Deployment

@@ -1617,7 +1617,12 @@ V1-C14 — Amazon S3 Integration
 
 ### 2. Engineering Goal
 
-Add provider-isolated S3 persistence for required quotation artifacts and data.
+Add provider-isolated S3 persistence and retrieval through a storage contract.
+For the V1 quotation artifact flow, the primary persistable artifact is the
+validated `.xlsx` bytes produced by C12's approved export boundary. C14 does
+not accept arbitrary caller-supplied commercial content as an authoritative
+quotation artifact. Any other justified stored data must use an existing
+validated owner schema; C14 does not create new commercial or approval truth.
 
 ### 3. Learning Goal
 
@@ -1631,34 +1636,69 @@ Required artifacts and historical data need a controlled persistence boundary th
 
 Core / Application → Storage Contract → S3 Adapter → Amazon S3.
 
+The SDK remains isolated in the adapter; Core does not depend on the S3
+adapter. REVIEW and EXPORT do not depend on the S3 adapter, and
+APPLICATION_BOUNDARY does not automatically gain storage authority. Exact
+module category (including whether to reuse PROVIDER or introduce STORAGE)
+and allowed dependency directions are deferred to authorized C14
+implementation and must follow actual imports and least privilege. This
+maintenance grants no architecture permission or dependency direction; no
+dependency-laundering path is allowed.
+
 ### 6. Current System Before Card
 
-C01–C13 may later provide contracts, services, approved output, and API access. No S3 persistence integration is implemented; application state remains NOT_STARTED.
+C01–C13 provide the existing contracts, services, API, and C12 validated
+export output. No S3 persistence integration is implemented; C14 remains
+NOT_STARTED and NOT_AUTHORIZED until separate human approval.
 
 This is a contract description, not a claim that prior Cards or this Card are complete.
 
 ### 7. Design Decision
 
-S3 is an adapter, not commercial truth. Retrieved objects require parsing and validation before entering authoritative state.
+S3 is an adapter, not commercial truth or approval authority. C12 owns
+workbook generation and its approval/commercial validation; C14 persists and
+retrieves the storage-ready C12 artifact with validated identity. Retrieved
+bytes require storage-boundary identity/integrity validation. C14 does not
+re-run C11 approval or C12 commercial/workbook business validation and does
+not require or consume `ReviewSession`, `ReviewRecord`, or `AgentResult`.
+Retrieval uses validated storage identity through the storage contract;
+arbitrary S3 key text is not authority. C14 adds no public HTTP retrieval
+endpoint or authentication system.
 
 ### 8. Implementation Scope
 
-- define storage contract
-- persist and retrieve approved V1 artifacts/data where justified
-- serialize and deserialize through owned schemas
-- validate loaded objects
-- expose missing-object and service failures explicitly
-- keep boto3/S3 objects outside Core
-- preserve local mode where possible
-- avoid silent overwrite assumptions
+- define the storage contract and provider-isolated S3 adapter
+- persist and retrieve C12 validated `.xlsx` artifact bytes with validated storage identity
+- derive deterministic object keys from validated identity; do not accept arbitrary caller-controlled keys as storage authority or let path/prefix-like untrusted input control the final namespace
+- choose and test explicit duplicate/idempotency behavior; never rely on implicit SDK overwrite behavior
+- validate retrieved storage identity/integrity without duplicating C12 business validation
+- retain only metadata necessary for identity, retrieval/integrity, and artifact classification; do not persist review sessions/records, reviewer details, provider payloads, or duplicated commercial-authority state
+- expose missing-object, access/credential, service, malformed-response, duplicate, and integrity failures explicitly and sanitize provider errors
+- keep boto3/botocore objects and exceptions outside Core/domain contracts
+- preserve deterministic local testing and local-mode composition without network/AWS
+- use standard AWS credential resolution and least privilege; C14 does not provision the bucket
+
+The bucket and its region are supplied by runtime configuration. IAM grants
+only permissions justified by the implemented persist/retrieve behavior
+(PutObject/GetObject may be required); any additional permission must be
+justified by actual use. `s3:*`, DeleteObject, bucket creation/deletion, and
+public ACL changes are not C14 permissions. Encryption remains runtime or
+deployment configuration; C14 does not impose KMS. Credentials follow the
+existing C08 standard AWS provider chain and are never placed in source,
+persisted, logged, or returned.
 
 ### 9. Out of Scope
 
-- deployment
-- CloudWatch
-- UI
-- unrelated database introduction
-- domain ownership in storage code
+- C11 approval checks or review-session handling
+- C10 agent execution, C09 evidence discovery, or any AI reasoning
+- commercial arithmetic, quotation state transitions, or Excel generation
+- arbitrary client commercial payloads as authoritative storage artifacts
+- C13 route changes or automatic API-triggered upload
+- anonymous public retrieval endpoints, presigned URLs, public sharing/ACLs, or CloudFront
+- bucket provisioning/deletion or object deletion
+- deployment, Lambda, API Gateway, CloudWatch infrastructure, evaluation platform, or UI
+- database, Redis, authentication, email, multi-agent workflow, or C18 generalized guardrail platform
+- domain/commercial authority in storage code
 
 ### 10. Dependencies
 
@@ -1668,13 +1708,100 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 
 ### 11. Tests / Evaluation
 
-Adapter contract, serialization/deserialization, missing object, invalid object, S3 failure propagation, provider isolation, no provider-object leakage, and validation after load.
+Deterministic local adapter contract for C12 artifact persistence/retrieval,
+serialization/validation, identity/key derivation, duplicate behavior, missing
+object, malformed/invalid retrieval, service/access failures, provider
+isolation, credential secrecy, and no provider-object leakage. Tests must not
+require network or real AWS; a live S3 test is optional supplementary
+evidence. Do not require moto or other new test dependencies by default.
 
 Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require provider-isolated S3 persistence with validated serialization, explicit failure behavior, and no SDK ownership in Core.
+The Roadmap Exit Gate is authoritative and is expanded here only to clarify
+the C12 artifact boundary, storage/retrieval integrity, explicit duplicate and
+failure behavior, local deterministic verification, and provider isolation.
+
+### C09+ Pre-Implementation Verification Block
+
+This block records the implementation contract and verification plan only; it
+does not authorize or start C14 and is not implementation evidence.
+
+- Risk Classification: ELEVATED because persistence, identity derivation,
+  retrieval integrity, and AWS credential boundaries can expose or confuse
+  quotation artifacts if weakened; S3 object existence is not commercial or
+  approval authority.
+- Escalation Triggers: arbitrary caller-controlled keys; silent overwrite;
+  artifact not produced by C12's validated export path; identity collision;
+  unvalidated retrieval; credential or raw SDK exception leakage; public ACL
+  or sharing; an unapproved AWS dependency/resource; C11/C10 authority being
+  recreated in storage; or C15+ scope entering C14.
+- Canonical Sources: Roadmap V1-C14 and its Exit Gate; this Card's sections
+  2–12; PROJECT_PROFILE.md; COMMERCIAL_AND_DATA_GUARDRAILS.md §10; C12's
+  `export_approved_quote` validated `.xlsx` output; C08's existing AWS
+  credential/provider-isolation precedent; current architecture policy.
+- Acceptance Contract: Given C12-validated workbook bytes and validated
+  storage identity supplied through trusted application composition, persist
+  and retrieve the artifact through the storage contract with deterministic
+  identity, explicit duplicate/missing/failure behavior, and storage-boundary
+  validation. Given malformed, missing, mismatched, duplicate, unavailable,
+  or unauthorized storage conditions, fail explicitly and sanitize provider
+  details. Local deterministic tests must prove the adapter without AWS.
+- Critical Invariants: C12 remains the workbook/approval boundary; C14 does
+  not re-create C11 approval or accept arbitrary caller commercial content;
+  S3 is not commercial authority; keys derive deterministically from
+  validated identity; no implicit overwrite; retrieved data is validated;
+  boto3/botocore objects and credentials stay outside Core/domain state;
+  CORE, REVIEW, and EXPORT do not depend on the S3 adapter;
+  APPLICATION_BOUNDARY gets no automatic storage permission; no public
+  ACL/presigned/public sharing; no bucket provisioning/deletion; no C13 or
+  C15+ scope or dependency laundering.
+- Verification Strategy: deterministic storage-contract tests for round-trip,
+  key derivation, collisions/duplicates, missing objects, malformed and
+  mismatched retrieval, explicit provider/access failure and sanitization;
+  architecture/import boundary tests; credential/secret checks; local mode
+  without network. Live S3 calls are optional and do not replace local tests.
+- Advanced Verification Decision (reassess against the authorized C14 design;
+  no specific testing framework or live AWS setup is prescribed):
+
+  | Technique | Decision | Reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Artifact identity, no implicit overwrite, validated retrieval, and no storage-derived commercial authority must hold |
+  | Contract tests | REQUIRED | Storage inputs, outputs, missing objects, duplicates, and typed failures must follow the storage contract |
+  | Integration | REQUIRED | Deterministic local tests must exercise the storage contract through the adapter boundary without AWS |
+  | Generated property tests | CONDITIONAL / EVALUATE | Evaluate if validated identity/key combinations create a meaningful combinatorial space beyond focused cases |
+  | Targeted mutation-resistance | REQUIRED | Challenge key derivation, duplicate/overwrite, integrity, and false-success checks at this ELEVATED trust boundary |
+  | Failure injection | REQUIRED | Missing objects, access/credential failures, service errors, malformed responses, and integrity failures must fail explicitly and sanitized |
+  | Fuzzing | CONDITIONAL / EVALUATE | Evaluate if implementation exposes broad parsers for untrusted identity, metadata, or retrieved storage content |
+  | Differential | NOT_APPLICABLE | No second equivalent storage implementation or oracle is required |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Evaluate against the selected duplicate policy if concurrent writes could race or weaken no-overwrite behavior |
+  | Adversarial testing | REQUIRED | Probe arbitrary-key control, artifact substitution, namespace collision, overwrite, public-access, and forged-success attempts |
+  | Threat modeling | REQUIRED | ELEVATED persistence crosses artifact, namespace, credential, provider-error, public-access, and integrity trust boundaries |
+  | Agent evals | NOT_APPLICABLE | C14 owns storage behavior, not agent/model quality or C17 evaluation |
+  | Rollback/recovery | CONDITIONAL / EVALUATE | Evaluate retry/recovery behavior for partial or ambiguous provider outcomes; object deletion and bucket rollback remain out of scope |
+  | Formal methods | NOT_APPLICABLE | No exceptional formal-state requirement is specified; explicit contracts and deterministic tests are required instead |
+
+  Real AWS/S3, bucket provisioning, and live S3 tests remain NOT_REQUIRED for
+  implementation, independent audit, and the Exit Gate. A live S3 check may
+  provide optional supplementary evidence only.
+- Independent Verifier Expectations: verify that the artifact originates
+  from the C12 validated export composition boundary; challenge caller key,
+  artifact substitution, overwrite, malformed retrieval, and failure
+  sanitization; inspect dependency direction and ensure S3 state cannot grant
+  approval or commercial authority; distinguish local tests from optional
+  live AWS evidence.
+- Evidence / Traceability: record exact candidate identity, C12 input/output
+  boundary, chosen identity/key and duplicate policies, tests and failures,
+  architecture and security evidence, limitations, and any optional live S3
+  observation. Never claim AWS behavior not actually tested. Record bucket
+  provisioning and IAM/runtime configuration only as external assumptions;
+  never record credentials or secrets.
+- Known Non-Scope: bucket provisioning/deletion, object deletion, public ACLs,
+  presigned URLs, CloudFront, C13 route or automatic-upload changes, C15
+  deployment, C16 observability, database/Redis, authentication, UI, email,
+  multi-agent work, new commercial calculations, approval logic, Excel
+  generation, C17 evaluation, and C18 generalized guardrails.
 
 The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
 Before Card COMPLETE:
