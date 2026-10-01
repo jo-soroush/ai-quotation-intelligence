@@ -55,7 +55,9 @@ MODULE_CATEGORIES = {
     "comparison.py": CORE,
     "retrieval.py": CORE,
     "risk_evidence.py": CORE,
+    "storage_contract.py": CORE,
     "bedrock.py": PROVIDER,
+    "s3_storage.py": PROVIDER,
     "agent_tools.py": AGENT_TOOL,
     "quotation_agent.py": AGENT,
     "human_review.py": REVIEW,
@@ -185,6 +187,34 @@ def test_api_least_privilege_and_no_reverse_authority() -> None:
     for category in CATEGORIES - {APPLICATION_BOUNDARY}:
         assert APPLICATION_BOUNDARY not in ALLOWED_LOCAL_DEPENDENCIES[category]
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
+
+
+def test_s3_storage_reuses_provider_with_only_existing_core_support_directions() -> None:
+    assert MODULE_CATEGORIES["storage_contract.py"] == CORE
+    assert MODULE_CATEGORIES["s3_storage.py"] == PROVIDER
+    assert ALLOWED_LOCAL_DEPENDENCIES[PROVIDER] == {CORE, SUPPORT}
+    assert PROVIDER not in ALLOWED_LOCAL_DEPENDENCIES[CORE]
+    assert PROVIDER not in ALLOWED_LOCAL_DEPENDENCIES[REVIEW]
+    assert PROVIDER not in ALLOWED_LOCAL_DEPENDENCIES[EXPORT]
+    assert PROVIDER not in ALLOWED_LOCAL_DEPENDENCIES[APPLICATION_BOUNDARY]
+    validate_architecture(PACKAGE, MODULE_CATEGORIES)
+
+
+@pytest.mark.parametrize("source_path,category", [
+    ("calculation.py", CORE), ("human_review.py", REVIEW),
+    ("excel_export.py", EXPORT), ("api.py", APPLICATION_BOUNDARY),
+    ("agent_tools.py", AGENT_TOOL), ("quotation_agent.py", AGENT),
+    ("config.py", SUPPORT),
+])
+def test_nonprovider_boundaries_cannot_import_s3_adapter(
+    tmp_path: Path, source_path: str, category: str,
+) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, source_path, "from .s3_storage import S3StorageAdapter\n")
+    _add_module(package, "s3_storage.py")
+    categories.update({source_path: category, "s3_storage.py": PROVIDER})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
 
 
 @pytest.mark.parametrize("source", [
