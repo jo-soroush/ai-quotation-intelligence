@@ -1970,63 +1970,150 @@ V1 artifacts may need durable storage, but S3 object existence must not make unv
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+A provider-neutral, immutable storage envelope/identity and typed failure
+contract in `storage_contract.py`; a synchronous boto3 S3 adapter in
+`s3_storage.py`; one optional bucket setting; deterministic local tests with
+an injected fake S3 client and botocore Stubber. The integration fixture
+starts with an actual C11-approved result and C12-exported workbook. No API,
+approval, Excel, AWS resource, or deployment code was added.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Reuse the existing PROVIDER category: actual imports require only CORE's
+storage contract and SUPPORT's settings, already permitted; no architecture
+direction is widened. Identify objects with validated request ID, quote ID,
+and SHA-256 of workbook bytes. Derive `generated/v1/<SHA-256-of-length-delimited-
+identity>.xlsx` internally so callers never provide raw keys or control the
+prefix. Reject duplicates with a single `PutObject` using
+`IfNoneMatch="*"`; 412 is DUPLICATE and 409 is CONFLICT. No `HeadObject`
+check-then-write race or local/distributed lock is used. Retrieval checks
+owned metadata, type, length, SHA-256, and a minimal ZIP/XLSX package
+envelope; ETag is treated as opaque, not a universal digest. Result and
+failure types are storage-owned, with sanitized stable failure codes.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+One conditional write makes no-overwrite a provider operation rather than a
+separate existence query. Content-bound identity prevents distinct workbook
+bytes under the same request/quote pair from colliding; length-delimited
+encoding avoids concatenation ambiguity. The storage contract exposes only
+persist/retrieve, so S3 existence cannot grant review or commercial
+authority. The small XLSX envelope check classifies bytes without repeating
+C12's workbook/business validation. Runtime bucket configuration is explicit;
+standard boto3 credential resolution follows C08 precedent.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Dedicated STORAGE category; free-form keys; `HeadObject` plus `PutObject`;
+idempotent same-content success; ETag-based integrity; C11/C12 imports into
+the adapter; C13 automatic upload; live S3/moto; full C12 workbook reload in
+storage; object deletion on ambiguous failure.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+PROVIDER already isolates SDK code with precisely the needed CORE/SUPPORT
+directions; a new category would expand policy without a needed dependency.
+Free-form keys weaken namespace authority. Head-then-put races; default put
+silently overwrites. An explicit duplicate is simpler than idempotency under
+ambiguous retries. ETag is not reliably a content hash. C11/C12/C13 imports
+would transfer ownership or expand the delivered HTTP contract. Live AWS is
+optional and the user has no bucket; fake plus SDK Stubber cover deterministic
+call behavior. Full workbook validation belongs to C12. Deletion is outside
+C14, including rollback.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Existing Python standard library (`dataclasses`, `hashlib`, `zipfile`,
+`typing`) and already-declared boto3/botocore; pytest, a local fake, and
+botocore Stubber for tests. No new dependency was declared.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+They provide immutable owned values, SHA-256 storage integrity, minimal XLSX
+package classification, real SDK request-shape validation, and network-free
+tests without changing the project's dependency or AWS configuration model.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first artifact envelope checked only a ZIP header and could admit
+`PK`-prefixed non-XLSX data. A review of provider failure mapping also found
+that a malformed unhashable SDK error code could escape the sanitizer.
+The first session bootstrap run failed because its source-adaptation sanity
+check assumed the ledger was always empty; C14 added the first reference-only
+AWS API record.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The initial checks assumed a signature implied XLSX structure and that
+`ClientError.response.Error.Code` was always a string. Both assumptions are
+unsafe at a storage/provider trust boundary.
+The bootstrap was written for the historical `NONE` ledger and had no
+populated-ledger branch, despite the canonical traceability workflow.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Require a readable ZIP package with OpenXML content-type and workbook parts
+before persistence and after retrieval; this is not C12 commercial
+validation. Require exact string type for SDK error codes before mapping;
+otherwise return typed PROVIDER_INVALID. Focused regression tests cover both
+cases. No failed attempt was erased from the Evidence Map.
+The bootstrap now verifies matching recorded counts against actual record
+headings and still accepts the original empty-ledger state. Its rerun passed
+with only the expected dirty-worktree warning.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+See C14 Evidence Map for executed commands. Initial 102 C14/architecture
+tests and 389 full tests passed; after two review hardenings, C14 focused
+tests passed 34 and architecture passed 69. Final validation is recorded in
+the Evidence Map: C12 60, C13 23, full 390, Governance Harness 61/0,
+reconciliation PASS, bootstrap 127 PASS/1 expected WARN/0 FAIL, dependency,
+compile/import, shell syntax, and diff checks PASS. Local fake and botocore Stubber never call
+AWS; live S3 is NOT_RUN / NOT_REQUIRED. The source ledger records AWS
+conditional-write documentation as REFERENCE ONLY, with no material code
+copied. The actual request shape is independently checked with Stubber.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Trusted composition must provide C12 output: a storage value object cannot
+cryptographically attest C12 provenance. No S3 bucket/live IAM, bucket
+policy, or encryption behavior was tested. Encryption remains runtime/
+deployment configuration. Ambiguous provider write failure returns failure;
+a retry may return DUPLICATE even if the first write succeeded, and the caller
+can retrieve by its known identity. No object deletion, public sharing,
+presigned URL, auto-upload, cross-process workflow, or deployment is offered.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Storage integrity and commercial authority are separate: SHA-256/metadata
+bind retrieved bytes, but do not approve them. A provider-side conditional
+write is the load-bearing no-overwrite control; a preliminary read is not.
+SDK error shapes and apparent success responses both require validation.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Threat model (C14-local, ELEVATED): arbitrary key/path input is blocked by
+validated identity and hashed fixed prefix; collision/substitution by
+content-bound key and metadata/SHA; silent overwrite/races by conditional
+put; arbitrary artifact input by trusted composition plus bounded XLSX
+envelope; credential/provider detail leakage by standard chain and sanitized
+codes; public access by no ACL/presigned operation; false success by response
+validation. Tests assert exact key and `IfNoneMatch`, metadata/digest checks,
+typed errors, and no extraneous SDK arguments—targeted mutation-resistance
+for those load-bearing controls. Generated-property/fuzzing was evaluated:
+the narrow bounded identifiers, fixed key encoding, and focused malicious
+inputs do not justify an added generator/fuzzer. Differential and formal
+methods are not required by the contract. Concurrency is tested locally,
+but cross-process correctness relies on S3's conditional write; no local
+lock or distributed state is claimed.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C15 may compose/configure the adapter and provision runtime bucket/IAM as
+separately authorized work. C13's six routes and export behavior remain
+unchanged; storage must not be inferred from `/quotes/{id}/export` or object
+existence. C15 must not infer that live IAM/encryption/bucket policy has been
+verified by C14's local tests. C17/C18/C20 remain untouched.
 
 ### Pre-implementation canonical maintenance history
 

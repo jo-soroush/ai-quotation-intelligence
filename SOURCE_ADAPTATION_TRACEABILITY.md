@@ -200,13 +200,14 @@ SUPERSEDED
 
 Examples of the relationship are `Decision: ADAPT` with `Status: APPROVED`
 or, after actual incorporation, `Decision: ADAPT` with `Status: IMPLEMENTED`.
-No current record is approved or implemented.
+Current record statuses are stated in the records below; status does not
+supersede the separate Card implementation and delivery gates.
 
 ## 9. Recorded Ledger State (Not Live Project State)
 
 ```text
-Current Records: NONE
-Source Adaptation Records: NONE
+Current Records: 1 — V1-C14 AWS conditional-write documentation reference
+Source Adaptation Records: 1 — REFERENCE ONLY
 Historical migration-time Application Implementation: NOT_STARTED
 Historical migration-time Active Card: NONE
 Historical migration-time V1-C01 Authorization: NO
@@ -216,8 +217,33 @@ These fields are retained as historical ledger context. PROJECT_CONTROL.md
 owns current project state and authorization; Git owns runtime Git facts.
 ```
 
-No external source has been formally adopted through this ledger. Prior
-source/template material is not current external implementation reuse.
+No external implementation material has been adopted through this ledger.
+Prior source/template material is not current external implementation reuse.
+
+### V1-C14-SOURCE-01 — S3 conditional-write API reference
+
+1. Record ID: V1-C14-SOURCE-01
+2. Card: V1-C14
+3. Source / Repository: Amazon S3 User Guide and S3 API Reference
+4. URL: https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-writes.html ; https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html
+5. File / Module: Conditional writes; PutObject `If-None-Match`
+6. Source Type: AWS Documentation
+7. License: UNKNOWN
+8. License Verification Status: UNVERIFIED
+9. What We Studied: The documented `If-None-Match: *` conditional PutObject behavior, including existing-object and concurrent-write failures.
+10. Why We Studied It: C14 requires an explicit no-silent-overwrite policy without a check-then-write race.
+11. Decision: REFERENCE ONLY
+12. Reason for Decision: The vendor API behavior informs the adapter contract; no AWS sample code, IAM policy, configuration artifact, or architecture design is incorporated.
+13. What Was Taken: No source code or implementation artifact; only the documented API semantics were consulted.
+14. What Was Not Taken: Vendor examples, IAM policies, deployment instructions, and unrelated S3 operations.
+15. Changes Made: NOT_APPLICABLE
+16. Risks / Limitations: Live S3 behavior is not proven by documentation or local tests alone; bucket policy and permissions remain runtime concerns.
+17. Security / Data Concerns: Conditional writes avoid ordinary overwrite but do not grant retrieval authorization or commercial authority; no credentials or customer data were used.
+18. Architecture Impact: NO — existing provider isolation remains the governing boundary.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C14
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C14
+21. Date Recorded: 2026-10-01
+22. Status: APPROVED
 
 ## 10. Educational Purpose
 
@@ -245,5 +271,5 @@ DECISION MUST BE EXPLICIT.
 NO SILENT COPYING.
 LICENSE STATUS MUST REMAIN HONEST.
 EVIDENCE AND LEARNING REFERENCES MUST POINT TO THEIR CANONICAL RECORDS.
-CURRENT RECORDS: NONE.
+CURRENT RECORDS: 1 — REFERENCE ONLY.
 ```

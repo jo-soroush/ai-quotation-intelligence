@@ -12,6 +12,7 @@ class Settings:
     environment: str = "local"
     log_level: str = "INFO"
     aws_region: str = "us-east-1"
+    s3_bucket: str | None = None
     bedrock_model_id: str = "amazon.nova-micro-v1:0"
     bedrock_max_tokens: int = 1024
     bedrock_temperature: float = 0.0
@@ -28,6 +29,7 @@ def load_settings() -> Settings:
         environment=os.getenv("AQI_ENVIRONMENT", Settings.environment),
         log_level=os.getenv("AQI_LOG_LEVEL", Settings.log_level),
         aws_region=os.getenv("AQI_AWS_REGION", Settings.aws_region),
+        s3_bucket=os.getenv("AQI_S3_BUCKET"),
         bedrock_model_id=os.getenv("AQI_BEDROCK_MODEL_ID", Settings.bedrock_model_id),
         bedrock_max_tokens=int(os.getenv("AQI_BEDROCK_MAX_TOKENS", str(Settings.bedrock_max_tokens))),
         bedrock_temperature=float(os.getenv("AQI_BEDROCK_TEMPERATURE", str(Settings.bedrock_temperature))),

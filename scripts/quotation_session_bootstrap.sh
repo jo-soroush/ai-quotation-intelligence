@@ -81,7 +81,15 @@ if [[ -f SOURCE_ADAPTATION_TRACEABILITY.md ]]; then
      grep -Fq "Source Adaptation Records: NONE" SOURCE_ADAPTATION_TRACEABILITY.md; then
     pass "source adaptation current records: NONE"
   else
-    fail "source adaptation current-state sanity check failed"
+    current_count="$(sed -nE 's/^Current Records: ([0-9]+)( .*)?$/\1/p' SOURCE_ADAPTATION_TRACEABILITY.md | head -n 1)"
+    source_count="$(sed -nE 's/^Source Adaptation Records: ([0-9]+)( .*)?$/\1/p' SOURCE_ADAPTATION_TRACEABILITY.md | head -n 1)"
+    actual_count="$(grep -Ec '^### V1-C[0-9]+-SOURCE-[0-9]+ ' SOURCE_ADAPTATION_TRACEABILITY.md || true)"
+    if [[ -n "$current_count" && "$current_count" == "$source_count" &&
+          "$current_count" == "$actual_count" && "$current_count" -gt 0 ]]; then
+      pass "source adaptation current records: $current_count"
+    else
+      fail "source adaptation current-state sanity check failed"
+    fi
   fi
 fi
 

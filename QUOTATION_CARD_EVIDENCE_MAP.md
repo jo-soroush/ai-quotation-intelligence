@@ -2368,47 +2368,100 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE — implementation authorized; not delivered or complete
 
 ### 4. Human Start Approval
 
-NO
+YES — explicit human V1-C14 implementation authorization; Git delivery not authorized
 
 ### 5. Files Changed
 
-NONE
+Created `src/ai_quotation_intelligence/storage_contract.py`,
+`src/ai_quotation_intelligence/s3_storage.py`, and `tests/test_s3_storage.py`.
+Modified `src/ai_quotation_intelligence/config.py`,
+`tests/test_architecture.py`, `PROJECT_CONTROL.md`, this Evidence Map,
+`CARD_LEARNING_AND_DECISION_LOG.md`, `SOURCE_ADAPTATION_TRACEABILITY.md`,
+and `scripts/quotation_session_bootstrap.sh` (a narrow source-ledger sanity
+check needed for the new C14 reference-only record).
+No C13 source, dependency declaration, Roadmap, or Card Specification changed.
 
 ### 6. Commands Run
 
-NONE
+Observed implementation checkpoint: `.venv/bin/pytest -q
+tests/test_s3_storage.py tests/test_architecture.py` passed 102 tests before
+the malformed-SDK-error hardening. Subsequent separate focused commands:
+`.venv/bin/pytest -q tests/test_s3_storage.py` passed 34 and
+`.venv/bin/pytest -q tests/test_architecture.py` passed 69. Earlier full
+`.venv/bin/pytest -q` passed 389 before that final one-test addition.
+Final commands: focused C14 34 PASS, C12 60 PASS, C13 23 PASS, architecture
+69 PASS, full `.venv/bin/pytest -q` 390 PASS/one existing warning;
+`python scripts/reconcile_governance_views.py --write` and `--check` PASS;
+`bash scripts/test_governance_harness.sh` 61 PASS/0 FAIL;
+`bash scripts/quotation_session_bootstrap.sh` 127 PASS/1 expected dirty-tree
+WARN/0 FAIL after the source-ledger sanity fix. `.venv/bin/pip check`,
+Python compile/import, `bash -n`, and `git diff --check` all PASS.
 
 ### 7. Focused Tests
 
-NOT_RUN
+34 PASS — deterministic local C14 tests, including real C11-approved/C12
+export bytes, fake S3 conditional-write behavior, botocore Stubber call
+shape, retrieval integrity, malformed responses, failure sanitization,
+same-process contention, and ambiguous-write retry behavior. No network,
+bucket, or credentials used.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+C12/C13 combined regression checkpoint: `.venv/bin/pytest -q
+tests/test_s3_storage.py tests/test_excel_export.py tests/test_api.py` passed
+116, with one pre-existing non-functional Starlette/httpx TestClient warning.
+Final separate results: C12 60 PASS, C13 23 PASS; full suite 390 PASS.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+Local ELEVATED-boundary evaluation: key/identity collision probes, duplicate
+conditional write, forged metadata/content, missing-versus-access denial,
+provider malformed-success/error payloads, no public ACL/delete/bucket or
+C13 operations, and ambiguous-write recovery covered by focused tests.
+Threat model and targeted mutation-resistance rationale are in the C14
+Learning / Decision Log. Live S3: NOT_RUN / NOT_REQUIRED; the user has no
+bucket and this does not block the local Exit Gate.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+C14 performs no commercial arithmetic or approval decision. The focused
+round-trip fixture obtains a validated workbook from actual C11 approval and
+C12 export, then verifies storage bytes/identity only. Storage cannot prove
+arbitrary external provenance: trusted composition must supply C12 bytes.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+Provider isolation verified by adapter/architecture tests: boto3/botocore
+stay in PROVIDER; owned result/failure types cross the storage contract.
+No Bedrock, AI, or live S3 call was used.
 
 ### 12. Security Validation
 
-NOT_RUN
+Focused adversarial tests exercise path-like identity rejection, fixed key
+namespace, ZIP/XLSX envelope rejection, conditional no-overwrite, metadata
+and body substitution, strict provider success response, exception-message
+sanitization, and no explicit credential/ACL argument. Architecture tests
+prove no reverse S3 adapter import by CORE/REVIEW/EXPORT/APPLICATION_BOUNDARY.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION.
+Implementation review found that a first-pass `PK`-prefix check could admit
+arbitrary non-XLSX bytes. This was corrected with a bounded ZIP/XLSX package
+envelope check, leaving C12's business validation with C12. Review also
+found a malformed unhashable SDK error code could escape sanitization;
+explicit string-type validation and a regression test corrected it. Neither
+first-pass gap is erased from this record. No current implementation blocker
+is known; independent audit and delivery remain pending.
+
+The first bootstrap run failed its source-adaptation sanity check because it
+hard-coded an empty ledger; C14's documented AWS API reference was the first
+record. The script now validates matching nonzero counts and actual record
+headings while retaining the original empty-ledger case. Bootstrap rerun
+passed with only the expected dirty-worktree warning.
 
 Pre-implementation read-only C14 preflight: BLOCKED before authorization by
 the missing authoritative Roadmap Exit Gate and missing C09+ verification
@@ -2435,25 +2488,42 @@ dependency, architecture, or authorization change was made.
 
 ### 14. Exit Gate Evidence
 
-NONE
+Self-validation maps the Roadmap gate to: C12-origin round-trip fixture;
+provider-neutral `StorageContract`; deterministic content-bound key under a
+fixed namespace; atomic `IfNoneMatch="*"` reject-duplicate PutObject;
+validated GetObject metadata, content type/length, SHA-256 and XLSX package
+envelope; explicit missing/access/provider/integrity errors; standard boto3
+credential chain; no ACL/public/delete/create/presigned operations; local
+fake and botocore Stubber verification; unchanged C13; architecture tests.
+Live AWS remains optional and unexecuted. Independent proof is pending.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: SELF_VALIDATED / INDEPENDENT_AUDIT_PENDING
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+SELF_VALIDATION_PASS / INDEPENDENT_AUDIT_PENDING — focused, regressions,
+full suite, architecture, governance, bootstrap, dependency, syntax, and
+diff checks passed. Git delivery remains separately unauthorized.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch `card/v1-c14-s3-storage` created from clean main at `f4692032c986585f54610799ad3867077e6c1ce1`; no delivery commit, push, PR, or merge.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+No live bucket/IAM/policy/encryption behavior verified; none is required for
+C14 Exit Gate. The storage contract cannot cryptographically attest that
+bytes came from C12, so trusted application composition remains necessary.
+No C13 upload, persistence workflow across processes, delete, public
+sharing, presigned URL, or deployment is provided. After an ambiguous
+network failure following an S3 write, retry is an explicit duplicate;
+caller can retrieve using the known content-bound identity. No rollback
+deletion is attempted.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+See C14 Learning / Decision Log for architecture, conditional-write,
+integrity, failure, threat-model, source-reference, and recovery rationale.
 
 ### 19. Completion Evidence
 
@@ -2461,11 +2531,11 @@ NONE
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE — implementation candidate, not delivered
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C14
 Learning Documentation Status:
-NOT_STARTED
+CURRENT — implementation rationale recorded; audit/delivery outcome pending
 
 ## V1-C15 — AWS Deployment
 
@@ -3026,7 +3096,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C11 | Human Review Gate | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C12 | Excel Generation | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C13 | FastAPI Application | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C14 | Amazon S3 Integration | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C14 | Amazon S3 Integration | ACTIVE | YES | 34 | SELF_VALIDATED | NOT_RUN | PRESENT | ACTIVE — implementation candidate, not delivered |
 | V1-C15 | AWS Deployment | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C16 | CloudWatch Observability | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C17 | Evaluation Harness | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -3039,7 +3109,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C13_COMPLETE
+Project Phase: V1_C14_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3053,8 +3123,9 @@ V1-C10: COMPLETE
 V1-C11: COMPLETE
 V1-C12: COMPLETE
 V1-C13: COMPLETE
-V1-C14: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C14: ACTIVE
+V1-C15: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C14
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
