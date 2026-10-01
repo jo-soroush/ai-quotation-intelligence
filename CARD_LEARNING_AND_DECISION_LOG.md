@@ -1631,63 +1631,140 @@ Excel is the mandatory V1 quotation output and must not allow raw model output t
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+An in-memory C12 `.xlsx` exporter with exactly three semantic sheets,
+typed failures, C11 held-session eligibility, Core calculation
+reconciliation, safe-text rendering, workbook reload validation, and 60
+focused tests. The EXPORT architecture category imports REVIEW and CORE
+only. It is self-validated but not independently audited or delivered.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+`export_approved_quote(session, current=...) -> bytes` accepts a real held
+`ReviewSession`, calls `require_approved`, and renders the returned decision
+snapshot rather than trusting a caller's copied record. C04 functions
+calculate item costs and total; C12 never implements pricing arithmetic.
+Risk and Historical Evidence rows use approved suggestion/evidence IDs, not
+post-approval lookup. All workbook strings cross one inert-text boundary;
+the saved workbook is reopened and compared to the approved semantic rows.
+EXPORT → {REVIEW, CORE} is the only new local dependency direction.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+Bytes avoid file paths, overwrites, persistence, and S3 authority. The held
+C11 session is the only existing approval eligibility proof. Rendering the
+returned snapshot avoids a second read of mutable caller input after the
+gate. Static Core-derived numbers keep Excel from becoming a calculation
+engine. The independent reload catches workbook serialization drift before
+any bytes are returned. A dedicated EXPORT category keeps C11 authority
+available to export without giving Agent, Tool, Provider, or Core export
+privileges.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Local-path output; status/ReviewRecord-based approval; Excel formulas for
+totals; a fresh C09 history lookup; embedding role or unbound historical
+metrics; placing export inside CORE or REVIEW; and broad architecture
+permissions were considered against the delivered contracts.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Paths add overwrite/traversal and persistence policy without C12 need.
+Copied approval metadata or status cannot prove C11 eligibility. Formulas
+would create another business-rule authority. Fresh lookup could attach
+evidence never reviewed. `QuoteItem` lacks role, and approved results lack
+historical metric records. CORE/REVIEW placement would give lower layers
+workbook concerns; broader permissions have no exercised imports.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+openpyxl 3.1.5 was installed under the declared `openpyxl>=3.1,<4.0`
+project dependency. Existing Pydantic contracts, C04 arithmetic, C11
+review gate, and pytest architecture harness were reused. No AWS service or
+new external-source implementation artifact was incorporated.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+openpyxl is the canonical C12 workbook library and supports local `.xlsx`
+creation and independent reload without cloud resources. The project uses
+bounded dependency ranges rather than a lockfile, so the declaration follows
+that convention. Its portability cost is the dependency and Excel's limited
+numeric representation; exact post-save reconciliation makes the latter an
+explicit failure instead of a silent commercial change. Revisit only if the
+canonical workbook contract or project dependency convention changes.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first Card-start reconciliation check failed on `ACTIVE /
+IMPLEMENTATION` in the status table. The first focused suite failed because
+the scripted C10 narrative violated C10's exact protocol and an existing
+architecture negative fixture denied EXPORT's necessary REVIEW import.
+After correcting those, the first workbook reload check rejected expected
+blank cells because openpyxl serializes empty strings as absent cells. A
+leading-space formula fixture also conflicted with domain text normalization
+and C11's request/quote identity rule.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The governance reconciler consumes exact lifecycle tokens, not descriptive
+variants. The test setup initially assumed a broader model protocol and an
+unchanged pre-C12 dependency matrix. The workbook validator assumed an
+empty string would survive ZIP serialization as a literal string. The
+adversarial fixture assumed Pydantic would preserve outer spaces in
+`NonEmptyText` and did not maintain `quote_id = draft-{request_id}`.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The C12 status-table state became exact `ACTIVE`, followed by successful
+generated-view `--write`/`--check`. The scripted narrative now uses a valid
+C10 literal, and architecture tests explicitly permit only EXPORT → REVIEW
+and CORE while rejecting other directions. The validator accepts a reloaded
+empty cell only when the expected value is the empty string. The formula
+fixture now checks the normalized text and maintains C11 identity. Focused
+and full tests passed on rerun; no failure was erased.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+QUOTATION_CARD_EVIDENCE_MAP.md → V1-C12 records exact commands, 60 focused
+C12 tests, C11/C10/C09 and architecture regressions, full 321-pass pytest,
+Governance Harness, reconciliation, bootstrap, dependency/import, security,
+diff checks, original failures, and recovered reruns. These are
+self-validation results, not independent audit or delivery proof.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Approval remains in-memory and same-process; reviewer reference is
+caller-asserted, not authenticated. Approved evidence carries IDs and risk
+links but not underlying historical records or metrics. The Evidence sheet
+discloses the bound-reference limit and synthetic-by-default portfolio
+context; it does not assert a specific origin for every opaque ID. The
+exporter returns bytes only. Excel numbers that cannot round-trip exactly
+fail instead of being rounded. Byte-identical ZIP output is not required.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Export correctness has two separate proofs: C11's current-result decision
+gate controls *whether* export may happen, while Core/reload reconciliation
+controls *what* the file actually contains. Cell type, not merely displayed
+text, determines whether an untrusted value can execute as a formula.
+Serialization details must be tested against reloaded artifacts rather than
+assumed from in-memory workbook objects.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Do not turn a copied `ReviewRecord`, status, saved workbook, or opaque
+evidence ID into approval or underlying historical truth. Any future
+persistence/API/S3 boundary must carry an independently authorized C11
+eligibility design; it must not reconstruct approval from metadata. Do not
+remove exact post-save numeric checks merely to make difficult Decimal
+values exportable.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C13+ may consume the bytes through a separately authorized application
+boundary; no API, S3, persistence, or UI authority is granted here. Richer
+history in a later workbook would require a new approved evidence-binding
+contract before human review, not a C12 post-approval search. Durable review
+authority across processes remains a separate future design decision.
 
 ## V1-C13 — FastAPI Application
 

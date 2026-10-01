@@ -1987,81 +1987,148 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE / IMPLEMENTATION
 
 ### 4. Human Start Approval
 
-NO
+YES — explicit V1-C12 implementation authorization; delivery not authorized
 
 ### 5. Files Changed
 
-NONE
+`src/ai_quotation_intelligence/excel_export.py` and
+`tests/test_excel_export.py` created; `tests/test_architecture.py`,
+`pyproject.toml`, `PROJECT_CONTROL.md`, this Evidence Map, and
+`CARD_LEARNING_AND_DECISION_LOG.md` modified. No C13+ source, AWS,
+storage, API, or deployment files.
 
 ### 6. Commands Run
 
-NONE
+`.venv/bin/pytest -q tests/test_excel_export.py` (60 passed),
+`tests/test_human_review.py` (32), `tests/test_quotation_agent.py` (57),
+`tests/test_agent_tools.py` (24), `tests/test_architecture.py` (57), and
+full `.venv/bin/pytest -q` (321 passed). Governance Harness 61 PASS / 0 FAIL;
+reconciliation `--write` and `--check` PASS after the recorded initial
+Card-start lifecycle-label failure. Bootstrap 127 PASS / 1 expected
+modified-worktree WARN / 0 FAIL. Python compile/import, shell syntax,
+`.venv/bin/pip check`, changed-file secret-pattern scan, and
+`git diff --check` passed. openpyxl 3.1.5 imports from the declared
+`openpyxl>=3.1,<4.0` dependency.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS (self-validation) — 60 C12 tests: real C10 → C11 → C12 approved
+path, exact three-sheet content, Core values, evidence links, denied approval
+states, stale/mutated results, inert formula-like text, malformed generated
+workbooks, injected formula/hyperlink/macro, explicit failure, and semantic
+repeatability. No live AWS or provider call during export.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS (self-validation) — C11 32, C10 57, C09 24, architecture 57,
+full suite 321. EXPORT is classified with REVIEW and CORE imports only;
+negative architecture fixtures reject forbidden inbound/outbound directions.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+SELF_VALIDATED — held `ReviewSession.require_approved(current=...)` gates
+in-memory bytes export; a copied record, approved-looking Quote, rejected
+or unreviewed state, and stale/modified result cannot authorize it. The
+artifact reloads as `.xlsx` with exactly Quotation, Risk Analysis, and
+Historical Evidence sheets. Independent verification remains pending.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS (self-validation) — C04 `calculate_item_cost` and
+`calculate_quote_total` supply authoritative static values. The approved
+total and each reloaded numeric cell are compared exactly; a Core mismatch
+or Excel numeric round-trip loss blocks export. No role, historical metric,
+tax, discount, or new evidence is manufactured.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS (self-validation) — C12 imports no Agent, Agent Tool, Provider,
+Bedrock SDK, API, or storage module, and invokes no model or C09 search.
+The integration fixture uses scripted C10 output only to form a validated
+approved input; export itself reads C11's held decision snapshot.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS (self-validation) — all untrusted exported string categories use one
+inert-text boundary; reloaded cells are neither formulas nor hyperlinks.
+Workbook validation rejects injected formulas, links, macro entries,
+unexpected cells/sheets, and numeric drift. Failure codes do not include
+internal exception text. No path or overwrite input exists. Secret-pattern,
+syntax/import, and architecture checks passed.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+At Card start `reconcile_governance_views.py --check` failed because the
+PROJECT_CONTROL status table used `ACTIVE / IMPLEMENTATION` where the
+existing reconciler requires the exact lifecycle token `ACTIVE`. The table
+was corrected and `--write`/`--check` passed. The first focused C12 run
+failed because its scripted C10 narrative was outside C10's exact allowed
+protocol and an architecture negative fixture incorrectly denied C12's
+required EXPORT → REVIEW import. Correcting those test assumptions exposed
+an openpyxl round-trip detail: saved empty-string cells reload as empty
+cells. The workbook validator was corrected to accept that representation
+only for expected blank cells. A subsequent formula-injection fixture also
+needed to honor the domain model's outer-whitespace normalization and the
+C11 request/quote identity relationship. Final focused and full reruns pass;
+no failure was hidden or treated as evidence of initial success.
 
 ### 14. Exit Gate Evidence
 
-NONE
+SELF_VALIDATION: current held C11 approval only (denial/stale/copy tests);
+three required loadable sheets (approved export test); Core item/total and
+currency reconciliation (integration and drift tests); approved risk and
+evidence references only, with unsupported role/metrics absent; inert text
+and post-save formula/link/macro checks; explicit typed failure; no C13+
+module/action. Independent audit and delivery are still required.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: SELF_VALIDATED / INDEPENDENT_AUDIT_PENDING
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PENDING — self-validation and learning record are current; independent
+audit, separate Git delivery approval, delivery, and outcome reconciliation
+have not occurred. C12 is not COMPLETE.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Start base `70f4eca6c6dd0c9db91a944e1d927e15600b7611` on clean,
+synchronized main; implementation branch `card/v1-c12-excel-generation`.
+Candidate remains unstaged and uncommitted. No push, PR, merge, or C12
+delivery approval. Candidate identity is computed and reported outside the
+candidate to avoid self-reference.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+Approval remains C11's in-memory/same-process held-session authority;
+caller-asserted reviewer reference is not cryptographic authentication.
+The approved result carries evidence IDs and suggestion links, not the
+underlying historical records or metrics. The sheet discloses that limit
+and synthetic-by-default V1 context. Unrepresentable Excel numeric values
+fail explicitly rather than being rounded into a successful export. Bytes
+are not persisted; byte-identical ZIP output is not required.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+CURRENT — the C12 Learning and Decision Log records approval-gate,
+in-memory output, Core/export, text-safety, architecture, library, and
+failure/recovery rationale.
 
 ### 19. Completion Evidence
 
-NONE
+NOT_COMPLETE — implementation self-validation passed; independent audit,
+human Git delivery approval, merge, and final-state reconciliation pending.
 
 ### 20. Recommended State
 
-NOT_STARTED
+READY_FOR_INDEPENDENT_AUDIT / UNDELIVERED
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C12
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C13 — FastAPI Application
 
@@ -2800,7 +2867,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C09 | Agent Tools | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C10 | Quotation Agent | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C11 | Human Review Gate | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C12 | Excel Generation | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C12 | Excel Generation | ACTIVE | YES | PASS | SELF_VALIDATED | NOT_RUN | PRESENT | READY_FOR_INDEPENDENT_AUDIT / UNDELIVERED |
 | V1-C13 | FastAPI Application | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C14 | Amazon S3 Integration | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C15 | AWS Deployment | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -2815,7 +2882,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C11_COMPLETE
+Project Phase: V1_C12_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -2827,8 +2894,9 @@ V1-C08: COMPLETE
 V1-C09: COMPLETE
 V1-C10: COMPLETE
 V1-C11: COMPLETE
-V1-C12: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C12: ACTIVE
+V1-C13: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C12
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
