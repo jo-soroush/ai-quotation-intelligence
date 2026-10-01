@@ -17,15 +17,18 @@ PROVIDER = "PROVIDER"
 AGENT_TOOL = "AGENT_TOOL"
 AGENT = "AGENT"
 REVIEW = "REVIEW"
+EXPORT = "EXPORT"
 APPLICATION_BOUNDARY = "APPLICATION_BOUNDARY"
 SUPPORT = "SUPPORT"
-CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, AGENT, REVIEW, APPLICATION_BOUNDARY, SUPPORT}
-FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, REVIEW, APPLICATION_BOUNDARY}
+CATEGORIES = {CORE, PROVIDER, AGENT_TOOL, AGENT, REVIEW, EXPORT, APPLICATION_BOUNDARY, SUPPORT}
+FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, REVIEW, EXPORT, APPLICATION_BOUNDARY}
 # C10 may orchestrate C09 and call Core's existing calculation/domain owners.
 # C08's adapter is injected through a provider-neutral client protocol, so
 # Agent requires no Provider or Support import permission.
 # C11 review may use Core contracts/arithmetic only; Agent, Agent Tool,
 # Provider, Support, Core, and future Application modules cannot import Review.
+# C12 export needs only C11's held approval gate and Core's domain/arithmetic;
+# no other existing category may import Export.
 ALLOWED_LOCAL_DEPENDENCIES = {
     CORE: {CORE, SUPPORT},
     SUPPORT: {SUPPORT},
@@ -33,6 +36,7 @@ ALLOWED_LOCAL_DEPENDENCIES = {
     AGENT_TOOL: {CORE},
     AGENT: {CORE, AGENT_TOOL},
     REVIEW: {CORE},
+    EXPORT: {CORE, REVIEW},
     APPLICATION_BOUNDARY: set(),
 }
 # boto3 is declared in pyproject.toml; botocore is its imported SDK boundary.
@@ -54,6 +58,7 @@ MODULE_CATEGORIES = {
     "agent_tools.py": AGENT_TOOL,
     "quotation_agent.py": AGENT,
     "human_review.py": REVIEW,
+    "excel_export.py": EXPORT,
     "config.py": SUPPORT,
     "logging_config.py": SUPPORT,
 }
@@ -160,8 +165,56 @@ def test_human_review_is_separate_authority_with_core_only_dependency() -> None:
     assert MODULE_CATEGORIES["human_review.py"] == REVIEW
     assert ALLOWED_LOCAL_DEPENDENCIES[REVIEW] == {CORE}
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
-    for category in CATEGORIES - {REVIEW}:
+    for category in CATEGORIES - {REVIEW, EXPORT}:
         assert REVIEW not in ALLOWED_LOCAL_DEPENDENCIES[category]
+
+
+def test_excel_export_has_only_review_and_core_dependencies() -> None:
+    assert MODULE_CATEGORIES["excel_export.py"] == EXPORT
+    assert ALLOWED_LOCAL_DEPENDENCIES[EXPORT] == {CORE, REVIEW}
+    validate_architecture(PACKAGE, MODULE_CATEGORIES)
+    for category in CATEGORIES - {EXPORT}:
+        assert EXPORT not in ALLOWED_LOCAL_DEPENDENCIES[category]
+
+
+@pytest.mark.parametrize("source", [
+    "from .quotation_agent import QuotationAgent\n",
+    "from .agent_tools import AgentTools\n",
+    "from .bedrock import BedrockConverseAdapter\n",
+    "from .config import Settings\n",
+    "import boto3\n",
+])
+def test_export_rejects_agent_tool_provider_and_support_imports(
+    tmp_path: Path, source: str,
+) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, "excel_export.py", source)
+    for name, category in (
+        ("quotation_agent.py", AGENT), ("agent_tools.py", AGENT_TOOL),
+        ("bedrock.py", PROVIDER), ("config.py", SUPPORT),
+    ):
+        _add_module(package, name)
+        categories[name] = category
+    categories["excel_export.py"] = EXPORT
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
+
+
+@pytest.mark.parametrize("source_path,category", [
+    ("calculation.py", CORE), ("human_review.py", REVIEW),
+    ("quotation_agent.py", AGENT), ("agent_tools.py", AGENT_TOOL),
+    ("config.py", SUPPORT), ("bedrock.py", PROVIDER),
+    ("api.py", APPLICATION_BOUNDARY),
+])
+def test_other_categories_cannot_import_export(
+    tmp_path: Path, source_path: str, category: str,
+) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, source_path, "from .excel_export import export_approved_quote\n")
+    _add_module(package, "excel_export.py")
+    categories.update({source_path: category, "excel_export.py": EXPORT})
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
 
 
 @pytest.mark.parametrize("source_path,category", [
@@ -208,6 +261,7 @@ def test_unclassified_new_module_fails_closed(tmp_path: Path, relative_path: str
         ("human_review.py", REVIEW, "from .. import human_review"),
         ("tooling/__init__.py", AGENT_TOOL, "from ai_quotation_intelligence import tooling"),
         ("api.py", APPLICATION_BOUNDARY, "from ai_quotation_intelligence.api import route"),
+        ("excel_export.py", EXPORT, "from .. import excel_export"),
     ],
 )
 def test_core_rejects_each_forbidden_local_boundary(
@@ -256,6 +310,7 @@ def test_root_package_reexport_cannot_hide_provider_import(tmp_path: Path) -> No
         ("quotation_agent.py", AGENT),
         ("human_review.py", REVIEW),
         ("api.py", APPLICATION_BOUNDARY),
+        ("excel_export.py", EXPORT),
     ],
 )
 def test_support_cannot_launder_forbidden_dependency_to_core(
