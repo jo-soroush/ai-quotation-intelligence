@@ -2115,6 +2115,25 @@ unchanged; storage must not be inferred from `/quotes/{id}/export` or object
 existence. C15 must not infer that live IAM/encryption/bucket policy has been
 verified by C14's local tests. C17/C18/C20 remain untouched.
 
+### Post-delivery completion reconciliation
+
+The independently audited candidate identity
+`98f286074c8d1897ae19664d845c778862c8f1c915e3cec80b2c640e42401500` matched
+the staged and committed trees. Delivery commit
+`e73b8de7a7b521c706e210e21d3776d44a23bb43` was pushed and merged through
+PR #41 as `2f99f4c24f9182029ded27b15c4f123c810a61fe`. The audit passed with
+zero critical/high/medium findings and one LOW cosmetic finding: the manual
+PROJECT_CONTROL §18 row still read NOT_RUN / PARTIAL. Human approval accepted
+that finding without candidate remediation; this outcome-only reconciliation
+updates the row while preserving the observation in Evidence Map history.
+Post-merge main tests passed: C14 34, C12 60, C13 23, full suite 390,
+architecture 69; Governance Harness 61/0, governance reconciliation PASS,
+bootstrap 128/0/0, and dependency/import/syntax/security/diff checks PASS.
+No S3 bucket or AWS resource was created; live S3 and IAM behavior remain
+unverified and are not C14 completion requirements. This reconciliation
+records only delivery/completion state. The deterministic final Card-state
+gate and synchronized-main checks are run after its delivery.
+
 ### Pre-implementation canonical maintenance history
 
 The C14 read-only preflight was BLOCKED because the Roadmap had no
