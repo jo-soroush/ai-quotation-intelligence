@@ -2202,63 +2202,75 @@ The portfolio workflow needs a bounded cloud delivery path, while deployment cla
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+At the initial local checkpoint, an uncommitted C15 candidate included deployment-only Lambda composition of delivered C08/C09/C10/C13, Mangum ASGI adapter, six-route IAM-protected API Gateway HTTP API CloudFormation template, pinned Python 3.13 x86_64 Lambda ZIP builder/validator, signed health-smoke helper, and a bounded repository-controlled live procedure. Under later separate human approval, the real stack and private artifact bucket were created and intentionally retained, but the first signed `/health` failed with HTTP 500. A second separate approval allowed the repaired package to be deployed to that same stack; real signed `/health` then returned HTTP 200. C15 is still undelivered.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Selected API Gateway HTTP API payload 2.0, Mangum 0.20.0, CloudFormation JSON plus AWS CLI procedure, ZIP packaging of pinned runtime dependencies including boto3/botocore, Python 3.13 x86_64/512 MiB/30 seconds, IAM on all six routes, and a runtime role limited to own log group plus optional exact-ARN Bedrock invocation. Deployment composition remains outside the application package and C13 `api.py` remains unchanged. No S3 runtime permission or C14 auto-upload. C13 process memory remains an accepted non-durable V1 limitation.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+This minimizes new code and permissions while preserving the delivered FastAPI, provider, approval, and export owners. HTTP API payload 2.0 and Mangum support direct local event simulation and base64 XLSX transport; CloudFormation makes resource topology reviewable without a heavy framework. AWS_IAM prevents anonymous commercial-route access without inventing an application authentication platform. A private artifact bucket is required by the future ZIP deployment procedure, not by local implementation.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered custom ASGI/Lambda event code, REST API, SAM/CDK/Terraform, using Lambda-managed boto3, open anonymous HTTP API, automatic C14 upload, and durable workflow storage.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Custom adaptation would duplicate protocol code and enlarge binary-response risk. REST API adds binary media configuration not needed for this six-route V1 surface. SAM/CDK/Terraform add toolchain weight beyond the reviewable CloudFormation/CLI procedure. Runtime-managed SDK versions can drift from project-tested boto3/botocore. Anonymous API exposure and C14 auto-upload violate the bounded deployment/authority contract. Durable state is a separately authorized design, not a C15 fix.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Mangum 0.20.0 (MIT verified at release tag), delivered FastAPI/Pydantic/openpyxl/boto3/botocore, and the newly pinned FastAPI-required `opentelemetry-api` 1.45.0 (Apache-2.0 metadata/license verified), Python standard-library ZIP builder, AWS CloudFormation JSON and AWS CLI. SOURCE_ADAPTATION_TRACEABILITY.md records both library REUSE decisions and vendor-documentation REFERENCE ONLY decisions.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Mangum is a bounded maintained ASGI/Lambda adapter; the other direct runtime libraries are project dependencies. FastAPI 0.142.2 also requires `opentelemetry-api>=1.44.0`, so the exact `--no-deps` snapshot must include that unmodified transitive distribution. Standard-library packaging and JSON require no new build framework. Exact lock versions and Linux CPython 3.13 wheels reduce Lambda-managed SDK drift. CloudFormation was executed only after separate live authorization.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The local `pip install mangum==0.20.0` reported successful installation but shell exit 1 because pyenv tried to rehash unwritable shims. The first package validator rejected pip-generated `.pyc` files; the next rejected botocore's required public `cacert.pem`. An initial architecture test wrongly treated imported symbol names as extra modules. Resume review revisited an optional Bedrock ARN wildcard concern; the current template already rejected a bare wildcard, while its ARN shape was broader than the resource forms justified by runtime use. AWS documentation review also found the API Gateway Lambda integration URI should be explicit. Later, the real Lambda returned HTTP 500 on the first signed `/health`; independent CloudWatch diagnosis found a missing `opentelemetry` import before application initialization.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The pip failure was post-install shell/pyenv behavior, not dependency incompatibility. `pip --target` compiled bytecode by default, and the archive writer initially included it. A broad `.pem` ban conflated a public CA trust bundle with credentials. The import helper deliberately returns both module and member targets; the test assumed modules only. Recovery found the wildcard already blocked in the current template, but optional account syntax was accepted for all Bedrock resource types, allowing unsupported ARN shapes. The first integration URI used the raw function ARN despite the documented API Gateway Lambda URI form. The first C15 ACTIVE-state consistency run failed because its exact comparisons correctly expected `Active Card: V1-C15`, `ACTIVE`, and `YES`, while C15 had mixed descriptive detail into those machine-readable values. The live import failure came from treating `requirements-lambda.txt` as a complete explicit snapshot while installing it with `--no-deps`: FastAPI's required `opentelemetry-api` distribution was absent, and the previous package validator checked directories but not dependency closure or actual packaged imports.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Verified Mangum with `pip show`, import, and focused tests; excluded bytecode and `bin/` from ZIP; narrowly allowed only `botocore/cacert.pem` while still rejecting other PEM/key files; checked expected module prefixes while allowing imported member names. Constrained optional Bedrock permission to accountless foundation-model ARNs or 12-digit-account profile ARNs; absence remains the exact empty default and is removed from the IAM policy through the CloudFormation condition. Added wildcard, whitespace, malformed, valid-form, IAM-output, and broadened-pattern mutation checks. Replaced raw function ARN with the documented API Gateway Lambda integration URI and POST method, asserting the exact template shape. For state consistency, followed the prior C09 resolution: exact `V1-C15`, `ACTIVE`, and `YES` machine values are kept separate from descriptive detail; the checker is unchanged. The rerun passed the C15 ACTIVE consistency gate and all ten isolated negative/positive fixtures. Focused C15 tests (19), full pytest (410), architecture (70), Governance Harness (61/0), reconciliation, bootstrap, dependency, and package/template checks also passed; see the Evidence Map for actual commands and results. No prior failure was erased.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15 records commands and outcomes. Initial local C15 tests: 19 passed; after packaging remediation: 21 passed, C13/C12/C14 combined regressions 117 passed, architecture 70 passed, full pytest 412 passed with the accepted TestClient deprecation warning. The initial real signed `/health` returned HTTP 500; the corrected Linux ZIP later passed a separately approved real retry with HTTP 200. Independent live verification and Git delivery remain pending.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The signed IAM HTTP API requires a principal with `execute-api:Invoke` even for `/health`. Default runtime IAM cannot invoke Bedrock; exact-model permission is an opt-in parameter that must match actual model configuration. The private deployment-artifact bucket and stack now exist and are intentionally retained by human choice. The repaired ZIP's live HTTP 200 proves application startup through API Gateway, but local binary simulation does not prove a full live export workflow. Process-local C13 review state may disappear or diverge across Lambda environments; full cloud workflow continuity and production readiness are not claimed.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Thin deployment composition can preserve C13 authority without touching API code. A package validator must distinguish public CA material from credentials, strip incidental pip bytecode, and check complete runtime dependency metadata. The initial live infrastructure proved CloudFormation and Gateway/Lambda wiring but exposed that static ZIP inspection was insufficient to prove handler import. A Linux-isolated handler/health smoke is now part of local validation; the separately approved live retry proved application startup through API Gateway, while leaving durable-state and production claims unproven.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Do not mark C15 COMPLETE or describe local event simulation as live deployment. Before resource-creating AWS commands, present exact resources, region/account, cost-sensitive services, deployer permissions, runtime role, artifact bucket, teardown posture, and rollback plan for separate human approval. Reserved concurrency of one and provisioned concurrency do not make C13 memory durable.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C16 must not treat this minimal log group as an observability platform. Any durable serverless review-state design, production authentication/access posture, or C13→C14 upload integration requires separately authorized scope. The final live-health evidence now exists; C15 still needs independent live verification and approved Git delivery before closure.
+
+### Bounded packaging remediation after first live health failure — 2026-10-02
+
+The human separately authorized the initial non-production live deployment and chose KEEP DEPLOYED. CloudFormation completed and actual routes/runtime IAM matched the bounded template, but signed `/health` returned HTTP 500. The independent CloudWatch diagnosis reported `Runtime.ImportModuleError: No module named 'opentelemetry'`; an isolated Linux Python 3.13 import of the exact deployed ZIP reproduced `lambda_handler → ai_quotation_intelligence.api → fastapi.telemetry → opentelemetry` before FastAPI initialization. This was a package-closure defect, not evidence of a Bedrock, S3, API Gateway route, or IAM problem.
+
+Package metadata and pip resolution showed `fastapi==0.142.2` requires `opentelemetry-api>=1.44.0`; selected version 1.45.0 requires only the already pinned `typing-extensions>=4.5.0`. The bundled distribution metadata and license text identify Apache-2.0; its REUSE is recorded in the source ledger. We kept direct versions and the explicit `--no-deps` build strategy, adding only the missing exact transitive pin. A metadata-closure validator now compares packaged distributions with the snapshot and evaluates every applicable `Requires-Dist` for Linux Python 3.13. Its focused regression fails when FastAPI's required OpenTelemetry API is absent, while the complete chain passes. The original deployed ZIP is rejected by the new validator.
+
+A fresh local Linux/x86_64 ZIP passes the strengthened validator and an isolated Docker smoke with no container network or host site-packages. The packaged handler imports and returns C13 `{"status":"ok"}` through the Lambda adapter; boto3 client construction is forbidden during that smoke. The new ZIP is not uploaded, the existing stack/bucket are unchanged, and no live retry was performed. The lesson is that an exact `--no-deps` snapshot needs both dependency-graph validation and a target-platform import test; a directory-presence validator can produce a false PASS. Future C15 operators must independently audit this local fix and obtain new approval before touching live resources.
+
+### Separately approved repaired-artifact live retry — 2026-10-02
+
+After the local package repair passed independent audit, the human separately authorized one immutable artifact upload, one update to the existing C15 stack, and one signed health retry, retaining resources. The repaired ZIP SHA-256 was `5ff6ffe282706a7b8b423580cefc74dffeb54c1ef225ef6bb889cb3fb322279c`; it was uploaded under its content-addressed `c15/<sha256>.zip` key. A reviewed CloudFormation change set updated the same stack without replacing resources; the final status was `UPDATE_COMPLETE`. Lambda's deployed base64 `CodeSha256` exactly matched the local ZIP, and the original log-only role, six AWS_IAM routes, and absence of CORS, Bedrock permission, and application-S3 permission were preserved. The real SigV4 HTTPS `GET /health` returned HTTP 200 with `{"status":"ok"}` at approximately `2026-10-02 11:26:20 UTC`. A minimal log check found no remaining import error or obvious secret exposure. Post-live focused C15 tests (21), full pytest (412), architecture tests (70), Governance Harness (61/0), reconciliation, active-state consistency, package smoke, pip check, and diff check passed. The first HTTP 500 remains in the history as the evidence that exposed an incomplete `--no-deps` snapshot; the successful retry does not prove Bedrock, application S3, durable cross-environment review state, a full quotation workflow, or production readiness. C15 remains ACTIVE, UNDELIVERED, and NOT COMPLETE pending independent live verification and Git delivery. Further live AWS mutation and C16 are not authorized.
 
 ### Pre-C15 Canonical Remediation — Governance Decision
 

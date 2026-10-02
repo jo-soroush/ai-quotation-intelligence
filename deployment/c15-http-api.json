@@ -1,0 +1,202 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "C15 non-production API Gateway HTTP API to Lambda to delivered FastAPI",
+  "Parameters": {
+    "ArtifactBucket": {
+      "Type": "String",
+      "MinLength": 3,
+      "Description": "Approved private deployment-artifact bucket in the target region"
+    },
+    "ArtifactKey": {
+      "Type": "String",
+      "MinLength": 1,
+      "AllowedPattern": "c15/[a-f0-9]{64}\\.zip",
+      "Description": "Versioned C15 Lambda ZIP object key"
+    },
+    "FunctionName": {
+      "Type": "String",
+      "AllowedPattern": "[A-Za-z0-9_-]{1,64}",
+      "Description": "Unique non-production Lambda name"
+    },
+    "BedrockModelId": {
+      "Type": "String",
+      "Default": "amazon.nova-micro-v1:0",
+      "Description": "Existing C08 model identifier; not a credential"
+    },
+    "BedrockModelArn": {
+      "Type": "String",
+      "Default": "",
+      "AllowedPattern": "^$|^arn:(aws|aws-us-gov|aws-cn):bedrock:[a-z0-9-]+::foundation-model/[A-Za-z0-9._:/-]+$|^arn:(aws|aws-us-gov|aws-cn):bedrock:[a-z0-9-]+:[0-9]{12}:(inference-profile|application-inference-profile)/[A-Za-z0-9._:/-]+$",
+      "Description": "Optional exact model/inference-profile ARN for C10 invocation; empty grants no Bedrock access"
+    }
+  },
+  "Conditions": {
+    "HasBedrockModel": {
+      "Fn::Not": [{ "Fn::Equals": [{ "Ref": "BedrockModelArn" }, ""] }]
+    }
+  },
+  "Resources": {
+    "LambdaLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": { "Fn::Sub": "/aws/lambda/${FunctionName}" },
+        "RetentionInDays": 7
+      }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [{
+            "Effect": "Allow",
+            "Principal": { "Service": "lambda.amazonaws.com" },
+            "Action": "sts:AssumeRole"
+          }]
+        },
+        "Policies": [{
+          "PolicyName": "C15RuntimeOnly",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": ["logs:CreateLogStream", "logs:PutLogEvents"],
+                "Resource": [
+                  { "Fn::GetAtt": ["LambdaLogGroup", "Arn"] },
+                  { "Fn::Sub": "${LambdaLogGroup.Arn}:*" }
+                ]
+              },
+              {
+                "Fn::If": [
+                  "HasBedrockModel",
+                  {
+                    "Effect": "Allow",
+                    "Action": "bedrock:InvokeModel",
+                    "Resource": { "Ref": "BedrockModelArn" }
+                  },
+                  { "Ref": "AWS::NoValue" }
+                ]
+              }
+            ]
+          }
+        }]
+      }
+    },
+    "ApiFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "FunctionName": { "Ref": "FunctionName" },
+        "Runtime": "python3.13",
+        "Architectures": ["x86_64"],
+        "Handler": "lambda_handler.handler",
+        "MemorySize": 512,
+        "Timeout": 30,
+        "Role": { "Fn::GetAtt": ["LambdaExecutionRole", "Arn"] },
+        "Code": {
+          "S3Bucket": { "Ref": "ArtifactBucket" },
+          "S3Key": { "Ref": "ArtifactKey" }
+        },
+        "Environment": {
+          "Variables": {
+            "AQI_ENVIRONMENT": "c15-nonproduction",
+            "AQI_AWS_REGION": { "Ref": "AWS::Region" },
+            "AQI_BEDROCK_MODEL_ID": { "Ref": "BedrockModelId" }
+          }
+        }
+      }
+    },
+    "HttpApi": {
+      "Type": "AWS::ApiGatewayV2::Api",
+      "Properties": {
+        "Name": { "Fn::Sub": "${FunctionName}-http" },
+        "ProtocolType": "HTTP"
+      }
+    },
+    "ApiIntegration": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationMethod": "POST",
+        "IntegrationUri": {
+          "Fn::Sub": "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiFunction.Arn}/invocations"
+        },
+        "PayloadFormatVersion": "2.0"
+      }
+    },
+    "ApiStage": {
+      "Type": "AWS::ApiGatewayV2::Stage",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" },
+        "StageName": "$default",
+        "AutoDeploy": true
+      }
+    },
+    "LambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": { "Ref": "ApiFunction" },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Sub": "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/*"
+        }
+      }
+    },
+    "RouteHealth": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" }, "RouteKey": "GET /health",
+        "AuthorizationType": "AWS_IAM",
+        "Target": { "Fn::Join": ["", ["integrations/", { "Ref": "ApiIntegration" }]] }
+      }
+    },
+    "RouteAnalyze": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" }, "RouteKey": "POST /quotes/analyze",
+        "AuthorizationType": "AWS_IAM",
+        "Target": { "Fn::Join": ["", ["integrations/", { "Ref": "ApiIntegration" }]] }
+      }
+    },
+    "RouteDraft": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" }, "RouteKey": "POST /quotes/draft",
+        "AuthorizationType": "AWS_IAM",
+        "Target": { "Fn::Join": ["", ["integrations/", { "Ref": "ApiIntegration" }]] }
+      }
+    },
+    "RouteGetQuote": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" }, "RouteKey": "GET /quotes/{id}",
+        "AuthorizationType": "AWS_IAM",
+        "Target": { "Fn::Join": ["", ["integrations/", { "Ref": "ApiIntegration" }]] }
+      }
+    },
+    "RouteDecision": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" }, "RouteKey": "POST /quotes/{id}/approve",
+        "AuthorizationType": "AWS_IAM",
+        "Target": { "Fn::Join": ["", ["integrations/", { "Ref": "ApiIntegration" }]] }
+      }
+    },
+    "RouteExport": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": { "Ref": "HttpApi" }, "RouteKey": "POST /quotes/{id}/export",
+        "AuthorizationType": "AWS_IAM",
+        "Target": { "Fn::Join": ["", ["integrations/", { "Ref": "ApiIntegration" }]] }
+      }
+    }
+  },
+  "Outputs": {
+    "ApiId": { "Value": { "Ref": "HttpApi" } },
+    "ApiEndpoint": { "Value": { "Fn::GetAtt": ["HttpApi", "ApiEndpoint"] } },
+    "LambdaArn": { "Value": { "Fn::GetAtt": ["ApiFunction", "Arn"] } },
+    "Stage": { "Value": "$default" }
+  }
+}

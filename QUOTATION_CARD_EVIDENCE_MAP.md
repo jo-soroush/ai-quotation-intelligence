@@ -2589,81 +2589,87 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE
+State Detail: first signed health HTTP 500 retained as failure evidence; separately approved repaired-artifact retry HTTP 200; independent live verification and Git delivery pending; NOT_COMPLETE; UNDELIVERED
 
 ### 4. Human Start Approval
 
-NO
+YES
+Approval Detail: Explicit 2026-10-02 authorization separately covered local implementation, one bounded initial live deployment, and one repaired-artifact live retry in account `553541119072` / `us-east-1` with KEEP DEPLOYED. Those live actions were executed; further AWS mutation, Git delivery, and C16 are not authorized.
 
 ### 5. Files Changed
 
-NONE
+`deployment/__init__.py`, `deployment/lambda_handler.py`, `deployment/c15-http-api.json`, `deployment/requirements-lambda.txt`, `deployment/README.md`, `scripts/build_c15_lambda.py`, `scripts/validate_c15_package.py`, `scripts/c15_signed_health.py`, `tests/test_c15_deployment.py`; plus `pyproject.toml`, `tests/test_architecture.py`, `PROJECT_CONTROL.md`, `QUOTATION_CARD_EVIDENCE_MAP.md`, `CARD_LEARNING_AND_DECISION_LOG.md`, and `SOURCE_ADAPTATION_TRACEABILITY.md`. C13 `api.py` was not changed.
 
 ### 6. Commands Run
 
-NONE
+Initial local validation used `python -m pytest -q tests/test_c15_deployment.py`, C13/C12/C14 regressions, full pytest, architecture tests, a Linux ZIP build/validator, and `python -m pip check`. The separately approved first live attempt created a private artifact bucket, uploaded immutable key `c15/ff64e11a83a3a70e31524179bad196eeb75a0e120a8859962e26f7101816a939.zip`, and created CloudFormation stack `aqi-c15-nonprod`; read-only AWS inspection verified deployed Lambda/API/IAM resources. The first `python scripts/c15_signed_health.py --api-id yj2yk1sk3g --region us-east-1` returned HTTP 500. During the subsequent local-only remediation, the broken ZIP was imported in an isolated Linux Python 3.13 container, a fresh ZIP was built at `/tmp/aqi-c15-remediation.AfXp10/aqi-c15-lambda.zip`, and `python scripts/validate_c15_package.py ... --runtime-smoke` passed; no AWS call was made in that phase. After separate live retry approval, the repaired immutable ZIP was uploaded to the same bucket, the existing stack was updated through a reviewed change set, and the same signed health command returned HTTP 200.
 
 ### 7. Focused Tests
 
-NOT_RUN
+21 passed after remediation (19 original plus two deterministic dependency-closure regressions). Simulated HTTP API payload-2.0 events prove `/health`, JSON/error routing, and exact base64 XLSX bytes/MIME/Content-Disposition through Mangum; malformed events and adapter exceptions return sanitized 500; template route/IAM/config, targeted template mutations, and builder/package boundary are checked. The new validator rejects the previously deployed incomplete archive and an isolated Linux container imports the repaired packaged handler and returns `{"status":"ok"}` from `/health` without network or AWS client construction.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+C13/C12/C14 combined regression: 117 passed (23/60/34); architecture: 70 passed; full pytest: 412 passed. One pre-existing Starlette/httpx TestClient deprecation warning remains.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+LIVE_HEALTH_PASS / INDEPENDENT_VERIFICATION_PENDING — the initial real stack reached `CREATE_COMPLETE`, but signed `/health` returned HTTP 500. Independent CloudWatch diagnosis reported `Runtime.ImportModuleError: No module named 'opentelemetry'`. An isolated Linux import reproduced the failure before application initialization. The corrected archive passed dependency closure and isolated handler/health import locally; after separate approval it was deployed to the same stack and a real signed `/health` returned HTTP 200 with `{"status":"ok"}`. This proves deployment reachability, not Bedrock, application S3, durable review state, production readiness, independent verification, or Git delivery.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — no commercial arithmetic, approval, Excel generation, C13 route, or C14 storage behavior was changed; static C13 export bytes remain under the existing C11/C12 authority.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS for repaired local package import/health isolation — C08 creates the Bedrock client lazily, and the isolated runtime smoke forbids boto3 client creation during `/health`. Live Bedrock invocation is NOT_RUN / NOT_REQUIRED for C15.
 
 ### 12. Security Validation
 
-NOT_RUN
+LOCAL_AND_DEPLOYED_CONFIGURATION_PASS — read-only AWS inspection after the approved retry found six `AWS_IAM` routes, no API CORS configuration, the unchanged log-only Lambda runtime role, no Bedrock runtime permission (empty `BedrockModelArn`), and no application-S3 runtime permission. The artifact bucket retains all four public-access blocks, bucket-owner-enforced ownership, and SSE-S3. The repaired package excludes credential-like files and includes the required runtime dependency; no credential was added. Real signed `/health` HTTP 200 proves live application startup only.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+Observed and repaired locally: `pip install mangum==0.20.0` installed the package but returned shell exit 1 because pyenv could not rehash unwritable shims; `pip show`, import and tests proved installation. The first ZIP validator failed because pip generated bytecode; builder now excludes bytecode. The next validator failed on botocore's required public `cacert.pem`; validator now narrowly allows only that file while rejecting credential-like PEMs. An initial architecture assertion counted imported symbols as module imports; corrected to validate both. On resume, the reported wildcard risk was rechecked: the current pre-edit template already rejected literal `*`, but its optional account field was broader than supported resource forms. The parameter now accepts only absence, accountless foundation-model ARNs, or 12-digit-account inference-profile/application-inference-profile ARNs; whitespace and malformed forms fail. A mutation test widens the pattern to `.*` and verifies the contract test fails. AWS documentation review clarified the Lambda integration URI form, now explicit in the template and tests. The first C15 ACTIVE-state consistency run failed three exact assertions: Project Control expected `Active Card: V1-C15`, the Evidence Map expected a standalone `ACTIVE` state value, and the approval subsection expected a standalone `YES`; each original value included human-readable suffixes. C09 history established these fields as bare canonical values, with details on following lines. No AWS or application-authority failure was observed.
+
+Later live failure: under separate human approval, CloudFormation stack `aqi-c15-nonprod` reached `CREATE_COMPLETE` in account `553541119072`, region `us-east-1`; Lambda `arn:aws:lambda:us-east-1:553541119072:function:aqi-c15-api`, API `yj2yk1sk3g`, and deployment-artifact bucket `aqi-c15-artifacts-c69acfc4` were retained. The first signed HTTPS `/health` returned HTTP 500. An independent CloudWatch diagnosis identified `Runtime.ImportModuleError: Unable to import module 'lambda_handler': No module named 'opentelemetry'`. In this remediation, isolated Linux Python 3.13 import of the deployed ZIP reproduced the exact import chain `lambda_handler → ai_quotation_intelligence.api → fastapi.telemetry → opentelemetry`, failing before application initialization. Package metadata and pip resolution proved FastAPI 0.142.2 requires `opentelemetry-api>=1.44.0`; the old `--no-deps` snapshot omitted it. `opentelemetry-api==1.45.0` requires only `typing-extensions>=4.5.0`, already pinned. The new validator checks every packaged distribution against the exact pinned snapshot and evaluates the packaged `Requires-Dist` closure for Linux Python 3.13. It rejects the old broken ZIP. A freshly built ZIP passes the validator and isolated Linux packaged handler `/health` smoke; it has **not** been uploaded or deployed. Live retry is NOT_RUN / NOT_AUTHORIZED.
 
 ### 14. Exit Gate Evidence
 
-NONE
+Initial local evidence: route set and JSON request/error mapping passed; controlled `.xlsx` round-tripped byte-for-byte through payload-2.0 base64 response. The initial package validator passed the ZIP despite missing FastAPI's OpenTelemetry import dependency. The separately approved live deployment created stack ID `arn:aws:cloudformation:us-east-1:553541119072:stack/aqi-c15-nonprod/d1faf150-be49-11f1-9c0b-0e7fb78001fd` and API endpoint `https://yj2yk1sk3g.execute-api.us-east-1.amazonaws.com`; deployed route/IAM configuration matched the bounded template, but signed `/health` was HTTP 500, not the required 200. The local remediation ZIP is `/tmp/aqi-c15-remediation.AfXp10/aqi-c15-lambda.zip`, size 19,810,905 bytes, SHA-256 `5ff6ffe282706a7b8b423580cefc74dffeb54c1ef225ef6bb889cb3fb322279c`, differing from deployed ZIP SHA-256 `ff64e11a83a3a70e31524179bad196eeb75a0e120a8859962e26f7101816a939`. `python scripts/validate_c15_package.py ... --runtime-smoke` returned `C15_PACKAGED_HANDLER_AND_HEALTH: PASS` and `C15_LAMBDA_PACKAGE_VALIDATION: PASS` with Docker networking disabled and only extracted artifact contents on the module path. Focused C15 tests: 21 passed; C13/C12/C14 combined regressions: 117 passed; full pytest: 412 passed; architecture: 70 passed; Governance Harness: 61/0; reconciliation and ACTIVE-state consistency: PASS; bootstrap: 127 PASS / 1 expected dirty-tree WARN / 0 FAIL; pip check and diff check: PASS. The repaired ZIP is local only.
 
-Exit Gate Status: NOT_PROVEN
+Separately approved repaired-artifact live retry, 2026-10-02: candidate identity `32f798da8ee13c489ba0c553c17cb9990e644aebace57b0e4c1df8dbc2fed98a` and repaired ZIP SHA-256 `5ff6ffe282706a7b8b423580cefc74dffeb54c1ef225ef6bb889cb3fb322279c` were verified before AWS mutation. The ZIP was uploaded once under immutable key `c15/5ff6ffe282706a7b8b423580cefc74dffeb54c1ef225ef6bb889cb3fb322279c.zip` to the existing private deployment-artifact bucket `aqi-c15-artifacts-c69acfc4`. A reviewed change set updated only the existing `aqi-c15-nonprod` stack without resource replacement; final status was `UPDATE_COMPLETE`. Lambda `aqi-c15-api` retained Python 3.13, x86_64, 512 MiB, 30-second timeout, `lambda_handler.handler`, and its original log-only role. Deployed `CodeSha256` `X/b/4oJwanuLQjWAzvx03/61TB7yJe9ruInLP7MiJ5w=` exactly matched the local repaired ZIP's base64 SHA-256. API `yj2yk1sk3g` retained the same six AWS_IAM routes, Lambda proxy integration, scoped invoke permission, and no CORS. A real SigV4-signed HTTPS `GET /health` at `https://yj2yk1sk3g.execute-api.us-east-1.amazonaws.com` returned HTTP 200 with exact body `{"status":"ok"}` between `2026-10-02 11:26:18 UTC` and `11:26:21 UTC`. Minimal associated Lambda logs showed initialization, invocation, and completion without ImportModuleError, traceback, or obvious credential/secret pattern. Live Bedrock and application/data S3 were not used; their runtime permissions remain absent. Resources were retained by human choice. Post-live C15 tests: 21 passed; full pytest: 412 passed; architecture: 70 passed; Governance Harness: 61/0; reconciliation, ACTIVE-state consistency, package runtime smoke, pip check, and diff check: PASS.
+
+Exit Gate Status: LIVE_DEPLOYMENT_EVIDENCE_PRESENT / INDEPENDENT_VERIFICATION_AND_DELIVERY_PENDING — mandatory real signed health proof exists, but C15 is ACTIVE, UNDELIVERED, and NOT COMPLETE. No full-cloud workflow, production readiness, or durable process-local state is claimed.
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PENDING — independent live verification, Git delivery, and final reconciliation remain outstanding; live signed health and post-live local checks passed.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch `card/v1-c15-aws-deployment` started from `3d36b7c1448a6b89031f49d532070310fcbb20b3`; candidate is uncommitted and unstaged. C15 Git delivery is NOT_AUTHORIZED.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+C13 process-local review state is not durable/shared across Lambda environments; reserved/provisioned concurrency is not a state solution. The first health attempt failed at Lambda import; the repaired ZIP has now passed a real signed health retry. No live Bedrock or application-S3 proof and no production-readiness claim. The default runtime role has no Bedrock or application-S3 permission. Binary XLSX remains locally validated through the adapter, not through a full live workflow. The artifact bucket and stack are retained by human decision; further live AWS change requires separate authorization.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+Local event simulation proves adapter semantics, not actual AWS reachability. A pinned Linux-wheel ZIP can be built and inspected without AWS, but filename/presence checks alone did not prove importability when `--no-deps` was used. Complete packaged metadata closure plus isolated Linux handler/health import is required. Deployment identity and runtime identity must remain separate; process memory cannot be claimed as durable.
 
 ### 19. Completion Evidence
 
-NONE
+NONE — not delivered or complete; mandatory live health passed, but independent live verification and approved Git delivery remain pending.
 
 ### 20. Recommended State
 
-NOT_STARTED
+READY_FOR_INDEPENDENT_LIVE_VERIFICATION; not COMPLETE or READY_FOR_DELIVERY.
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
 Learning Documentation Status:
-NOT_STARTED
+IN_PROGRESS — initial live failure, local package remediation, and successful approved live retry recorded; independent verification and delivery pending.
 
 ### Pre-C15 Canonical Remediation (Documentation Only)
 
@@ -3153,7 +3159,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C12 | Excel Generation | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C13 | FastAPI Application | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C14 | Amazon S3 Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C15 | AWS Deployment | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C15 | AWS Deployment | ACTIVE | YES — local implementation and separately approved live retry executed | 21 | LIVE_DEPLOYMENT_EVIDENCE_PRESENT | PENDING | PRESENT | READY_FOR_INDEPENDENT_LIVE_VERIFICATION; not COMPLETE or READY_FOR_DELIVERY. |
 | V1-C16 | CloudWatch Observability | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C17 | Evaluation Harness | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C18 | Guardrails and Failure Handling | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -3165,7 +3171,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C14_COMPLETE
+Project Phase: V1_C15_LOCAL_IMPLEMENTATION
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3180,8 +3186,9 @@ V1-C11: COMPLETE
 V1-C12: COMPLETE
 V1-C13: COMPLETE
 V1-C14: COMPLETE
-V1-C15: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C15: ACTIVE
+V1-C16: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C15
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
