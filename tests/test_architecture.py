@@ -502,3 +502,23 @@ def test_agent_tool_rejects_provider_and_sdk_imports(tmp_path: Path, source: str
     categories.update({"agent_tools.py": AGENT_TOOL, "bedrock.py": PROVIDER})
     with pytest.raises(AssertionError, match="forbidden architecture imports"):
         validate_architecture(package, categories)
+
+
+def test_c15_deployment_composition_has_no_reverse_or_storage_dependency() -> None:
+    """C15 lives outside the application package; no owner imports it back."""
+    root = PACKAGE.parents[1]
+    entrypoint = root / "deployment" / "lambda_handler.py"
+    imports = _import_targets(ast.parse(entrypoint.read_text()), "deployment.lambda_handler", False)
+    expected = {
+        f"{PACKAGE_NAME}.agent_tools", f"{PACKAGE_NAME}.api",
+        f"{PACKAGE_NAME}.bedrock", f"{PACKAGE_NAME}.config",
+        f"{PACKAGE_NAME}.quotation_agent",
+    }
+    local = {target for target in imports if target.startswith(f"{PACKAGE_NAME}.")}
+    assert local & expected == expected
+    assert all(target in expected or any(target.startswith(f"{module}.") for module in expected)
+               for target in local)
+    assert not any("s3_storage" in target or "storage_contract" in target for target in imports)
+    for module in PACKAGE.rglob("*.py"):
+        targets = _import_targets(ast.parse(module.read_text()), _module_name(module.relative_to(PACKAGE).as_posix()), False)
+        assert not any(target == "deployment" or target.startswith("deployment.") for target in targets)

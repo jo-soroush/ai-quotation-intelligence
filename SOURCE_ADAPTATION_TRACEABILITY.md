@@ -206,8 +206,8 @@ supersede the separate Card implementation and delivery gates.
 ## 9. Recorded Ledger State (Not Live Project State)
 
 ```text
-Current Records: 1 — V1-C14 AWS conditional-write documentation reference
-Source Adaptation Records: 1 — REFERENCE ONLY
+Current Records: 7 — one V1-C14 reference; two V1-C15 library reuses and four vendor references
+Source Adaptation Records: 7 — 2 REUSE; 5 REFERENCE ONLY
 Historical migration-time Application Implementation: NOT_STARTED
 Historical migration-time Active Card: NONE
 Historical migration-time V1-C01 Authorization: NO
@@ -217,8 +217,161 @@ These fields are retained as historical ledger context. PROJECT_CONTROL.md
 owns current project state and authorization; Git owns runtime Git facts.
 ```
 
-No external implementation material has been adopted through this ledger.
-Prior source/template material is not current external implementation reuse.
+The C15 library decisions below authorize incorporation into the local
+package candidate; the first approved live package included Mangum but failed
+handler import because another required distribution was missing. The repaired
+package remains local and undeployed. Prior
+source/template material is not current external implementation reuse.
+
+### V1-C15-SOURCE-01 — Mangum ASGI/Lambda adapter
+
+1. Record ID: V1-C15-SOURCE-01
+2. Card: V1-C15
+3. Source / Repository: Kludex/mangum, release 0.20.0
+4. URL: https://github.com/Kludex/mangum/tree/0.20.0 ; https://github.com/Kludex/mangum/blob/0.20.0/LICENSE
+5. File / Module: Mangum package and published license
+6. Source Type: Library
+7. License: MIT
+8. License Verification Status: VERIFIED — release-tagged repository LICENSE and package metadata checked
+9. What We Studied: ASGI-to-API-Gateway/Lambda event and response adaptation, Python 3.13 support, and license.
+10. Why We Studied It: C15 needs a maintained adapter that preserves C13 semantics, including binary XLSX responses.
+11. Decision: REUSE
+12. Reason for Decision: The bounded, published adapter avoids implementing a new ASGI event protocol and is locally testable.
+13. What Was Taken: Unmodified Mangum 0.20.0 runtime distribution via dependency resolution; no source snippets copied.
+14. What Was Not Taken: Examples, deployment templates, authentication systems, and application business logic.
+15. Changes Made: Repository-owned Lambda composition wraps the delivered FastAPI app; the library itself is not changed.
+16. Risks / Limitations: Local simulation cannot prove live API Gateway behavior; version and binary mapping need focused regression tests.
+17. Security / Data Concerns: The adapter processes untrusted HTTP events but owns no approval, commercial, or credential authority.
+18. Architecture Impact: Deployment-only entrypoint outside Core; no reverse package dependency.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
+21. Date Recorded: 2026-10-02
+22. Status: IMPLEMENTED — included in both live ZIPs; first health failed, repaired-artifact retry passed; C15 not delivered
+
+### V1-C15-SOURCE-06 — OpenTelemetry API runtime dependency
+
+1. Record ID: V1-C15-SOURCE-06
+2. Card: V1-C15
+3. Source / Repository: OpenTelemetry Python `opentelemetry-api` distribution, version 1.45.0
+4. URL: https://pypi.org/project/opentelemetry-api/1.45.0/ ; https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-api
+5. File / Module: Published `opentelemetry-api` wheel, its `METADATA`, and bundled `licenses/LICENSE`
+6. Source Type: Library / transitive runtime dependency
+7. License: Apache-2.0
+8. License Verification Status: VERIFIED — installed distribution metadata declares `Apache-2.0`, and its bundled license text was inspected
+9. What We Studied: FastAPI 0.142.2 `Requires-Dist: opentelemetry-api>=1.44.0`, resolver selection of 1.45.0, the distribution's `typing-extensions>=4.5.0` requirement, and the isolated Linux import failure without it.
+10. Why We Studied It: The explicit `--no-deps` Lambda snapshot omitted this required distribution, causing the deployed handler import to fail before application initialization.
+11. Decision: REUSE
+12. Reason for Decision: Pin and package the unmodified required runtime distribution rather than substitute an import shim or broaden application/deployment behavior.
+13. What Was Taken: Unmodified `opentelemetry-api==1.45.0` runtime wheel through the existing Lambda package builder; no source snippets copied.
+14. What Was Not Taken: OpenTelemetry SDK, exporters, instrumentation, observability configuration, or C16 platform behavior.
+15. Changes Made: Added the exact transitive pin to the C15 runtime snapshot and strengthened package closure/import validation; no changes to the distribution itself.
+16. Risks / Limitations: Snapshot drift can recur if package metadata changes; the validator now checks dependency closure and a separate isolated Linux handler import.
+17. Security / Data Concerns: This is a FastAPI import dependency, not permission to emit telemetry, collect secrets, or make network calls during handler import.
+18. Architecture Impact: Packaged dependency only; no new application or Core import authority.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
+21. Date Recorded: 2026-10-02
+22. Status: IMPLEMENTED — repaired dependency packaged and deployed to the existing C15 Lambda under separate approval; signed live health HTTP 200; C15 not delivered
+
+### V1-C15-SOURCE-02 — HTTP API Lambda proxy and IAM documentation
+
+1. Record ID: V1-C15-SOURCE-02
+2. Card: V1-C15
+3. Source / Repository: Amazon API Gateway Developer Guide
+4. URL: https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html ; https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-access-control-iam.html
+5. File / Module: HTTP API Lambda proxy payload 2.0; IAM route authorization
+6. Source Type: AWS Documentation
+7. License: UNKNOWN
+8. License Verification Status: UNVERIFIED
+9. What We Studied: Version 2.0 event/response shape, binary base64 response flag, and signed IAM-protected route behavior.
+10. Why We Studied It: C15 must preserve XLSX bytes and bound non-production API exposure.
+11. Decision: REFERENCE ONLY
+12. Reason for Decision: Vendor behavior informs local contract tests and template review; no sample code or deployment artifact was copied.
+13. What Was Taken: Documented service semantics only.
+14. What Was Not Taken: AWS examples, IAM policy templates, or unrelated API Gateway features.
+15. Changes Made: NOT_APPLICABLE
+16. Risks / Limitations: The initial signed health returned HTTP 500 at Lambda import; after separately approved package repair/redeployment, a real signed health returned HTTP 200. This proves reachability and startup, not durable review state or production readiness.
+17. Security / Data Concerns: IAM protects all six routes; SigV4 smoke must use standard temporary credentials and a constrained target.
+18. Architecture Impact: Deployment template only; no C13/Core authority change.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
+21. Date Recorded: 2026-10-02
+22. Status: APPROVED
+
+### V1-C15-SOURCE-03 — Lambda Python ZIP packaging documentation
+
+1. Record ID: V1-C15-SOURCE-03
+2. Card: V1-C15
+3. Source / Repository: AWS Lambda Developer Guide
+4. URL: https://docs.aws.amazon.com/lambda/latest/dg/python-package.html
+5. File / Module: Python ZIP deployment package and Linux-compatible wheels
+6. Source Type: AWS Documentation
+7. License: UNKNOWN
+8. License Verification Status: UNVERIFIED
+9. What We Studied: ZIP root layout, bundled dependencies, and Python 3.13 Linux x86_64 wheel targeting.
+10. Why We Studied It: C15 must package Pydantic/openpyxl/boto3 dependencies reproducibly from macOS for Lambda.
+11. Decision: REFERENCE ONLY
+12. Reason for Decision: Only runtime packaging semantics were consulted; no AWS code or configuration was copied.
+13. What Was Taken: Documented compatibility constraints only.
+14. What Was Not Taken: Vendor sample source, layers, container images, or deployment procedures.
+15. Changes Made: NOT_APPLICABLE
+16. Risks / Limitations: Local ZIP inspection alone cannot prove Lambda runtime import; final live deployment remains required.
+17. Security / Data Concerns: Package excludes local secrets and includes project-declared SDK versions instead of relying on mutable runtime SDK contents.
+18. Architecture Impact: Deployment-only build script; no Core/provider direction changes.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
+21. Date Recorded: 2026-10-02
+22. Status: APPROVED
+
+### V1-C15-SOURCE-04 — CloudFormation resource schema reference
+
+1. Record ID: V1-C15-SOURCE-04
+2. Card: V1-C15
+3. Source / Repository: AWS CloudFormation Template Reference
+4. URL: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-apigatewayv2-route.html ; https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-apigatewayv2-integration.html ; https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-function.html
+5. File / Module: API Gateway V2 Route/Integration and Lambda Function resource properties
+6. Source Type: AWS Documentation
+7. License: UNKNOWN
+8. License Verification Status: UNVERIFIED
+9. What We Studied: Resource property names for the reviewable local HTTP API/Lambda template.
+10. Why We Studied It: C15 needs a repository-controlled deployment topology without undocumented Console configuration.
+11. Decision: REFERENCE ONLY
+12. Reason for Decision: Service schema was consulted; no vendor sample template or policy was incorporated.
+13. What Was Taken: Documented property semantics only.
+14. What Was Not Taken: Example stacks, scripts, account-specific identifiers, and IAM policies.
+15. Changes Made: NOT_APPLICABLE
+16. Risks / Limitations: The initial stack reached `CREATE_COMPLETE`, but its first signed health failed at handler import. The later separately approved repaired-artifact retry returned real signed HTTP 200; this does not prove durable review state or production readiness.
+17. Security / Data Concerns: All product routes are IAM-protected; actual AWS IAM behavior remains pending live evidence.
+18. Architecture Impact: Deployment template only; no package architecture permission change.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
+21. Date Recorded: 2026-10-02
+22. Status: APPROVED
+
+### V1-C15-SOURCE-05 — Bedrock Converse runtime IAM reference
+
+1. Record ID: V1-C15-SOURCE-05
+2. Card: V1-C15
+3. Source / Repository: Amazon Bedrock User Guide
+4. URL: https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
+5. File / Module: Converse API prerequisites
+6. Source Type: AWS Documentation
+7. License: UNKNOWN
+8. License Verification Status: UNVERIFIED
+9. What We Studied: Converse requires model-invocation permission when that runtime feature is actually enabled.
+10. Why We Studied It: C15 must not grant Bedrock access automatically yet must describe the exact optional runtime permission.
+11. Decision: REFERENCE ONLY
+12. Reason for Decision: Only documented service authorization semantics were consulted; no IAM sample or code was copied.
+13. What Was Taken: Permission name/behavior as an AWS API fact.
+14. What Was Not Taken: Broad IAM policies, model-access provisioning steps, or live invocation examples.
+15. Changes Made: NOT_APPLICABLE
+16. Risks / Limitations: Actual model entitlement, region, and IAM sufficiency remain unproven without approved live use.
+17. Security / Data Concerns: Default template grants no Bedrock permission; optional permission is limited to a non-wildcard model/profile ARN.
+18. Architecture Impact: Conditional runtime IAM only; no application/provider code change.
+19. Evidence Reference: QUOTATION_CARD_EVIDENCE_MAP.md → V1-C15
+20. Learning Log Reference: CARD_LEARNING_AND_DECISION_LOG.md → V1-C15
+21. Date Recorded: 2026-10-02
+22. Status: APPROVED
 
 ### V1-C14-SOURCE-01 — S3 conditional-write API reference
 
@@ -271,5 +424,5 @@ DECISION MUST BE EXPLICIT.
 NO SILENT COPYING.
 LICENSE STATUS MUST REMAIN HONEST.
 EVIDENCE AND LEARNING REFERENCES MUST POINT TO THEIR CANONICAL RECORDS.
-CURRENT RECORDS: 1 — REFERENCE ONLY.
+CURRENT RECORDS: 2 — REUSE; 5 — REFERENCE ONLY.
 ```

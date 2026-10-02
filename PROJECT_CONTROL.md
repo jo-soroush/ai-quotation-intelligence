@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C14_COMPLETE
+Project Phase: V1_C15_LOCAL_IMPLEMENTATION
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,16 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT ACTIVE / NOT_DELIVERED
+Active Card: V1-C15
+Active Card Title: AWS Deployment
+Active Card State: ACTIVE
+Active Card State Detail: live signed health proven; independent live verification and Git delivery pending
 Last COMPLETE Card: V1-C14 — Amazon S3 Integration
-Next Roadmap Card: V1-C15 — AWS Deployment (not authorized)
-Next Card Authorized: NO — V1-C15 and later Cards remain unauthorized
-Implementation Authorization: NONE — V1-C14 authorization consumed by completion; later Cards not authorized
+Next Roadmap Card: V1-C15 — AWS Deployment (active; live health proven, delivery pending)
+Next Card Authorized: NO — V1-C16 and later Cards remain unauthorized
+Implementation Authorization: V1-C15 local implementation, initial bounded live deployment, and one repaired-artifact live retry were separately approved and executed; further live AWS changes and Git delivery NOT_AUTHORIZED
+Live AWS Outcome: us-east-1 stack aqi-c15-nonprod UPDATE_COMPLETE with repaired artifact; first signed /health returned HTTP 500 due to missing packaged opentelemetry, then the approved retry returned HTTP 200 with {"status":"ok"}; resources retained by human choice
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
 Bootstrap Evidence: latest smoke-check result is reported by scripts/quotation_session_bootstrap.sh; mutable PASS/WARN/FAIL counts are not live-state invariants
@@ -107,9 +110,9 @@ Git repository: YES
 .git present: YES
 Current Git branch, HEAD, upstream, remote, synchronization, and working-tree state: query Git at runtime; do not treat values embedded in this tracked file as current Git truth
 Application package: V1-C01–V1-C14 IMPLEMENTED / DELIVERED
-tests/: V1-C01–V1-C14 CREATED / PASS
+tests/: V1-C01–V1-C15 local tests CREATED / PASS; final C15 live gate pending
 pyproject.toml: CREATED
-requirements: pyproject.toml project dependencies and dev extra; openpyxl added for V1-C12, FastAPI/httpx for V1-C13
+requirements: pyproject.toml project dependencies and dev extra; openpyxl added for V1-C12, FastAPI/httpx for V1-C13, Mangum 0.20.0 local candidate for V1-C15
 CI: NOT_CREATED
 ```
 
@@ -120,7 +123,7 @@ Bedrock Integration: IMPLEMENTED — C08 adapter; delivery complete
 S3 Integration: IMPLEMENTED / DELIVERED — independently audited; PR #41 merged
 FastAPI: IMPLEMENTED / DELIVERED — independently audited; PR #37 merged
 Excel Generation: IMPLEMENTED / DELIVERED — independently audited; PR #34 merged
-AWS Deployment: NOT_STARTED
+AWS Deployment: non-production stack UPDATE_COMPLETE; repaired package deployed; signed health HTTP 200 after preserved first-attempt HTTP 500 failure
 CloudWatch: NOT_STARTED
 Evaluation Harness: NOT_STARTED
 Golden Case: NOT_STARTED
@@ -132,32 +135,36 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C14
-Title: Amazon S3 Integration
-State: COMPLETE
-Branch: card/v1-c14-s3-storage
-Start Commit: f4692032c986585f54610799ad3867077e6c1ce1
+Card ID: V1-C15
+Title: AWS Deployment
+State: ACTIVE
+State Detail: live signed health proven; independent live verification and Git delivery pending; NOT_COMPLETE; UNDELIVERED
+Branch: card/v1-c15-aws-deployment
+Start Commit: 3d36b7c1448a6b89031f49d532070310fcbb20b3
 Initial Working Tree State: CLEAN
-Delivery Commit: e73b8de7a7b521c706e210e21d3776d44a23bb43
-PR: MERGED — #41
-Merge Commit: 2f99f4c24f9182029ded27b15c4f123c810a61fe
-Human Start Approval: GRANTED — explicit human authorization for V1-C14 implementation
-Authorized Scope: V1-C14 storage contract and provider-isolated S3 adapter only; no C13 route change, C15+ implementation, or Git delivery
-ROADMAP_ALIGNMENT_GATE: PASS — C14 contract/risk inspection, delivered C12 boundary, clean base, and explicit approval verified before implementation
-CARD_QUALITY_GATE: PASS — exact-identity independent audit, approved PR #41 delivery, and post-merge validation passed
+Delivery Commit: NOT_CREATED — C15 Git delivery not authorized
+PR: NOT_CREATED — C15 Git delivery not authorized
+Merge Commit: NOT_CREATED — C15 Git delivery not authorized
+Human Start Approval: YES
+Human Start Approval Detail: Explicit local C15 authorization was followed by separate approvals for the bounded initial deployment and one repaired-artifact retry in account `553541119072` / `us-east-1`, with KEEP DEPLOYED. Both live actions are executed; further live AWS changes and Git delivery are not authorized.
+Authorized Scope: Record and independently verify the completed C15 live health evidence; no further AWS mutation or Git delivery
+ROADMAP_ALIGNMENT_GATE: PASS — C15 contract/risk inspection, delivered C13/C14 boundaries, clean base, and explicit local authorization verified before implementation
+CARD_QUALITY_GATE: PENDING — live health proven; independent live verification and Git delivery pending
 ```
 
 Safe Checkpoint:
 
-C02 domain contracts through C14 Amazon S3 Integration were delivered and are complete. Active Card is NONE; V1-C15 and later remain unauthorized.
+C02 domain contracts through C14 Amazon S3 Integration were delivered and are complete. Active Card is V1-C15. The first signed health failed with HTTP 500; the separately approved repaired-artifact retry returned HTTP 200. The stack remains deployed; independent live verification and Git delivery are pending, while C16 is unauthorized.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
-FINAL_CARD_STATE_CONSISTENCY_GATE: PENDING — run on synchronized main after this completion reconciliation merges.
+FINAL_CARD_STATE_CONSISTENCY_GATE: NOT_APPLICABLE_YET — C15 remains active and undelivered.
 
 ## 6. Authorization Ledger
 
 ```
-Card Start: CONSUMED — V1-C14 completed
-Next Card: NOT_GRANTED — V1-C15 and later Cards remain unauthorized
+Card Start: GRANTED — V1-C15 local implementation, explicit user authorization on 2026-10-02
+Live AWS Resource Creation: GRANTED / EXECUTED — bounded initial deployment and one repaired-artifact retry; further mutation NOT_AUTHORIZED
+Git Delivery: NOT_GRANTED — no staging, commit, push, or PR for C15
+Next Card: NOT_GRANTED — V1-C16 and later Cards remain unauthorized
 V1-C14: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -176,7 +183,7 @@ Architecture Change: V1-C14 reuses existing PROVIDER → CORE/SUPPORT directions
 Material Scope Change: NOT_GRANTED
 Significant Technology Addition: V1-C13 FastAPI/httpx dependencies delivered; no V1-C14+ addition authorized
 Sensitive Credential Use: NOT_GRANTED
-External Write/Action Capability: V1-C14 implementation and Git delivery GRANTED / CONSUMED; live AWS NOT_USED / not authorized
+External Write/Action Capability: V1-C14 delivery GRANTED / CONSUMED; bounded initial C15 deployment and one repaired-artifact retry GRANTED / EXECUTED with resources retained; further C15 live AWS changes NOT_AUTHORIZED
 Commit: COMPLETED — 266884504a40584d9d7497a648beb1268c8f827f (C04 delivery)
 Push: COMPLETED — origin/card/v1-c04-quote-calculation-engine (C04 delivery)
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #9 merged (C04 delivery)
@@ -232,7 +239,7 @@ PR: MERGED — #41 (C14 delivery)
 Merge: COMPLETED — 2f99f4c24f9182029ded27b15c4f123c810a61fe (C14 delivery)
 ```
 
-V1-C04 through V1-C14 implementation, validation, and approved delivery are complete. V1-C15 and later remain unauthorized.
+V1-C04 through V1-C14 implementation, validation, and approved delivery are complete. V1-C15 initial health failure and local packaging repair remain in history; the approved live retry passed, but C15 is not delivered or complete. Further AWS changes and C16+ remain unauthorized.
 
 ## 7. Roadmap Position
 
@@ -240,18 +247,19 @@ V1-C04 through V1-C14 implementation, validation, and approved delivery are comp
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration
-Active Card: NONE
-Next Roadmap Card: V1-C15 — AWS Deployment (not authorized)
+Active Card: V1-C15
+Active Card Detail: AWS Deployment (live health proven; independent verification and delivery pending)
+Next Roadmap Card: V1-C15 — AWS Deployment (active; further live changes not authorized)
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
-Later Cards: V1-C15 and later NOT_AUTHORIZED
+Later Cards: V1-C16 and later NOT_AUTHORIZED
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
 
 ## 8. Current Blockers and Pending Control
 
-V1-C02 through V1-C14 implementation, validation, and Git delivery are complete. V1-C15 and later remain unauthorized.
+V1-C02 through V1-C14 implementation, validation, and Git delivery are complete. V1-C15 is active; the initial health failed at handler import, and the separately approved repaired-artifact live retry passed. Independent live verification and Git delivery remain pending; further live changes and C16+ are unauthorized.
 
 Governance remaining actions: NONE.
 
@@ -271,15 +279,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: V1-C14 identity, C12 validated-artifact boundary, storage ownership, provider isolation, clean base, and explicit human authorization were verified before implementation.
+Reason: V1-C15 identity, six delivered C13 routes, C14 non-composition, process-local state, clean base, and explicit local authorization were verified before implementation. Initial live deployment and repaired-artifact retry had separate human approvals.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / V1-C14 pre-write inspection recorded in session
-Risk Map: COMPLETE / V1-C14 ELEVATED storage identity, overwrite, integrity, credential, and provider boundary recorded in session
-Reason: V1-C14 Roadmap/specification, delivered C12 export, C08 provider precedent, guardrails, and least-privilege architecture were inspected; requested work remains C14-only. Source Adaptation: REFERENCE ONLY — AWS conditional-write documentation; no code copied.
+Contract Map: COMPLETE / V1-C15 pre-write inspection recorded in session — C13 six routes and C11/C12 authority unchanged; Lambda adapter/deployment only
+Risk Map: COMPLETE / V1-C15 ELEVATED IAM/exposure, binary response, credentials, package, Lambda process-state, and false-live-evidence risks recorded in session
+Reason: V1-C15 Roadmap/specification, C13 API, C14 boundary, C08 lazy provider, configuration, architecture, and local tools were inspected. Source Adaptation: Mangum REUSE license verified; AWS vendor semantics REFERENCE ONLY.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -314,12 +322,13 @@ AI runtime validation: PASS — Python Converse smoke test with amazon.nova-micr
 ## 13. AWS State
 
 ```
-S3: IMPLEMENTED / DELIVERED — PR #41 merged; live AWS NOT_RUN / NOT_REQUIRED
-Lambda: NOT_STARTED
-API Gateway: NOT_STARTED
-IAM project implementation: NOT_STARTED
-CloudWatch: NOT_STARTED
-Deployment: NOT_STARTED
+S3 application/data: C14 IMPLEMENTED / DELIVERED — PR #41 merged; C14 live S3 workflow NOT_RUN / NOT_REQUIRED
+S3 deployment artifact: private bucket `aqi-c15-artifacts-c69acfc4` created and retained; no application/data bucket created
+Lambda: `aqi-c15-api` exists in us-east-1; repaired package deployed after first handler import failed due to missing packaged opentelemetry
+API Gateway: HTTP API `yj2yk1sk3g` exists with six AWS_IAM routes; repaired-artifact signed /health HTTP 200 after first HTTP 500
+IAM project implementation: dedicated C15 runtime role exists with log-only permission; no Bedrock or application-S3 grant
+CloudWatch: minimal seven-day Lambda log group exists for C15 diagnostics; C16 observability platform NOT_STARTED
+Deployment: existing stack `aqi-c15-nonprod` UPDATE_COMPLETE with immutable repaired artifact `c15/5ff6ffe282706a7b8b423580cefc74dffeb54c1ef225ef6bb889cb3fb322279c.zip`; resources retained
 ```
 
 Do not infer account configuration or credentials from local tools or external systems.
@@ -343,7 +352,7 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01–V1-C14 COMPLETE; V1-C15 and later NONE
+Implementation Evidence: V1-C01–V1-C14 COMPLETE; V1-C15 ACTIVE / NOT_DELIVERED (first health failed; repaired live retry HTTP 200; independent verification pending); V1-C16 and later NONE
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration
 V1-C01 CARD_QUALITY_GATE: PASS
 V1-C09 CARD_QUALITY_GATE: PASS — implementation validation, independent audit, and approved delivery
@@ -364,7 +373,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C14_COMPLETE
+Checkpoint Type: V1_C15_LOCAL_IMPLEMENTATION
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -372,9 +381,11 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01–V1-C14 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application implementation: V1-C01–V1-C14 IMPLEMENTED / DELIVERED; V1-C15 LOCAL_IMPLEMENTATION_ONLY
+Active Card: V1-C15
+Active Card Title: AWS Deployment
+Active Card State: ACTIVE
+Active Card State Detail: LIVE_HEALTH_PROVEN / INDEPENDENT_VERIFICATION_AND_DELIVERY_PENDING
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -413,14 +424,14 @@ These are governance decisions, not implementation claims.
 | V1-C12 | Excel Generation | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
 | V1-C13 | FastAPI Application | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
 | V1-C14 | Amazon S3 Integration | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
-| V1-C15 | AWS Deployment | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C15 | AWS Deployment | ACTIVE | YES — local implementation and separately approved live retry executed | PENDING | IN_PROGRESS — real signed health HTTP 200; independent verification/delivery pending |
 | V1-C16 | CloudWatch Observability | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C17 | Evaluation Harness | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C18 | Guardrails and Failure Handling | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01 through V1-C14 are COMPLETE. V1-C15 and later remain unauthorized.
+V1-C01 through V1-C14 are COMPLETE. V1-C15 remains ACTIVE: first live health failed, then the approved repaired-artifact retry passed. Independent verification and Git delivery are pending; further live AWS changes and C16+ are not authorized.
 
 ## 19. Resume Protocol
 
@@ -451,17 +462,19 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01–V1-C14 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
-Next Roadmap Card: V1-C15 — AWS Deployment (not authorized)
+Application Implementation: V1-C01–V1-C14 IMPLEMENTED / DELIVERED; V1-C15 ACTIVE / NOT_DELIVERED
+Active Card: V1-C15
+Active Card Title: AWS Deployment
+Active Card State: ACTIVE
+Active Card State Detail: LIVE_HEALTH_PROVEN / INDEPENDENT_VERIFICATION_AND_DELIVERY_PENDING
+Next Roadmap Card: V1-C15 — AWS Deployment (active; live health proven, delivery pending)
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: Stop after final C14 state consistency verification; V1-C15 requires separate explicit human authorization.
+Safe next action: Independently verify the C15 live retry evidence and exact current candidate. The existing stack and artifact bucket remain in us-east-1; further AWS mutation, Git delivery, and C16 require separate authorization.
 
 Do not start any later Card automatically.
 
@@ -475,5 +488,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01 THROUGH V1-C14 ARE COMPLETE; V1-C15 AND LATER REQUIRE SEPARATE HUMAN APPROVAL.
+V1-C01 THROUGH V1-C14 ARE COMPLETE; V1-C15 IS ACTIVE WITH PRESERVED FIRST LIVE FAILURE AND SUCCESSFUL APPROVED REPAIRED-ARTIFACT HEALTH RETRY; FURTHER LIVE AWS CHANGE, DELIVERY, AND C16+ REQUIRE SEPARATE HUMAN APPROVAL.
 ```
