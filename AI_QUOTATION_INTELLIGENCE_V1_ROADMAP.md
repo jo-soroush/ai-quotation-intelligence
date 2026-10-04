@@ -863,22 +863,20 @@ Route53, and ACM custom certificates are not required.
 
 ## V1-C16 — CloudWatch Observability
 
-Add operational visibility for the deployed system.
+Add bounded structured operational visibility for the deployed system while
+keeping local logging first-class.
 
 ### Capture
 
 ```text
 request_id
-agent run
-tool calls
-tool failures
-Bedrock calls
-Bedrock latency
-token usage when available
-S3 operations
-API latency
-errors
-final request status
+quotation_id where appropriate
+agent run and outcome
+tool calls and failures
+Bedrock calls, outcome, and latency
+token usage only when available
+S3 operations where C14 is actually used
+API latency, errors, and final request status
 ```
 
 ### Rules
@@ -888,9 +886,81 @@ Do not log:
 ```text
 secrets
 AWS credentials
-sensitive user data
-unnecessary prompt contents
+full prompts or raw model responses
+raw provider exception text
+workbook bytes or contents
+reviewer_id
+free-form user/customer content
+arbitrary request/response bodies
+sensitive commercial values unless explicitly necessary and separately approved
 ```
+
+Use machine-parseable bounded events with operational fields such as event,
+request_id, optional quotation_id, component, operation, status, duration,
+available token usage, and a sanitized error category. Correlation identifiers
+identify a workflow for operations; they are not permission to expose its
+contents.
+
+### Boundaries
+
+- Instrumentation may be added to existing API, agent, tool, Bedrock, storage,
+  or support logging paths when needed to emit these events. It must not change
+  routes, schemas, business or approval authority, provider/storage semantics,
+  or commercial calculations.
+- `lambda_handler.py` changes are not required by default; allow them only if
+  implementation evidence shows they are necessary for correlation/context
+  propagation.
+- Provider failures such as `BedrockResult.message=str(exc)` must not be logged
+  raw; log only a bounded sanitized category/message.
+- Local structured logging must work without AWS. In deployed C15, use the
+  retained Lambda log group `/aws/lambda/aqi-c15-api`; do not create a parallel
+  deployment. Its existing stdout/stderr log permissions are sufficient for
+  the logging-only scope. No new runtime IAM or AWS resource is assumed.
+- Final C16 Exit Gate proof requires separately authorized bounded live
+  evidence that a representative structured event from the retained C15
+  Lambda appears in that log group with correlation present and prohibited
+  sensitive fields absent. Local simulation is not live evidence. Any AWS
+  modification requires separate explicit human approval.
+- Bound event volume and avoid payload logging. Reuse the retained 7-day C15
+  log retention unless a change is separately approved; ingestion and storage
+  volume are the primary C16 cost risks.
+
+### Exit Gate
+
+C16 is COMPLETE only when independent evidence proves:
+
+- operational events are structured, bounded, and consistently correlated
+  with request_id and quotation_id where appropriate;
+- API latency, errors, and final request status are visible;
+- agent runs, tool calls/failures, Bedrock outcome/latency, and token usage
+  when available are observable; S3 outcomes are visible only when C14 is
+  actually used;
+- local logging works without AWS, and the deployed C15 runtime sends
+  representative C16 structured events to `/aws/lambda/aqi-c15-api`;
+- a live log event is independently verified to contain correlation and
+  allowed operational fields while excluding credentials, secrets, raw
+  provider errors, prompts/responses, workbook data, reviewer_id, arbitrary
+  bodies, and unnecessary sensitive commercial/user data;
+- provider errors are sanitized before logging, and observability does not
+  become commercial, approval, provider, or storage authority;
+- no Core commercial arithmetic changes, new runtime IAM, or new AWS resource
+  is introduced for the logging-only scope without separately approved need;
+- event volume is bounded and the retained seven-day log retention is reused
+  unless separately approved otherwise;
+- C16 does not implement custom metrics, EMF, alarms, dashboards, X-Ray,
+  distributed tracing, or third-party observability infrastructure.
+
+Local implementation and independent local audit do not require live AWS.
+Live AWS evidence is required only for the final Exit Gate and must use the
+retained C15 Lambda `aqi-c15-api` and log group
+`/aws/lambda/aqi-c15-api`. C16 must not create a parallel deployment.
+
+### Out of Scope
+
+Custom CloudWatch metrics, EMF, alarms, dashboards, X-Ray/distributed tracing,
+third-party or enterprise observability platforms, production SRE programs,
+C17 evaluation, workflow redesign, commercial arithmetic, approval changes,
+durable state, authentication, UI, and C18+ / C20+ Cards are out of scope.
 
 ---
 
