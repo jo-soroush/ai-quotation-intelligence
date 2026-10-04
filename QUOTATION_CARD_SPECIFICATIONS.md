@@ -2012,11 +2012,14 @@ V1-C16 — CloudWatch Observability
 
 ### 2. Engineering Goal
 
-Add useful operational observability for the quotation workflow without unnecessary observability infrastructure.
+Add bounded structured operational logs for the quotation workflow with useful
+correlation and failure/latency visibility, without moving business authority
+into logging or building an observability platform.
 
 ### 3. Learning Goal
 
-Structured logs, correlation IDs, agent/tool tracing, cloud observability, failure diagnosis, and sensitive-data redaction.
+Structured logs, correlation identifiers, agent/tool operation visibility,
+CloudWatch Logs, failure diagnosis, and sensitive-data redaction.
 
 ### 4. Why It Exists
 
@@ -2024,7 +2027,8 @@ Operators need to trace workflow failures and latency while preserving confident
 
 ### 5. Architecture Concept
 
-Request → application workflow → structured events/logging → CloudWatch where deployed.
+Request → application workflow → structured operational events → local logging
+and CloudWatch Logs where deployed.
 
 ### 6. Current System Before Card
 
@@ -2034,23 +2038,37 @@ This is a contract description, not a claim that prior Cards or this Card are co
 
 ### 7. Design Decision
 
-Use structured, correlated events with local logging support; never fabricate unavailable model metadata or place business decisions in logging.
+Use bounded, machine-parseable correlated events with local logging support;
+never fabricate unavailable model metadata or place business decisions in
+logging.
 
 ### 8. Implementation Scope
 
-- capture request_id and quotation_id where appropriate
-- capture agent run, tool, Bedrock, S3, workflow, latency, and error fields where available
-- include model identity and token/cost metadata only when actually available
-- support CloudWatch where deployed
-- redact secrets and sensitive commercial content
-- preserve local logging without CloudWatch
+- capture `request_id` and `quotation_id` where appropriate for operational
+  correlation
+- capture API latency, errors, and final request status
+- capture agent-run, tool-call/failure, and Bedrock-call outcome/latency
+  visibility; record token usage only when available
+- capture S3 operation outcome only where C14 is actually used
+- support local structured logging and CloudWatch Logs where deployed
+- sanitize provider errors and exclude secrets and sensitive payload content
+- keep logging observational; do not change commercial, approval, provider,
+  storage, route, or schema semantics
+- instrumentation may be placed in existing API, agent, tool, Bedrock,
+  storage, or support logging paths when justified; `lambda_handler.py` is not
+  required by default and may change only if evidence shows it is necessary
+  for correlation/context propagation
 
 ### 9. Out of Scope
 
-- evaluation harness
+- custom CloudWatch metrics or EMF
+- CloudWatch alarms or dashboards
+- X-Ray or distributed tracing
+- third-party observability or enterprise monitoring platforms
+- production SRE program
+- evaluation harness (C17)
 - business workflow redesign
-- enterprise observability stack
-- third-party observability platform without approval
+- durable state, authentication, UI, C18+, or C20+
 
 ### 10. Dependencies
 
@@ -2060,15 +2078,106 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 
 ### 11. Tests / Evaluation
 
-Structured event shape, request correlation, tool/Bedrock/S3 failure visibility, redaction expectations, no secret leakage, and local logging behavior.
+Structured event shape; request/quotation correlation; API latency/final
+status; agent/tool/Bedrock outcomes and latency; available token usage; S3
+visibility only when used; sanitized failure logging; prohibited-field
+absence; local logging without AWS; and preserved architecture boundaries.
 
 Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require useful correlated observability with appropriate redaction and no unnecessary infrastructure.
+The Roadmap Exit Gate is authoritative. C16 local implementation and initial
+independent local audit do not require live AWS. The final Exit Gate requires
+separately approved live proof that a representative structured event from
+the retained C15 Lambda `aqi-c15-api` reaches the retained log group
+`/aws/lambda/aqi-c15-api`, includes correlation, and excludes prohibited
+sensitive fields. C16 must not create a parallel deployment. Any AWS
+modification requires separate explicit human approval.
 
 The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
+
+### 11A. Pre-Implementation Verification (C09+)
+
+- **Risk Classification: ELEVATED.** Logging touches provider failures,
+  operational identifiers, commercial-adjacent workflow data, and a live
+  cloud runtime boundary. Confidentiality failures and false observability
+  claims are material.
+- **Escalation Triggers:** raw prompts, model responses, provider exceptions,
+  secrets, credentials, reviewer identifiers, workbook/user/commercial data
+  enter logs; correlation context crosses requests; logging changes behavior
+  or authority; unexpected IAM/resource changes are proposed; unbounded event
+  volume or cost appears; local simulation is represented as live proof.
+- **Canonical Sources:** C16 Roadmap contract and Exit Gate; this specification;
+  delivered C13 API/error contract; C10 agent, C09 tools, C08 Bedrock adapter,
+  C14 storage boundary, and C15 Lambda/log-group deployment; Commercial and
+  Data Guardrails; Engineering Harness; PROJECT_CONTROL for authorization and
+  live state.
+- **Acceptance Contract:** Given delivered C13/C15 and existing workflow
+  boundaries, when C16 instrumentation is exercised locally and, after
+  separate AWS approval, in the retained deployed Lambda, then bounded
+  structured events expose applicable correlation, operation, outcome,
+  latency, and available token usage while excluding prohibited sensitive
+  data. Local mode remains usable without AWS. A representative real event
+  must reach the retained C15 log group for the final Exit Gate. Logging
+  changes no route, response, commercial, approval, provider, or storage
+  behavior and does not claim durable workflow state.
+- **Critical Invariants:** `request_id` is per request and context does not
+  leak between requests; `quotation_id` is only an operational correlation
+  identifier; no credentials/secrets, raw provider error, prompt/model output,
+  workbook bytes/content, reviewer_id, free-form user content, arbitrary
+  bodies, or unnecessary sensitive commercial values are logged. Provider
+  failures such as `BedrockResult.message=str(exc)` are sanitized before log
+  emission. Logging owns no business or decision authority. No Core arithmetic
+  changes. C16 does not add runtime IAM or AWS resources for logging-only
+  behavior. Local logging works without AWS.
+- **Verification Strategy:** locally verify event schema/field bounds,
+  correlation propagation and isolation, API latency/final status, agent/tool
+  event visibility, Bedrock outcome/latency and token usage when available,
+  S3 outcomes only when C14 is used, sanitized failures, redaction under
+  adversarial inputs, no new dependencies without justification, and
+  architecture boundaries. Exercise failure paths and rollback by disabling
+  or reverting instrumentation/deployment revision. Separately, after
+  approval, inspect a representative event in the retained CloudWatch log
+  group and verify its correlation and prohibited-field absence. Do not treat
+  local simulation as live evidence.
+- **Advanced Verification Decision:** reassess against the authorized C16
+  implementation; local proof is sufficient for implementation/audit, while
+  a bounded live log event is required only for the final Exit Gate.
+
+  | Technique | Decision | C16-specific reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Exact allowed event fields, bounded values, correlation scope, and forbidden data must be stable and testable. |
+  | Contract tests | REQUIRED | Logging event structure and component event names/status/latency fields must satisfy the defined operational contract. |
+  | Integration | REQUIRED | Injected local events must reach the local logging sink; final live proof separately confirms a C15 Lambda event reaches the retained CloudWatch log group. |
+  | Generated property tests | CONDITIONAL / EVALUATE | Evaluate generated strings/identifiers and context combinations if bounded event serialization has a meaningful input space. |
+  | Targeted mutation-resistance | REQUIRED | Prove tests fail if redaction, context clearing, provider-error sanitization, or event-field bounds are removed. |
+  | Failure injection | REQUIRED | Inject provider/tool/API/storage failures and verify sanitized outcome events without changing returned failure semantics. |
+  | Fuzzing | CONDITIONAL / EVALUATE | Evaluate only if log serialization or redaction processes broad untrusted text; otherwise bounded adversarial cases suffice. |
+  | Differential | NOT_APPLICABLE | Two logging backends are not an oracle pair; local and CloudWatch sinks need contract compatibility, not comparative output equivalence. |
+  | Concurrency/race | CONDITIONAL / EVALUATE | Evaluate concurrent requests for request/quotation context leakage or cross-request correlation contamination. |
+  | Adversarial testing | REQUIRED | Attempt to inject prompts, raw provider errors, secrets, reviewer IDs, workbook/user content, and oversized values into events. |
+  | Threat Modeling | REQUIRED | ELEVATED risk spans confidentiality, operational correlation, provider failures, log ingestion cost, live cloud boundaries, and false-observability claims. |
+  | Agent evals | NOT_APPLICABLE | C16 owns operational event visibility, not model behavior or C17 evaluation. |
+  | Rollback/recovery | REQUIRED | Demonstrate a bounded way to disable/revert instrumentation and restore the preceding known-good application/deployment revision if logging breaks behavior or leaks data. |
+  | Formal methods | NOT_APPLICABLE | Typed/event contract tests, redaction probes, isolation tests, and live log inspection provide proportionate evidence; no formal proof is specified. |
+
+- **Independent Verifier Expectations:** independently inspect exact event
+  fields and all touched application/provider/tool/storage boundaries; test
+  correlation isolation, sanitization, failure visibility, local operation,
+  and architecture rules; challenge false event claims and prohibited-data
+  leakage. For final Exit Gate, independently inspect an actual event in the
+  retained log group and distinguish that live evidence from local tests.
+- **Evidence / Traceability:** record actual local event/test evidence and
+  actual live event evidence separately. Live evidence identifies the retained
+  Lambda/log group, event/time and correlation presence, confirms prohibited
+  fields absent, and avoids recording log payloads that contain sensitive
+  data. Record no secret values. Cite real implementation decisions and
+  failures in the Learning Log after they occur.
+- **Known Non-Scope:** C17 evaluation; custom CloudWatch metrics; EMF; alarms;
+  dashboards; X-Ray/distributed tracing; third-party or enterprise
+  observability; production SRE; workflow redesign; commercial arithmetic;
+  approval changes; durable state; authentication; UI; C18+ and C20+.
 Before Card COMPLETE:
 
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C16

@@ -2378,6 +2378,26 @@ NOT YET RECORDED — complete from actual implementation experience.
 
 NOT YET RECORDED — complete from actual implementation experience.
 
+### Pre-C16 Canonical Remediation (Documentation Only)
+
+The read-only C16 preflight was BLOCKED because the Roadmap had no
+authoritative C16 Exit Gate and the Specification had no mandatory C09+
+pre-implementation verification block. The preflight also found unresolved
+boundaries for final live CloudWatch evidence, use of the retained C15 Lambda
+and log group, logging versus metrics/dashboards/tracing, permissible
+instrumentation paths, sensitive data and raw provider exceptions, runtime
+IAM/resources, and log-volume cost.
+
+This documentation-only remediation defines bounded structured events and
+correlation, permits instrumentation only in existing paths without changing
+their semantics or authority, requires sanitized operational failures, keeps
+local logging first-class, and reserves live evidence in the retained C15
+log group for the final Exit Gate after separate AWS approval. It excludes
+custom metrics, EMF, alarms, dashboards, X-Ray/distributed tracing, and
+third-party/enterprise observability. No C16 implementation, dependency, AWS
+resource, or runtime IAM change was made. C16 remains NOT_AUTHORIZED /
+NOT_STARTED; Active Card remains NONE and C17 remains NOT_AUTHORIZED.
+
 ## V1-C17 — Evaluation Harness
 
 ### 1. Card

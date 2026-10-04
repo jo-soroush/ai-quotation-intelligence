@@ -2745,11 +2745,22 @@ NOT_RUN
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+No C16 implementation failures are recorded because implementation has not
+started. The read-only preflight was BLOCKED by the missing authoritative
+Roadmap Exit Gate, missing C09+ verification block, and unresolved scope and
+security ambiguities. The pre-C16 remediation addressed canonical
+documentation only. No C16 implementation was added and no AWS resource was
+modified. C16 remains NOT_AUTHORIZED / NOT_STARTED.
 
 ### 14. Exit Gate Evidence
 
-NONE
+No C16 implementation or Exit Gate evidence exists. This remediation records
+the required future live evidence contract: after separate AWS approval, a
+representative structured event from the retained C15 Lambda must be
+independently observed in `/aws/lambda/aqi-c15-api`, with correlation present
+and prohibited sensitive fields absent. Local/simulated logging is not live
+evidence. No such event was emitted or inspected during this documentation
+maintenance.
 
 Exit Gate Status: NOT_PROVEN
 
