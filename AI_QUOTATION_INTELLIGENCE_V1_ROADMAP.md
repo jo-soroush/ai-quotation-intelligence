@@ -1408,31 +1408,136 @@ README explains architecture and limitations
 
 ## V1-C20 — Demo UI
 
-Add a lightweight user interface after the complete backend passes the Golden Case.
+Add a professional, lightweight local portfolio/demo presentation for the
+completed V1 workflow. C20 uses React + TypeScript + Vite and npm, communicating
+only through existing FastAPI HTTP contracts. This is the approved bounded
+choice instead of the historically preferred Streamlit option; it is not a
+frontend platform or a production SaaS deployment.
 
-Preferred initial option:
+The browser uses the local Vite `/api` proxy to reach the local FastAPI process.
+No backend CORS or API/schema change is authorized. The UI accepts free-form
+synthetic quotation input and may offer one clearly synthetic, UI-owned demo
+preset. It presents backend-returned workflow, deterministic evidence, AI
+explanation/draft, human review, and backend-generated Excel download without
+reimplementing business logic.
 
-```text
-Streamlit
-```
+The local demo may rely on one stable FastAPI process; C13 `LocalQuoteStore`
+remains process-local and accepted. C20 does not repair persistence or claim
+multi-instance reliability. No live AWS, Bedrock, deployed Lambda/API Gateway,
+real S3, CloudWatch, frontend cloud hosting, or authentication platform is
+required.
 
-### UI Capabilities
+### Exit Gate — V1-C20
 
-```text
-Create new quotation request
-Enter work items
-Enter estimated hours
-Enter hourly rates
-Analyze historical projects
-View comparable quotations
-View risk evidence
-View AI draft
-Approve / reject
-Generate Excel
-Download quotation
-```
+This Card Exit Gate is distinct from the project-wide Final Gate below. C20
+completes the portfolio/demo presentation layer only.
 
-The UI must consume the existing API/core system rather than duplicate business logic.
+- A React + TypeScript + Vite frontend exists, TypeScript strict mode is enabled,
+  the production build passes, and the implementation uses only the authorized
+  bounded npm/tooling stack. API requests, responses, and errors are typed;
+  transport, presentation state, and view components remain separated.
+- The frontend consumes independently verified existing FastAPI routes and
+  schemas through the local Vite `/api` proxy. No new API route/schema, backend
+  CORS change, authentication mechanism, or backend dependency on frontend code
+  is introduced. If existing contracts cannot support the required flow, stop
+  for human direction.
+- The presentation boundary contains no Core, arithmetic, retrieval,
+  RiskEvidence calculation, AgentTools, QuotationAgent, approval-state,
+  workbook-generation, or storage logic. Backend responses remain authoritative
+  for commercial values, evidence, workflow state, approval, and export.
+- A synthetic-only request/input flow demonstrates work items, hours, rates,
+  comparable quotations, estimate/actual evidence, RiskEvidence, AI draft or
+  explanation, missing-information/validation feedback, and workflow state.
+  Deterministic evidence is visibly distinct from AI-generated text. Synthetic
+  nature is disclosed; no real/customer/confidential data is used or implied.
+- Human approve/reject actions use the existing C11 backend boundary. AI cannot
+  approve; the UI cannot assert authoritative approval locally; backend denial
+  keeps export unavailable. After backend approval, the existing C12 endpoint
+  supplies the real Excel download; the UI does not construct a substitute.
+- Loading, empty, validation, provider-unavailable/invalid, approval/rejection,
+  export, and sanitized network/API failure states are clear and truthful.
+  Storage internals and C16 observability are not user-facing screens.
+- Browser security/privacy checks pass: untrusted AI text is safely rendered;
+  no unsafe HTML path is used without separately justified sanitization; no
+  secrets, credentials, prompts, raw model/provider errors, prohibited reviewer
+  identity, arbitrary payload dumps, or confidential data are exposed. No
+  prohibited sensitive browser storage is used and the built bundle contains
+  no secrets.
+- Professional usability/accessibility baseline passes: semantic/labeled
+  controls, keyboard use, visible focus, clear status/error text not conveyed
+  only by color, reasonable contrast, and usable desktop/laptop/tablet layouts.
+  No WCAG certification, mobile-app, or design-system claim is made.
+- Type/build checks, Vitest + React Testing Library component tests, API contract
+  tests, and a bounded Playwright real-browser local E2E pass. E2E covers
+  synthetic request through analysis/draft, evidence, approval, and Excel
+  download, plus a meaningful failure state. Targeted mutation resistance,
+  bounded failure injection, adversarial checks, and the C20 threat-model
+  evidence pass. Existing Python/full, C17, C18, and C19 regressions pass
+  unchanged.
+- No live AWS, Bedrock, S3, CloudWatch, Lambda, or API Gateway invocation, new
+  persistence, authentication platform, or production cloud infrastructure is
+  introduced. C13 process-local state remains an explicit limitation; C19 is
+  prior evidence, not a runtime dependency. Changes are Git-reversible and
+  generated artifacts remain ephemeral by default.
+- The maximum claim is: “A professional local React/TypeScript demonstration UI
+  exercised the existing V1 quotation workflow using synthetic data.” C20 does
+  not prove production SaaS readiness, multi-user security, persistence,
+  real-customer suitability, market/commercial accuracy, accessibility
+  certification, mobile readiness, enterprise authentication, or scale.
+
+### Project-Wide Final Gate Relationship
+
+The existing project-wide Final Gate above remains separate and is not renamed
+or replaced by the C20 Exit Gate. C20 is the final Roadmap implementation Card
+for portfolio presentation, but C20 delivery and completion do not themselves
+declare PROJECT V1 COMPLETE. After C20 is delivered and reconciled, a separate
+FINAL V1 PROJECT-WIDE AUDIT / FINAL GATE RECONCILIATION must verify every
+project-wide Final Gate row, C01–C20 delivery/completion, README architecture,
+setup, evidence and limitations, bounded claims, repository synchronization,
+and retained AWS resources/status and documented limitations. Do not perform
+that audit as part of C20; no release/tag is implied.
+
+### C20 Implementation Verification Block
+
+- **Risk Classification:** MODERATE. Escalate and stop for human review if
+  backend/API or CORS change, persistence, authentication, live AWS/Bedrock,
+  frontend business authority, or broad new tooling becomes necessary.
+- **Escalation Triggers:** missing required information in existing APIs; any
+  required `src/`, route/schema, CORS, persistence, auth, cloud, or production
+  architecture change; major dependency expansion; or material policy conflict.
+- **Canonical Sources:** PROJECT_CONTROL, this Roadmap, C20 Specification,
+  Evidence Map, Learning Log, existing C13/API contracts, Guardrails, and relevant
+  owner-Card contracts/evidence. Independently verify current routes and schemas.
+- **Acceptance Contract:** satisfy every C20 Exit Gate row with traceable
+  implementation and executed evidence; no inferred PASS.
+- **Critical Invariants:** backend owns commercial truth/evidence/workflow;
+  approval remains human-owned; synthetic-only disclosure; safe rendering and
+  privacy; C13 process-local limit is not hidden; browser talks only to existing
+  API contracts.
+- **Verification Strategy:** strict TypeScript/type/build; component and API
+  contract tests; local FastAPI/Vite integration; bounded Playwright success and
+  failure flows; security/privacy, accessibility/usability, mutation, failure
+  injection, adversarial, threat-model, and prior-card regressions.
+- **Advanced Verification Decision:** deterministic invariants REQUIRED;
+  contract tests REQUIRED; integration REQUIRED; generated property tests
+  CONDITIONAL / EVALUATE; targeted mutation REQUIRED; bounded failure injection
+  REQUIRED; fuzzing CONDITIONAL / EVALUATE; differential NOT_APPLICABLE by
+  default; concurrency/race CONDITIONAL / EVALUATE for overlapping async work;
+  bounded adversarial testing REQUIRED; threat modeling REQUIRED; agent evals
+  NOT_APPLICABLE as a C20-specific technique; rollback/recovery REQUIRED; formal
+  methods NOT_APPLICABLE. Reasons and targets are detailed in the Specification.
+- **Independent Verifier Expectations:** verify API-only boundary, absence of
+  duplicated business logic/secrets, actual browser flow, backend-owned approval
+  and Excel, bounded claims, and every Exit Gate evidence row; verifier may
+  return BLOCKED.
+- **Evidence / Traceability:** record exact frontend files, resolved dependency
+  versions, commands/results, component/API/browser evidence, mutation/failure
+  outcomes, privacy/accessibility review, prior-card regressions, and limitations
+  in canonical evidence and learning records. Screenshots are illustrative,
+  never correctness oracles.
+- **Known Non-Scope:** SaaS/deployment, mobile-first product, authentication,
+  CORS/API redesign, backend logic, persistence, AWS/Bedrock, S3/CloudWatch UI,
+  design system, C19 runtime coupling, and project-wide final audit.
 
 ---
 
