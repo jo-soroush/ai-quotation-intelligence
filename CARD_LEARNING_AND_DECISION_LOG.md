@@ -2985,6 +2985,89 @@ than embedded recursively in this candidate.
 
 ## V1-C19 — Golden Case
 
+### C19 Implementation Activation (2026-10-05)
+
+Human authorization activated V1-C19 on branch `card/v1-c19-golden-case`
+from exact base `009c281ae26c5d6e59fefbff0add0d511cf58650` after the clean,
+synchronized baseline and canonical C19 contract were verified. Inspect-first
+discovery mapped the existing FastAPI, Core, retrieval/comparison,
+RiskEvidence, provider, agent/tool, review, Excel, storage, observability, and
+C17 regression interfaces. No production behavior, new architecture,
+dependency, persistence, AWS, or live Bedrock capability is required.
+
+C19 is ACTIVE / UNDELIVERED / NOT COMPLETE. Implementation and verification
+evidence will be recorded only after it exists. V1-C20 remains unauthorized.
+
+### C19 Local Implementation and Verification (2026-10-05)
+
+What was built: one repository-tracked canonical synthetic scenario, its
+content hash, a non-production `evaluation.c19` orchestration/report owner, a
+focused C19 test suite, and one narrow architecture inventory/boundary test.
+The successful path uses a fresh local FastAPI app and `LocalQuoteStore`, real
+QuotationAgent and AgentTools, a fixed injected client through the real
+Bedrock adapter, the real C11 approval route, real C12 workbook generation and
+reload, the real C14 adapter with an injected in-memory client, and bounded
+existing C16 events. C17 runs unchanged as regression evidence.
+
+The fixture's expected commercial values are authored as transparent literals,
+not calculated by Core at runtime: 13×110, 21×125, and 9×100 produce item
+amounts 1430, 2625, and 900, totaling 4955 SEK. Retrieval, comparison, and
+RiskEvidence expectations are fixed IDs and typed values checked through their
+existing owners. This keeps C19 an integration proof rather than a second
+business-authority implementation.
+
+Key design decisions: `evaluation/` was retained as the existing offline
+owner; the production package remains unaware of C19. An explicit 18-step
+ledger was chosen over dynamically discovered steps so omission, duplication,
+failure, and partial execution cannot silently become PASS. Reports are built
+from a strict allowlist and omit volatile correlation IDs, durations, temporary
+paths, workbook hashes, prompts/responses, and reviewer identity. This makes
+two fresh runs directly comparable while retaining bounded component evidence.
+Generated workbook/report/storage/event artifacts remain in memory and are not
+tracked.
+
+Alternatives rejected: a deployed Lambda/API Gateway flow would hide the
+accepted process-local C13 limitation; direct provider/tool stubs would bypass
+real C08–C10 contracts; direct approval-state mutation would bypass C11;
+binary workbook hashing would make metadata the oracle; copying arithmetic or
+retrieval implementations would create circular/differential theater. No new
+dependency, persistent store, public CLI, route, adapter, or production module
+was needed.
+
+Problem and recovery: the first harness execution failed because
+`VarianceSummary` is an immutable dataclass, while the initial harness code
+treated it as a Pydantic model and called `model_dump`. Repository inspection
+showed its direct typed fields are the public result. The correction reads
+those fields and computes the observed overrun rate from actual count and
+observation count before comparing to the independent fixture. This was a
+harness-construction error, not a product defect; the repaired focused and
+full suites pass.
+
+Verification learning: failure injection at the actual injected provider,
+approval, workbook reload, storage-response, and event-evidence boundaries is
+enough to show C19 cannot fabricate continuity. Thirteen targeted mutation
+classes and a duplicate-step probe are caught. Generated property tests and
+fuzzing would add little to a single fixed scenario; no independent
+differential oracle exists; concurrency and formal methods are not applicable.
+
+Future-maintainer reminder: preserve the scenario SHA, exact required-step
+set, report allowlist, independent expected literals, and injected clients.
+Do not put C19 into the C17 dataset, persist generated workbook/report files,
+expose the synthetic approval actor, or convert the accepted C13 limitation
+into a durability claim. The maximum claim remains: one fixed synthetic
+end-to-end Golden Case passed across existing V1 contracts.
+
+Local outcome: scenario `c19-golden-case-001` / `c19-golden-v1` SHA-256
+`672c675ed79c98caf0b7cccbf1ea32d908107ec7d0846f56d0c7454c5d822c1e`;
+report schema `c19-golden-report-v1`; normalized report SHA-256
+`c3dc642907993c9658e091755893fdb2b976773bf88b0b4cd3dd9d1ec8fc0312`;
+18/18 required steps PASS; 13/13 mutations CAUGHT; six/six failure injections
+blocked PASS; two-run report/workbook-business equivalence PASS; C17 exact
+hashes unchanged; full pytest 499; architecture 77; Governance Harness 61/0.
+No AWS, live Bedrock, real S3, live CloudWatch, dependency, persistence,
+production architecture, C17, or C18 change occurred. C19 remains ACTIVE,
+UNDELIVERED, and NOT COMPLETE; V1-C20 remains unauthorized.
+
 ### Pre-C19 Canonical Remediation — Human-Approved Decisions (2026-10-05)
 
 The read-only C19 preflight was BLOCKED by missing canonical contract, not by
