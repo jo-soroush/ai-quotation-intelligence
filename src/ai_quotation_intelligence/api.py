@@ -6,7 +6,9 @@ C12 alone renders export bytes. This module has no durable or multi-worker state
 
 from datetime import datetime
 from threading import RLock
+from time import monotonic_ns
 from typing import Annotated, Literal, Protocol
+from uuid import uuid4
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -19,6 +21,7 @@ from ai_quotation_intelligence.domain import (
 )
 from ai_quotation_intelligence.excel_export import ExportFailure, ExportFailureCode, export_approved_quote
 from ai_quotation_intelligence.human_review import ReviewFailure, ReviewFailureCode, ReviewSession
+from ai_quotation_intelligence.logging_config import begin_request, emit_event, end_request
 
 
 SafeId = Annotated[str, StringConstraints(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")]
@@ -214,18 +217,38 @@ def create_app(agent: AgentRunner, *, store: LocalQuoteStore | None = None) -> F
 
     @app.middleware("http")
     async def limit_request_size(request: Request, call_next):
-        if request.method == "POST":
-            length = request.headers.get("content-length")
-            if length is not None and (not length.isdecimal() or int(length) > MAX_REQUEST_BYTES):
-                return JSONResponse(status_code=413, content={"code": "request_too_large"})
-            chunks = bytearray()
-            async for chunk in request.stream():
-                if len(chunks) + len(chunk) > MAX_REQUEST_BYTES:
+        token = begin_request(uuid4().hex)
+        started = monotonic_ns()
+        status = 500
+        try:
+            if request.method == "POST":
+                length = request.headers.get("content-length")
+                if length is not None and (not length.isdecimal() or int(length) > MAX_REQUEST_BYTES):
+                    status = 413
                     return JSONResponse(status_code=413, content={"code": "request_too_large"})
-                chunks.extend(chunk)
-            # Starlette's cached request replays the bounded body to FastAPI.
-            request._body = bytes(chunks)
-        return await call_next(request)
+                chunks = bytearray()
+                async for chunk in request.stream():
+                    if len(chunks) + len(chunk) > MAX_REQUEST_BYTES:
+                        status = 413
+                        return JSONResponse(status_code=413, content={"code": "request_too_large"})
+                    chunks.extend(chunk)
+                # Starlette's cached request replays the bounded body to FastAPI.
+                request._body = bytes(chunks)
+            response = await call_next(request)
+            status = response.status_code
+            return response
+        finally:
+            route = request.scope.get("route")
+            operation = getattr(route, "name", None)
+            if operation not in {"health", "analyze", "draft", "get_quote", "decide", "export"}:
+                operation = "unmatched"
+            params = request.scope.get("path_params") or {}
+            emit_event("api_request", component="api", operation=operation,
+                       status="success" if status < 400 else "failure",
+                       quotation_id=params.get("id"), http_status=status,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error="http_error" if status >= 400 else None)
+            end_request(token)
 
     @app.get("/health", response_model=HealthView)
     def health() -> HealthView:
@@ -235,6 +258,8 @@ def create_app(agent: AgentRunner, *, store: LocalQuoteStore | None = None) -> F
     def analyze(value: AgentInput) -> AgentView:
         result = _agent_result(agent, value)
         _session(result)  # C11's validation protects even non-persisted analysis.
+        emit_event("quotation_analyzed", component="api", operation="analyze",
+                   status="success", quotation_id=result.draft_quote.quote.quote_id)
         return AgentView(request_id=result.request_id, status=result.status,
                          quote_id=result.draft_quote.quote.quote_id, message=result.message)
 
@@ -243,6 +268,8 @@ def create_app(agent: AgentRunner, *, store: LocalQuoteStore | None = None) -> F
         result = _agent_result(agent, value)
         session = _session(result)
         quote_id = sessions.add(result, session)
+        emit_event("quotation_drafted", component="api", operation="draft",
+                   status="success", quotation_id=quote_id)
         return AgentView(request_id=result.request_id, status=result.status,
                          quote_id=quote_id, message=result.message)
 

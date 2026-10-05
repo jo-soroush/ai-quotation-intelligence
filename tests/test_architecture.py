@@ -30,6 +30,8 @@ FORBIDDEN_FROM_CORE = {PROVIDER, AGENT_TOOL, AGENT, REVIEW, EXPORT, APPLICATION_
 # C12 export needs only C11's held approval gate and Core's domain/arithmetic;
 # no other existing category except C13's application adapter may import Export.
 # C13 uses an injected C10 runner protocol; only Core, Review, and Export are imported.
+# C16 permits an exact observability-only Support module import from the
+# application/agent/tool boundaries, without granting general Support access.
 ALLOWED_LOCAL_DEPENDENCIES = {
     CORE: {CORE, SUPPORT},
     SUPPORT: {SUPPORT},
@@ -140,8 +142,14 @@ def validate_architecture(
         ):
             external_provider = target.split(".")[0] in PROVIDER_SDK_ROOTS
             target_category = _local_category(target, modules)
+            c16_logging_only = (
+                category in {APPLICATION_BOUNDARY, AGENT, AGENT_TOOL}
+                and (target == f"{PACKAGE_NAME}.logging_config"
+                     or target.startswith(f"{PACKAGE_NAME}.logging_config."))
+            )
             if (external_provider and category != PROVIDER) or (
                 target_category is not None and target_category not in policy[category]
+                and not c16_logging_only
             ):
                 violations.append(f"{relative_path} -> {target}")
 
@@ -163,6 +171,23 @@ def _add_module(package: Path, relative_path: str, source: str = "") -> None:
 
 def test_actual_package_tree_has_complete_classification_and_valid_imports() -> None:
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
+
+
+@pytest.mark.parametrize("source_path,category", [
+    ("api.py", APPLICATION_BOUNDARY),
+    ("quotation_agent.py", AGENT),
+    ("agent_tools.py", AGENT_TOOL),
+])
+def test_c16_allows_only_logging_support_import(tmp_path: Path, source_path: str, category: str) -> None:
+    package, categories = _fixture_package(tmp_path)
+    _add_module(package, source_path, "from .logging_config import emit_event\n")
+    _add_module(package, "logging_config.py", "import logging\n")
+    _add_module(package, "config.py", "")
+    categories.update({source_path: category, "logging_config.py": SUPPORT, "config.py": SUPPORT})
+    validate_architecture(package, categories)
+    _add_module(package, source_path, "from .config import load_settings\n")
+    with pytest.raises(AssertionError, match="forbidden architecture imports"):
+        validate_architecture(package, categories)
 
 
 def test_human_review_is_separate_authority_with_core_only_dependency() -> None:

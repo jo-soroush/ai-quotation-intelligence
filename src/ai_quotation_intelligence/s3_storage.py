@@ -2,6 +2,7 @@
 
 from hashlib import sha256
 import re
+from time import monotonic_ns
 from typing import Any, Protocol
 
 import boto3
@@ -11,6 +12,7 @@ from botocore.exceptions import (
 )
 
 from ai_quotation_intelligence.config import Settings, load_settings
+from ai_quotation_intelligence.logging_config import emit_event
 from ai_quotation_intelligence.storage_contract import (
     ArtifactIdentity, MAX_WORKBOOK_BYTES, RetrievedArtifact, StorageFailure,
     StorageFailureCode, StoredArtifact, WorkbookArtifact,
@@ -124,6 +126,30 @@ class S3StorageAdapter:
         return self._client
 
     def persist(self, artifact: WorkbookArtifact) -> StoredArtifact:
+        started = monotonic_ns()
+        valid_envelope = type(artifact) is WorkbookArtifact and type(artifact.identity) is ArtifactIdentity
+        request_id = artifact.identity.request_id if valid_envelope else None
+        quotation_id = artifact.identity.quote_id if valid_envelope else None
+        try:
+            result = self._persist(artifact)
+        except StorageFailure as exc:
+            emit_event("storage_operation", component="s3_storage", operation="persist",
+                       status="failure", request_id=request_id, quotation_id=quotation_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error=exc.code.value)
+            raise
+        except Exception:
+            emit_event("storage_operation", component="s3_storage", operation="persist",
+                       status="failure", request_id=request_id, quotation_id=quotation_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error="unexpected_error")
+            raise
+        emit_event("storage_operation", component="s3_storage", operation="persist",
+                   status="success", request_id=request_id, quotation_id=quotation_id,
+                   duration_ms=(monotonic_ns() - started) // 1_000_000)
+        return result
+
+    def _persist(self, artifact: WorkbookArtifact) -> StoredArtifact:
         if type(artifact) is not WorkbookArtifact:
             raise StorageFailure(StorageFailureCode.INVALID_INPUT)
         clean = WorkbookArtifact(_validated_identity(artifact.identity), artifact.workbook_bytes)
@@ -145,6 +171,29 @@ class S3StorageAdapter:
         return StoredArtifact(identity, len(clean.workbook_bytes))
 
     def retrieve(self, identity: ArtifactIdentity) -> RetrievedArtifact:
+        started = monotonic_ns()
+        request_id = identity.request_id if type(identity) is ArtifactIdentity else None
+        quotation_id = identity.quote_id if type(identity) is ArtifactIdentity else None
+        try:
+            result = self._retrieve(identity)
+        except StorageFailure as exc:
+            emit_event("storage_operation", component="s3_storage", operation="retrieve",
+                       status="failure", request_id=request_id, quotation_id=quotation_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error=exc.code.value)
+            raise
+        except Exception:
+            emit_event("storage_operation", component="s3_storage", operation="retrieve",
+                       status="failure", request_id=request_id, quotation_id=quotation_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error="unexpected_error")
+            raise
+        emit_event("storage_operation", component="s3_storage", operation="retrieve",
+                   status="success", request_id=request_id, quotation_id=quotation_id,
+                   duration_ms=(monotonic_ns() - started) // 1_000_000)
+        return result
+
+    def _retrieve(self, identity: ArtifactIdentity) -> RetrievedArtifact:
         clean = _validated_identity(identity)
         try:
             response = self._provider_client().get_object(
