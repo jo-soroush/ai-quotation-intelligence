@@ -162,11 +162,11 @@ QUOTATION_CARD_EVIDENCE_MAP.md proves technical facts and validation. CARD_LEARN
 
 If a real implementation or validation failure occurs, preserve technical failure and recovery evidence in QUOTATION_CARD_EVIDENCE_MAP.md and preserve the root cause, fix rationale, and lesson in CARD_LEARNING_AND_DECISION_LOG.md. A repaired failure must not disappear. Do not invent a failure where none occurred.
 
-### 13. What We Learned
+### 32. What We Learned
 
 NOT YET RECORDED — complete only from actual implementation evidence.
 
-### 14. Completion Evidence
+### 33. Completion Evidence
 
 NOT YET RECORDED — complete only from actual implementation evidence.
 
@@ -2970,7 +2970,9 @@ A small interface makes the completed workflow understandable while preserving t
 
 ### 5. Architecture Concept
 
-User → lightweight UI → FastAPI/application interface → existing quotation workflow.
+Browser → React/TypeScript/Vite → local `/api` proxy → existing FastAPI HTTP
+contracts → existing quotation workflow. The frontend depends only on HTTP
+contracts and does not reproduce or import backend business logic.
 
 ### 6. Current System Before Card
 
@@ -2980,42 +2982,306 @@ This is a contract description, not a claim that prior Cards or this Card are co
 
 ### 7. Design Decision
 
-Use Streamlit or a similarly lightweight justified option; the UI remains presentation-only and does not become a second business system.
+Use React + TypeScript + Vite with npm. This is the approved bounded exception
+to the earlier Streamlit preference: C20 is a professional product-style
+portfolio prototype, and this stack preserves a clear presentation/API/backend
+separation without authorizing a frontend platform. Use TypeScript strict mode,
+typed API requests/responses/errors, a bounded reusable API client, and separate
+transport, UI state, and view components. Avoid unexplained `any`.
+
+Do not introduce Next.js, Redux, Zustand, Tailwind, Material UI, Chakra,
+shadcn, Bootstrap, another state framework, or another design system by default.
+Plain CSS/CSS modules or lightweight native styling is sufficient unless
+implementation evidence justifies otherwise. Additional major dependencies
+require STOP and human approval.
+
+Authorized bounded toolchain: React, React DOM, TypeScript, Vite, Vitest, React
+Testing Library and appropriate DOM/user-event support, and Playwright. Resolve
+mutually compatible supported versions during implementation. No dependency is
+installed by this remediation.
+
+Run locally: browser → React/Vite → Vite `/api` proxy → local FastAPI → existing
+backend. Do not add backend CORS, API/schema, authentication, or deployed
+infrastructure changes. If this topology or existing API contracts cannot
+support the flow, STOP for human approval.
 
 ### 8. Implementation Scope
 
-- demonstrate quotation request and work-item input
-- show similar historical cases, estimate/actual evidence, RiskEvidence, AI explanation, and missing-information warnings
-- show draft/review state
-- expose human approve/reject action through the existing boundary
-- show Excel generation/download
-- show useful workflow, error, and status states
-- keep synthetic portfolio nature clear
+- Support free-form synthetic request input and one optional, clearly synthetic
+  C20-owned preset; never import or execute `evaluation/c19.py` at runtime.
+- Use actual existing API routes/contracts (independently verify their current
+  truth): request/analysis/draft, quote retrieval, approve/reject, export, and
+  health as applicable. Do not add a route or alter public contracts for UI
+  convenience.
+- Demonstrate work items, hours/rates, analysis, comparable historical quotes,
+  estimate-vs-actual evidence, RiskEvidence, AI explanation/draft, missing
+  information, review state, human approve/reject, and backend Excel download.
+- Present deterministic/evidence-based information distinctly from AI text.
+  The backend remains authoritative for validation, arithmetic, retrieval,
+  evidence, provider/model validation, workflow, approval, export and failures.
+  Frontend may format returned values but must not calculate authoritative
+  totals, rates, risk statistics, or evidence.
+- Approval/rejection uses the existing C11 backend boundary. The frontend must
+  not assert approval locally, fabricate a reviewer decision, or let AI approve.
+  Backend denial keeps export unavailable. Download only the real workbook
+  returned by the existing C12 export endpoint after backend approval.
+- Handle loading, empty, validation/missing semantics, provider unavailable or
+  invalid, approval/rejection, export failure, and sanitized API/network error
+  states truthfully. Representative UI failure evidence is sufficient; C20 does
+  not repeat the full C18 matrix.
+- No user-facing storage/S3 or observability/CloudWatch screen. No login,
+  accounts, roles, authentication platform, browser AWS credentials, or
+  deployed Lambda/API Gateway path.
+- Local synthetic portfolio demo only. `LocalQuoteStore` remains process-local;
+  one stable local FastAPI process may support the demo. C20 adds no persistence,
+  does not repair this accepted limitation, and does not claim multi-instance
+  reliability.
+- Use minimal React presentation/session state; backend responses are
+  authoritative. Assess stale async responses if UI permits overlapping work.
+- Desktop-first, usable at common laptop/tablet widths. Use semantic/labeled
+  controls, keyboard operation, visible focus, meaningful status/errors not
+  conveyed only by color, and reasonable contrast. No WCAG certification or
+  mobile-app claim.
 
 ### 9. Out of Scope
 
-- large frontend
-- design-system project
-- authentication platform without explicit justification
-- CRM, ERP, or unrelated product features
+- production SaaS/deployment, frontend AWS hosting, Amplify, CloudFront,
+  Cognito, Route53, IAM, live AWS/Bedrock/S3/CloudWatch/Lambda/API Gateway
+- backend CORS/API/schema/route/authentication changes, new persistence, or
+  repair of C13 process-local state
+- duplicated business logic, new provider path, C19 runtime dependency,
+  storage/log viewer, CRM/ERP, design-system/platform project, mobile-first app
+- real/customer/confidential data, prompts/raw model output, secrets, raw
+  provider errors, prohibited reviewer identity, arbitrary payload dumps
+- project-wide Final Gate audit/reconciliation (a separate post-C20 phase)
 
 ### 10. Dependencies
 
-Explicit Roadmap dependency: none stated. This Card remains ordered according to AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md. Do not infer additional dependencies.
+The Roadmap implementation order is authoritative; C20 follows completed
+backend Cards. C19 is prior integration evidence, NOT a C20 runtime dependency.
+The explicitly approved frontend/tool dependencies are React, React DOM,
+TypeScript, Vite, Vitest, React Testing Library with appropriate DOM/user-event
+support, and Playwright. No other major dependency is authorized by default.
 
 If a dependency is later required but cannot be verified from the Roadmap, use CARD_SPEC_ROADMAP_MISMATCH and stop.
 
 ### 11. Tests / Evaluation
 
-Core user flow, input validation, approval/rejection interaction, draft/final distinction, Excel access, failure display, no duplicated business logic, and basic usability.
+Require strict TypeScript checking and production build. Use Vitest + React
+Testing Library for core forms, loading/status, backend error display,
+evidence-versus-AI presentation, approval/rejection, export gating/download, and
+absence of client commercial authority. Verify request/response shapes against
+existing FastAPI contracts. Use bounded Playwright real-browser local E2E for a
+synthetic request → analysis/draft → evidence → approve → Excel download flow
+and at least one meaningful failure state. Do not build visual-regression or
+cross-browser certification infrastructure. One primary browser engine is
+sufficient. Screenshots, if produced, are illustrative only.
+
+Check safe AI-text rendering, no unsafe HTML injection, bundle secret absence,
+privacy and browser-storage boundaries, keyboard/usability baseline, and
+representative error states. Existing Python full regression and C17/C18/C19
+regressions run unchanged.
 
 Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require a lightweight presentation layer that demonstrates the completed workflow without owning business logic.
+The dedicated `### Exit Gate — V1-C20` in the Roadmap is authoritative. It is
+separate from the project-wide Final Gate and requires the implementation,
+security, usability, integration, and verification outcomes summarized in that
+gate. C20 completion does not declare PROJECT V1 COMPLETE: after C20 delivery
+and outcome reconciliation, a separate project-wide Final Gate audit must
+verify all rows, including README architecture/setup/evidence/limitations.
 
-The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
+### 13. Risk Classification
+
+MODERATE: C20 adds a user-facing browser surface and associated security risks,
+but no commercial, AI, approval, persistence, or cloud authority. Escalate to
+ELEVATED and STOP for human review if implementation needs backend/API or CORS
+changes, persistence, authentication, live AWS/Bedrock, frontend business logic,
+or broad new tooling.
+
+### 14. Escalation Triggers
+
+Stop for missing information in existing public APIs or any required route,
+schema, status, CORS, production backend, persistence, authentication, AWS,
+Bedrock, new production architecture, or unauthorized major dependency change.
+Also stop if policy/authority boundaries conflict with the actual interface.
+
+### 15. Canonical Sources
+
+PROJECT_CONTROL owns authorization/state. Use the Roadmap C20 contract, this
+Specification, Evidence Map, Learning Log, current C13 API schemas/routes,
+Commercial/Data Guardrails, and relevant backend owner-Card contracts. Verify
+actual route/schema behavior during implementation; do not infer it from this
+list.
+
+### 16. Acceptance Contract
+
+Every C20 Roadmap Exit Gate item requires directly traceable implementation and
+executed evidence. The local UI uses existing API contracts only; backend
+responses own commercial and workflow truth. No missing/failed required check
+is PASS.
+
+### 17. Critical Invariants
+
+- No authoritative commercial arithmetic, risk statistics, evidence, approval,
+  or export logic in frontend.
+- Approval remains a human action through the existing backend route; AI cannot
+  approve and local UI state cannot create backend authority.
+- Synthetic-only content is visibly identified. C13 process-local limitation
+  remains accepted and disclosed.
+- Evidence and AI explanation remain visibly distinct; untrusted text is safely
+  rendered and failures are bounded/sanitized.
+- Browser calls existing API through the local proxy; no CORS/backend contract
+  redesign or cloud dependency.
+
+### 18. Verification Strategy
+
+Strict TypeScript/type/build; component/UI tests; API contract tests; local
+Vite/FastAPI integration; bounded browser E2E success and failure; accessibility
+/usability; privacy/security; mutation and failure injection; bounded
+adversarial/threat-model checks; unchanged Python and prior-Card regressions.
+
+### 19. Advanced Verification Decision
+
+1. Deterministic invariants — REQUIRED: backend values, approval ordering,
+   evidence labels, and API-to-view mapping must have exact outcomes.
+2. Contract tests — REQUIRED: existing FastAPI request/response contracts are
+   the frontend's only system boundary.
+3. Integration — REQUIRED: prove local browser/UI to FastAPI workflow.
+4. Generated property tests — CONDITIONAL / EVALUATE: only if input/state
+   transformations create a meaningful invariant space.
+5. Targeted mutation-resistance — REQUIRED: challenge client totals, approval
+   gating, evidence labels, rendering safety, and failure-to-success drift.
+6. Failure injection — REQUIRED, BOUNDED: provider/API/approval/export/network
+   failures must render truthfully without duplicating C18.
+7. Fuzzing — CONDITIONAL / EVALUATE: only if a custom parser/serializer is
+   introduced.
+8. Differential — NOT_APPLICABLE by default: there is no independent second UI
+   implementation.
+9. Concurrency/race — CONDITIONAL / EVALUATE: assess stale async responses if
+   concurrent requests can overlap; do not invent concurrency otherwise.
+10. Adversarial testing — REQUIRED, BOUNDED: unsafe AI text, approval bypass,
+    fabricated success/evidence, commercial-authority drift, and secrets.
+11. Threat modeling — REQUIRED: C20 adds a browser and user-facing trust
+    boundary.
+12. Agent evals — NOT_APPLICABLE as C20-specific technique: C20 does not change
+    agent behavior; C19/C10 remain regression evidence.
+13. Rollback/recovery — REQUIRED: tracked frontend/toolchain changes are
+    Git-reversible; no cloud/data rollback.
+14. Formal methods — NOT_APPLICABLE: disproportionate for this presentation
+    surface.
+
+### 20. Independent Verifier Expectations
+
+Independently inspect the API-only boundary, actual route/schema compatibility,
+absence of duplicated business logic and secrets, browser flow, approval/export
+authority, representative failures, privacy/accessibility, mutations, and
+bounded claims. A verifier may return BLOCKED.
+
+### 21. Evidence / Traceability
+
+Record actual file paths, resolved dependency versions, commands/counts,
+component/API/browser results, security/accessibility review, mutation/failure
+outcomes, prior regressions, and limitations. Screenshots are illustrative,
+not correctness evidence. No result is recorded before it occurs.
+
+### 22. Known Non-Scope
+
+Production SaaS, cloud hosting, auth platform, backend/API/CORS redesign,
+persistence, business logic, provider changes, storage/observability UI, C19
+runtime coupling, mobile-first/design-system work, and the post-C20 project-wide
+Final Gate audit.
+
+### 23. C20 Security, Privacy, and UI-State Contract
+
+Safely render untrusted/model-controlled text; do not use `dangerouslySetInnerHTML`
+unless separately justified and sanitized. Do not expose prompts, raw model
+responses, raw provider errors, credentials/tokens, secrets, prohibited
+`reviewer_id`, workbook bytes, arbitrary request/response bodies, or
+confidential/customer payloads. Do not put secrets in frontend source or bundle.
+Do not use localStorage/sessionStorage for prohibited sensitive data. Backend
+failure messages remain sanitized. UI state is presentation/session state only;
+backend responses are authoritative. Use minimal React state, not Redux/Zustand
+by default. Evaluate stale-response risk if overlapping asynchronous requests
+are possible.
+
+### 24. Mutation and Adversarial Targets
+
+Later implementation/audit must consider: UI total substituted for backend
+total; approve/export enabled after backend denial; API failure shown as success;
+AI explanation relabeled as deterministic evidence; fabricated RiskEvidence;
+unsafe HTML/model-text rendering; reviewer identity/raw error leakage;
+synthetic disclosure removed; stale response overwrites newer state when
+applicable; frontend imports/duplicates business logic or bypasses API; UI
+generates Excel instead of using backend; or C13 process-local limitation hidden
+in portfolio claims. Applicable mutations must be caught by evidence; do not
+execute them as part of this pre-implementation remediation.
+
+### 25. Threat Model
+
+Require disposition/evidence for XSS and unsafe model-text rendering; secrets in
+bundles; prompt/model/provider-error or reviewer-identity exposure; approval or
+commercial-authority drift; fabricated evidence; false-success UI; stale async
+state; sensitive browser storage; synthetic data presented as real history;
+API-boundary bypass; hidden C13 process-local limitation; and production/public
+readiness overclaim.
+
+### 26. Failure Injection and User-Facing Failure Contract
+
+Use bounded deterministic API/provider/approval/export/network-style failures
+that the local existing backend can represent. Verify honest loading, validation,
+provider unavailable/invalid, approval/rejection, export failure, and sanitized
+generic network/API states. Do not reproduce C18's full guardrail matrix or add
+retry behavior/new failure semantics. Backend denial or failure must never be
+presented as successful approval/export.
+
+### 27. Claim Boundary
+
+Maximum claim: “A professional local React/TypeScript demonstration UI
+exercised the existing V1 quotation workflow using synthetic data.” C20 does
+not prove production SaaS, secure multi-user operation, persistence, public
+cloud readiness, real-customer readiness, real-market commercial accuracy,
+accessibility certification, mobile-app readiness, enterprise authentication/
+security, or production-scale reliability.
+
+### 28. Project-Wide Finalization After C20
+
+After C20 delivery and completion reconciliation, a separate FINAL V1
+PROJECT-WIDE AUDIT / FINAL GATE RECONCILIATION is required. It verifies every
+project-wide Final Gate row, all Cards C01–C20 delivered/complete, README
+architecture/setup/evidence/limitations, bounded claims, clean synchronized
+repository, and retained AWS resource/status facts and limitations. This is not
+part of C20. No release/tag is required by this contract.
+
+### 29. Rollback, Generated Artifacts, and Source Adaptation
+
+Rollback is Git-only for tracked frontend/test/config files. `node_modules`,
+build output, Playwright transient files, downloaded Excel files, and generated
+test artifacts remain untracked/ephemeral by default. No cloud, S3, database, or
+operational rollback is expected. React/TypeScript/Vite/testing/browser
+documentation may be REFERENCE ONLY. No external template/code/component reuse
+is authorized by remediation; any later actual reuse requires normal source and
+license traceability review before incorporation.
+
+### 30. C20 Demo Preset and C19 Boundary
+
+Free-form synthetic input is supported; one lightweight C20-owned synthetic
+preset is allowed and must be visibly identified. It need not have a
+C17/C19-style fixture identity unless later used as a correctness oracle. C19
+remains prior integration evidence only: C20 must not import or execute
+`evaluation/c19.py` as runtime/demo code. C20 may rerun C19 unchanged for
+regression evidence.
+
+### 31. Local Composition Boundary
+
+A bounded non-production local launcher/composition may be used only if existing
+application/provider interfaces support it without production source or public
+contract changes. It may inject deterministic provider behavior; it must not
+duplicate backend logic or call live cloud services. No public CLI is required.
+If the approved local topology cannot be supported by existing interfaces,
+STOP for human approval.
 Before Card COMPLETE:
 
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C20

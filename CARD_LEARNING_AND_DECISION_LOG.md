@@ -3296,6 +3296,42 @@ NOT YET RECORDED — complete from actual implementation experience.
 
 NOT YET RECORDED — complete from actual implementation experience.
 
+### Pre-C20 Canonical Remediation — Approved Decisions (2026-10-05)
+
+The read-only C20 preflight was BLOCKED because the Roadmap lacked a dedicated
+C20 Exit Gate, the Specification pointed to that missing gate, and required
+C09+ verification and frontend-specific scope/security/claim boundaries were
+not defined. The preflight also left unclear whether portfolio completion
+required live cloud, how browser-to-API topology should work, and how C20 related
+to the already-completed technical backend/cloud Cards and the project-wide
+Final Gate. Human decisions resolved these ambiguities; this record preserves
+that history rather than implying the original contract was complete.
+
+The human-selected React + TypeScript + Vite/npm stack is a deliberate bounded
+exception to the historical Streamlit preference. It serves a professional
+product-style portfolio demonstration while keeping the frontend strictly a
+presentation client of existing FastAPI contracts. The approved local Vite
+`/api` proxy avoids authorizing backend CORS changes. Vitest, React Testing
+Library, and bounded Playwright are the authorized frontend test stack; no
+installation or implementation occurred during remediation.
+
+C20 is local, synthetic-only, and not a SaaS deployment. No AWS, frontend cloud
+hosting, live Bedrock, authentication platform, persistence, backend contract
+change, or new business logic is authorized. C13 `LocalQuoteStore` remains
+process-local and accepted; one stable local backend process may serve the
+interactive demo. A UI-owned synthetic preset is optional, and C19 remains
+prior evidence rather than a runtime dependency. Backend responses retain
+commercial, evidence, approval, workflow, and export authority. The separate
+project-wide Final Gate remains intact; after C20 delivery and reconciliation,
+a new independent project-wide audit must verify it, including README
+architecture and limitations, before project completion is declared.
+
+This was documentation-only canonicalization. No implementation, tests,
+frontend files, package manifest, dependencies, AWS, or Bedrock work occurred.
+PROJECT_CONTROL was intentionally untouched, so C20 remains NOT_AUTHORIZED /
+NOT_STARTED and Active Card remains NONE. The C20 implementation template above
+continues to say NOT YET RECORDED because no implementation learning exists yet.
+
 ## Post-C06 Full-Project Audit and Systemic Repair
 
 The independent full-project audit found three defects before V1-C07. The C01

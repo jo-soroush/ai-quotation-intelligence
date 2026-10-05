@@ -3808,6 +3808,33 @@ CARD_LEARNING_AND_DECISION_LOG.md → V1-C20
 Learning Documentation Status:
 NOT_STARTED
 
+### Pre-C20 Canonical Remediation — Approved Contract Decisions (2026-10-05)
+
+Read-only C20 preflight was BLOCKED: the Roadmap had no C20-specific Exit
+Gate; the Specification referred to a nonexistent Roadmap Exit Gate; the C09+
+verification block was missing; the boundary between already-proven backend/
+cloud completion and portfolio/project finalization was unclear; and frontend
+stack, local/deployed execution, AWS/CORS, browser security/privacy, and claim
+boundaries were unresolved. Human decisions recorded by this documentation-only
+remediation resolve those questions; they do not authorize or start C20.
+
+Canonical contract now specifies React + TypeScript + Vite/npm, strict and typed
+frontend contracts, Vitest + React Testing Library + bounded Playwright, and a
+local synthetic portfolio demo through the Vite `/api` proxy to existing
+FastAPI contracts. No backend/CORS/API change, AWS/frontend hosting, live
+Bedrock, authentication platform, persistence, or production business logic is
+authorized. One UI-owned synthetic preset is optional; C19 is not a runtime
+dependency. C13 process-local state remains an accepted limitation. C20 has a
+dedicated Exit Gate distinct from the project-wide Final Gate; after C20
+delivery/reconciliation, a separate project-wide Final Gate audit is required
+before project completion may be claimed.
+
+Remediation scope is documentation only. No implementation, frontend files,
+package manifest, dependency installation, tests, fixtures, AWS, or Bedrock
+activity occurred. Live PROJECT_CONTROL state remains untouched: Active Card
+NONE; C20 NOT_AUTHORIZED / NOT_STARTED. No implementation or validation result
+is asserted by this contract record.
+
 ## 17. Current Card Table
 
 <!-- BEGIN GENERATED: CURRENT_CARD_TABLE -->
