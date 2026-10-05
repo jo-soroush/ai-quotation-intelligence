@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C16_COMPLETE
+Project Phase: V1_C17_ACTIVE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT IMPLEMENTED / DELIVERED / V1-C16 CLOUDWATCH OBSERVABILITY IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT IMPLEMENTED / DELIVERED / V1-C16 CLOUDWATCH OBSERVABILITY IMPLEMENTED / DELIVERED / V1-C17 EVALUATION HARNESS IMPLEMENTED LOCALLY / UNDELIVERED
+Active Card: V1-C17
+Active Card State: ACTIVE
 Last COMPLETE Card: V1-C16 — CloudWatch Observability
-Next Roadmap Card: V1-C17 — Evaluation Harness (not authorized)
-Next Card Authorized: NO — V1-C17 and later Cards remain unauthorized
-Implementation Authorization: V1-C16 authorization consumed by completion; later Cards not authorized
+Next Roadmap Card: V1-C18 — Guardrails and Failure Handling (not authorized)
+Next Card Authorized: NO — V1-C18 and later Cards remain unauthorized
+Implementation Authorization: V1-C17 local/offline implementation GRANTED; Git delivery NOT_AUTHORIZED; V1-C18 and later Cards not authorized
 Live AWS Outcome: us-east-1 stack aqi-c15-nonprod UPDATE_COMPLETE; C15's first signed /health returned HTTP 500 due to missing packaged opentelemetry and its approved repaired-artifact retry returned HTTP 200; separately approved C16 in-place code update and one signed /health emitted a structured CloudWatch health event; resources retained by human choice
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
@@ -107,8 +107,8 @@ Project path: /Users/jo.soroush/john/my_projhects/AI_QUOTATION_INTELLIGENCE_
 Git repository: YES
 .git present: YES
 Current Git branch, HEAD, upstream, remote, synchronization, and working-tree state: query Git at runtime; do not treat values embedded in this tracked file as current Git truth
-Application package: V1-C01–V1-C15 IMPLEMENTED / DELIVERED
-tests/: V1-C01–V1-C15 tests CREATED / PASS; C15 Exit Gate proven
+Application package: V1-C01–V1-C16 IMPLEMENTED / DELIVERED; V1-C17 evaluation remains a separate offline owner outside the production package
+tests/: V1-C01–V1-C16 tests CREATED / PASS; V1-C17 focused and architecture validation created
 pyproject.toml: CREATED
 requirements: pyproject.toml project dependencies and dev extra; openpyxl added for V1-C12, FastAPI/httpx for V1-C13, Mangum 0.20.0 local candidate for V1-C15
 CI: NOT_CREATED
@@ -123,7 +123,7 @@ FastAPI: IMPLEMENTED / DELIVERED — independently audited; PR #37 merged
 Excel Generation: IMPLEMENTED / DELIVERED — independently audited; PR #34 merged
 AWS Deployment: COMPLETE / DELIVERED — non-production stack UPDATE_COMPLETE; repaired package deployed; signed health HTTP 200 after preserved first-attempt HTTP 500 failure
 CloudWatch: V1-C16 COMPLETE / DELIVERED; independent live verification and Exit Gate PASS; one real structured health event observed in retained log group
-Evaluation Harness: NOT_STARTED
+Evaluation Harness: IMPLEMENTED LOCALLY / OFFLINE / UNDELIVERED
 Golden Case: NOT_STARTED
 Demo UI: NOT_STARTED
 ```
@@ -133,33 +133,33 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C16
-Title: CloudWatch Observability
-State: COMPLETE
-State Detail: local implementation, independently verified live CloudWatch evidence, approved Git delivery, post-merge validation, and outcome-only completion reconciliation complete; accepted LOW findings preserved
-Branch: card/v1-c16-cloudwatch-observability
-Start Commit: ffa5380225943300ec887e0064c7975f1d036901
+Card ID: V1-C17
+Title: Evaluation Harness
+State: ACTIVE
+State Detail: local offline implementation and self-validation complete; independent local audit and Git delivery pending
+Branch: card/v1-c17-evaluation-harness
+Start Commit: 11906a1acfa8c842abff4002e259779bfea9b8a5
 Initial Working Tree State: CLEAN
-Delivery Commit: 00ddb696f965ef695e7bef547d0541c97604500b
-PR: MERGED — #48 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/48
-Merge Commit: 810cab18e20c9e4560eaee52e2043d32ba40f75b
+Delivery Commit: NOT_CREATED
+PR: NOT_CREATED
+Merge Commit: NOT_CREATED
 Human Start Approval: YES
-Human Start Approval Detail: Local V1-C16 implementation was explicitly authorized; later separate approvals covered the bounded existing-artifact upload and exact `aqi-c16-997af354` change-set execution/live proof. Human Git-delivery approval was granted and consumed by PR #48.
-Authorized Scope: bounded C16 instrumentation, tests, and live evidence in the retained C15 deployment; no further AWS mutation or C17
-ROADMAP_ALIGNMENT_GATE: PASS — C16 canonical contract, risk, owners, clean base, and explicit local authorization inspected
-CARD_QUALITY_GATE: PASS — exact-identity independent local and live audit, Exit Gate, PR #48 delivery, post-merge validation, and final reconciliation
+Human Start Approval Detail: Explicit human authorization granted for bounded V1-C17 local/offline implementation, validation, evaluation evidence, and candidate creation only.
+Authorized Scope: fixed synthetic Golden Dataset, deterministic offline evaluation harness, tests, report, and governance evidence; no AWS, live Bedrock, Git delivery, production-runtime dependency, or V1-C18 work
+ROADMAP_ALIGNMENT_GATE: PASS — C17 canonical contract, existing public owners, clean authorized base, offline architecture boundary, and explicit human authorization inspected before implementation
+CARD_QUALITY_GATE: PENDING_INDEPENDENT_AUDIT
 ```
 
 Safe Checkpoint:
 
-V1-C01 through V1-C16 are complete and delivered. The C16 artifact remains deployed in place to the retained C15 stack; independently verified live CloudWatch evidence and delivery records are preserved. Resources remain deployed by human choice; no business-correctness or production-readiness claim is made. C17 remains unauthorized.
+V1-C01 through V1-C16 are complete and delivered. V1-C17 is ACTIVE with a locally implemented, deterministic offline harness and fixed synthetic dataset; independent audit and Git delivery remain pending. No AWS or live Bedrock action occurred, and no business-correctness or production-readiness claim is made.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
-FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C16 COMPLETE; Active Card NONE; C17 NOT_AUTHORIZED.
+FINAL_CARD_STATE_CONSISTENCY_GATE: PENDING — V1-C17 remains ACTIVE / UNDELIVERED / NOT COMPLETE.
 
 ## 6. Authorization Ledger
 
 ```
-Card Start: GRANTED — V1-C16 local implementation
+Card Start: GRANTED — V1-C17 local/offline implementation
 Live AWS Resource Creation: GRANTED / EXECUTED — historical C15 deployment and repaired-artifact retry; separately approved C16 existing-stack code update executed without new stack resources; further mutation NOT_AUTHORIZED
 GIT_DELIVERY_APPROVAL: GRANTED / CONSUMED — PR #45 merged (C15 delivery)
 Commit: COMPLETED — 34189d39041286141a78a1edd9bef0a85d53bcc4 (C15 delivery)
@@ -173,7 +173,8 @@ Push: COMPLETED — origin/card/v1-c16-cloudwatch-observability (C16 delivery)
 PR: MERGED — #48 (C16 delivery)
 Merge: COMPLETED — 810cab18e20c9e4560eaee52e2043d32ba40f75b (C16 delivery)
 V1-C16 Completion Reconciliation: COMPLETED — outcome-only state/evidence reconciliation after delivery
-Next Card: NOT_GRANTED — V1-C17 and later Cards remain unauthorized
+V1-C17 Git Delivery: NOT_GRANTED
+Next Card: NOT_GRANTED — V1-C18 and later Cards remain unauthorized
 V1-C14: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -248,7 +249,7 @@ PR: MERGED — #41 (C14 delivery)
 Merge: COMPLETED — 2f99f4c24f9182029ded27b15c4f123c810a61fe (C14 delivery)
 ```
 
-V1-C01 through V1-C16 implementation, validation, and approved delivery are complete. C15's initial live health failure and local packaging repair remain in history; the approved live retry passed. C16 live CloudWatch evidence, independent verification, delivery, and completion reconciliation are recorded. C17+ remain unauthorized.
+V1-C01 through V1-C16 implementation, validation, and approved delivery are complete. C15's initial live health failure and local packaging repair remain in history; the approved live retry passed. C16 live CloudWatch evidence, independent verification, delivery, and completion reconciliation are recorded. C17 local implementation is authorized and ACTIVE; C18+ remain unauthorized.
 
 ## 7. Roadmap Position
 
@@ -256,22 +257,23 @@ V1-C01 through V1-C16 implementation, validation, and approved delivery are comp
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability
-Active Card: NONE
-Next Roadmap Card: V1-C17 — Evaluation Harness (not authorized)
+Active Card: V1-C17
+Next Roadmap Card: V1-C18 — Guardrails and Failure Handling (not authorized)
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
 V1-C16 Start Approval: YES — local implementation (historical; consumed by completion)
 V1-C16 Git Delivery: GRANTED / CONSUMED — PR #48 merged
-Later Cards: V1-C17 and later NOT_AUTHORIZED
+V1-C17 Start Approval: YES — local/offline implementation only
+Later Cards: V1-C18 and later NOT_AUTHORIZED
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
 
 ## 8. Current Blockers and Pending Control
 
-V1-C01 through V1-C16 implementation, validation, and Git delivery are complete. C15 Exit Gate and final state consistency are proven; the initial handler import failure and repaired-artifact success are both retained in evidence. C16 Exit Gate and final state consistency are proven; C17 and later Cards remain unauthorized.
+V1-C01 through V1-C16 implementation, validation, and Git delivery are complete. C15 Exit Gate and final state consistency are proven; the initial handler import failure and repaired-artifact success are both retained in evidence. C16 Exit Gate and final state consistency are proven. C17 is ACTIVE with local evaluation evidence; independent audit and delivery are pending, and C18+ remain unauthorized.
 
-Pending C16 controls: none. No further AWS action is authorized; C17 requires separate human approval.
+Pending C17 controls: independent local audit and later explicit Git-delivery approval. No AWS action is authorized; C18 requires separate human approval.
 
 Resolved migration blockers:
 
@@ -289,15 +291,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: V1-C15 identity, six delivered C13 routes, C14 non-composition, process-local state, clean base, and explicit local authorization were verified before implementation. Initial live deployment and repaired-artifact retry had separate human approvals.
+Reason: V1-C17 identity, approved deterministic evaluation contract, existing public Core/tool/agent/export owners, clean base, separate offline ownership, and explicit local authorization were verified before implementation.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / V1-C15 pre-write inspection recorded in session — C13 six routes and C11/C12 authority unchanged; Lambda adapter/deployment only
-Risk Map: COMPLETE / V1-C15 ELEVATED IAM/exposure, binary response, credentials, package, Lambda process-state, and false-live-evidence risks recorded in session
-Reason: V1-C15 Roadmap/specification, C13 API, C14 boundary, C08 lazy provider, configuration, architecture, and local tools were inspected. Source Adaptation: Mangum REUSE license verified; AWS vendor semantics REFERENCE ONLY.
+Contract Map: COMPLETE / V1-C17 pre-write inspection recorded in session — fixed synthetic dataset, independent deterministic oracles, existing typed contracts, exact metric gates, machine report, and offline production boundary
+Risk Map: COMPLETE / V1-C17 ELEVATED circular-oracle, fixture/hash drift, case skipping, denominator/threshold manipulation, privacy leakage, misleading PASS, and production-dependency risks recorded in session
+Reason: V1-C17 Roadmap/specification and the public C04/C05/C06/C07/C09/C10/C12 contracts were inspected. Source Adaptation: NOT_APPLICABLE; implementation was built from canonical repository contracts and standard-library mechanisms.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -348,9 +350,9 @@ Do not infer account configuration or credentials from local tools or external s
 ```
 tests/: C01–C09 tests, C10 QUOTATION AGENT tests, C11 HUMAN REVIEW tests, and C12 EXCEL EXPORT tests CREATED
 pytest project baseline: ESTABLISHED
-Evaluation Harness implementation: NOT_STARTED
+Evaluation Harness implementation: IMPLEMENTED LOCALLY / OFFLINE / ACTIVE
 Golden Case: NOT_STARTED
-Card tests: C16 focused — 15 PASSED; C08–C15 regressions — 168 PASSED; post-merge full suite — 430 PASSED; architecture — 73 PASSED; Governance Harness — 61 PASS / 0 FAIL
+Card tests: C17 focused and final broad validation recorded in the C17 Evidence Map; prior delivered Card baselines remain preserved
 ```
 
 Bootstrap inspection is not V1 Card test evidence.
@@ -362,7 +364,7 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01–V1-C16 COMPLETE; V1-C17–V1-C20 NOT_STARTED
+Implementation Evidence: V1-C01–V1-C16 COMPLETE; V1-C17 ACTIVE / IMPLEMENTED LOCALLY / UNDELIVERED; V1-C18–V1-C20 NOT_STARTED
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability
 V1-C01 CARD_QUALITY_GATE: PASS
 V1-C09 CARD_QUALITY_GATE: PASS — implementation validation, independent audit, and approved delivery
@@ -375,7 +377,7 @@ V1-C05 Exit Gate: PROVEN — deterministic variance, aggregate, missing-outcome,
 V1-C06 Exit Gate: PROVEN — deterministic, bounded, explainable retrieval and empty/insufficient-result behavior passed
 V1-C07 Exit Gate: PROVEN — deterministic, traceable risk evidence and insufficient-evidence behavior passed
 V1-C09 Exit Gate: PROVEN by implementation validation and independently audited delivery
-V1-C10 Exit Gate: PROVEN against six Roadmap clauses by validation and independent audit; V1-C11 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C12 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C13 Exit Gate: PROVEN by six-route validation, authority/security tests, independent audit, and approved delivery; V1-C14 Exit Gate: PROVEN by storage contract, conditional no-overwrite, retrieval integrity, sanitized failures, architecture and local tests, independent audit, and approved delivery; V1-C15 Exit Gate PROVEN; V1-C16 Exit Gate PROVEN by structured live CloudWatch event and independent verification; V1-C17–V1-C20 NOT_PROVEN
+V1-C10 Exit Gate: PROVEN against six Roadmap clauses by validation and independent audit; V1-C11 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C12 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C13 Exit Gate: PROVEN by six-route validation, authority/security tests, independent audit, and approved delivery; V1-C14 Exit Gate: PROVEN by storage contract, conditional no-overwrite, retrieval integrity, sanitized failures, architecture and local tests, independent audit, and approved delivery; V1-C15 Exit Gate PROVEN; V1-C16 Exit Gate PROVEN by structured live CloudWatch event and independent verification; V1-C17 local Exit Gate evidence SELF_VALIDATED / PENDING_INDEPENDENT_AUDIT; V1-C18–V1-C20 NOT_PROVEN
 ```
 
 Governance migration validation is not V1 implementation evidence.
@@ -383,7 +385,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C16_COMPLETE
+Checkpoint Type: V1_C17_LOCAL_IMPLEMENTATION
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -391,9 +393,9 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01–V1-C16 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application implementation: V1-C01–V1-C16 IMPLEMENTED / DELIVERED; V1-C17 evaluation harness IMPLEMENTED LOCALLY / UNDELIVERED
+Active Card: V1-C17
+Active Card State: ACTIVE
 Last COMPLETE Card: V1-C16 — CloudWatch Observability
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
@@ -435,12 +437,12 @@ These are governance decisions, not implementation claims.
 | V1-C14 | Amazon S3 Integration | COMPLETE | YES | PASS | PRESENT — implementation, validation, audit, and delivery evidence |
 | V1-C15 | AWS Deployment | COMPLETE | YES | PASS | PRESENT — implementation, live deployment, independent verification, delivery, and final reconciliation evidence |
 | V1-C16 | CloudWatch Observability | COMPLETE | YES | PASS | PRESENT — independent local/live verification, retained CloudWatch evidence, approved delivery, and completion reconciliation |
-| V1-C17 | Evaluation Harness | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C17 | Evaluation Harness | ACTIVE | YES | PENDING_INDEPENDENT_AUDIT | PRESENT — local offline implementation, deterministic evaluation, tests, and evidence |
 | V1-C18 | Guardrails and Failure Handling | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | PENDING |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
 
-V1-C01 through V1-C16 are COMPLETE. C15's first live health failure and repaired-artifact success are preserved in evidence. C16 live CloudWatch evidence, independent verification, approved delivery, and completion reconciliation are recorded; C17 and later Cards remain unauthorized.
+V1-C01 through V1-C16 are COMPLETE. C15's first live health failure and repaired-artifact success are preserved in evidence. C16 live CloudWatch evidence, independent verification, approved delivery, and completion reconciliation are recorded. C17 is ACTIVE / locally implemented / undelivered; C18 and later Cards remain unauthorized.
 
 ## 19. Resume Protocol
 
@@ -471,18 +473,18 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01–V1-C16 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01–V1-C16 IMPLEMENTED / DELIVERED; V1-C17 EVALUATION HARNESS IMPLEMENTED LOCALLY / UNDELIVERED
+Active Card: V1-C17
+Active Card State: ACTIVE
 Last COMPLETE Card: V1-C16 — CloudWatch Observability
-Next Roadmap Card: V1-C17 — Evaluation Harness (not authorized)
+Next Roadmap Card: V1-C18 — Guardrails and Failure Handling (not authorized)
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: STOP after C16 completion. V1-C17 is not authorized. The existing stack and artifact bucket remain in us-east-1 by human choice; any further AWS mutation requires separate human approval.
+Safe next action: independent local audit of the exact V1-C17 candidate. Git delivery, AWS changes, live Bedrock, and V1-C18 remain unauthorized. The retained AWS resources remain unchanged.
 
 Do not start any later Card automatically.
 
@@ -496,5 +498,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01 THROUGH V1-C16 ARE COMPLETE; C15 PRESERVES THE FIRST LIVE FAILURE AND SUCCESSFUL APPROVED REPAIRED-ARTIFACT HEALTH RETRY; C16 PRESERVES INDEPENDENTLY VERIFIED LIVE CLOUDWATCH EVIDENCE AND ACCEPTED NON-BLOCKING LOW FINDINGS; ACTIVE CARD NONE; C17+ REQUIRE SEPARATE HUMAN APPROVAL.
+V1-C01 THROUGH V1-C16 ARE COMPLETE; C15 PRESERVES THE FIRST LIVE FAILURE AND SUCCESSFUL APPROVED REPAIRED-ARTIFACT HEALTH RETRY; C16 PRESERVES INDEPENDENTLY VERIFIED LIVE CLOUDWATCH EVIDENCE AND ACCEPTED NON-BLOCKING LOW FINDINGS; V1-C17 IS ACTIVE / LOCALLY IMPLEMENTED / UNDELIVERED; C18+ REQUIRE SEPARATE HUMAN APPROVAL.
 ```

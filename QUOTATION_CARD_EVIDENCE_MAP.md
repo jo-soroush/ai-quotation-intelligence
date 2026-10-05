@@ -2907,61 +2907,114 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE
 
 ### 4. Human Start Approval
 
-NO
+YES
 
 ### 5. Files Changed
 
-Documentation-only pre-C17 remediation changed:
-`AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md`,
-`QUOTATION_CARD_SPECIFICATIONS.md`, this Evidence Map, and
-`CARD_LEARNING_AND_DECISION_LOG.md`. No implementation, test, dependency,
-dataset, deployment, or architecture-policy file changed.
+Local C17 candidate changes:
+
+- `evaluation/__init__.py`
+- `evaluation/c17.py`
+- `evaluation/golden_v1.json`
+- `evaluation/golden_v1.sha256`
+- `tests/test_evaluation.py`
+- `tests/test_architecture.py`
+- `PROJECT_CONTROL.md`
+- this Evidence Map
+- `CARD_LEARNING_AND_DECISION_LOG.md`
+
+No production source, dependency, deployment, AWS, Bedrock, Roadmap, or Card
+Specification file changed.
 
 ### 6. Commands Run
 
-Documentation-maintenance validation only:
-
-- `python scripts/reconcile_governance_views.py --write` and `--check`: PASS
-- `PYTHONPATH=.:src pytest -q`: 430 passed (one accepted Starlette/httpx
-  deprecation warning)
-- `PYTHONPATH=.:src pytest -q tests/test_architecture.py`: 73 passed
-- `bash scripts/test_governance_harness.sh`: PASS=61 / FAIL=0
-- `bash scripts/quotation_session_bootstrap.sh`: PASS=127 / expected dirty
-  maintenance-tree WARN=1 / FAIL=0; credential/sensitive-filename scan PASS
-- `python -m pip check`: PASS
-- `python -m compileall -q src deployment scripts`: PASS
+- `.venv/bin/pytest -q tests/test_evaluation.py`: 35 passed
+- `.venv/bin/pytest -q tests/test_calculation.py tests/test_comparison.py tests/test_retrieval.py tests/test_risk_evidence.py tests/test_agent_tools.py tests/test_quotation_agent.py tests/test_excel_export.py`: 183 passed
+- `.venv/bin/pytest -q tests/test_architecture.py`: 76 passed
+- `PYTHONPATH=.:src .venv/bin/pytest -q`: 468 passed with one accepted
+  Starlette/httpx deprecation warning
+- `PYTHONPATH=.:src .venv/bin/python -m evaluation.c17`: PASS report; output is
+  one authoritative JSON document
+- two in-process serialized evaluation runs: both PASS; byte-identical;
+  report SHA-256 `928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`
+  (5,283 bytes)
+- `.venv/bin/python scripts/reconcile_governance_views.py --write` and
+  `--check`: PASS and idempotent
+- `bash scripts/test_governance_harness.sh`: 61 PASS / 0 FAIL
+- `bash scripts/final_card_state_consistency.sh V1-C17 ACTIVE`: PASS
+- `bash scripts/quotation_session_bootstrap.sh`: 127 PASS / 1 expected dirty
+  worktree WARN / 0 FAIL; sensitive-filename and credential-pattern scans PASS
+- `.venv/bin/pip check`: no broken requirements
+- `.venv/bin/python -m compileall -q src evaluation deployment scripts tests`:
+  PASS
 - `bash -n scripts/*.sh`: PASS
 - `git diff --check`: PASS
 
-No C17 evaluation was run and no evaluation report or dataset was created.
+The first broad `.venv/bin/pytest -q` invocation omitted the repository's
+established root path and failed during C15 collection with
+`ModuleNotFoundError: deployment`. The canonical `PYTHONPATH=.:src` rerun
+passed all 468 tests; no implementation defect was involved.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — 35 C17 tests cover dataset integrity, exact metric thresholds,
+PASS/FAIL/ERROR semantics, independent fixed oracles, Hit@3, provenance,
+zero-reference behavior, typed output, tool/agent/Excel contracts, report
+privacy, reproducibility, offline execution, failure injection, and all ten
+targeted mutation-equivalent probes. The probes detect: lowering a 100% gate;
+raising the 0% unsupported-risk threshold; skipping a case; changing a
+denominator; allowing an implementation-derived wrong answer; accepting a
+retrieval hit below rank 3; treating report-only data as gating; relabeling
+ERROR as PASS; omitting dataset version/hash; and persisting a prohibited raw
+field. Caught: 10/10; not caught: 0.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS — 183 C04/C05/C06/C07/C09/C10/C12 tests passed; 76 architecture tests
+passed; the complete suite passed 468 tests.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+PASS — fixed synthetic Golden Dataset version `c17-golden-v1`, SHA-256
+`1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`.
+Ten cases were evaluated: calculation 2, historical comparison 2, retrieval 1,
+risk evidence 1, structured output 1, tool contract 1, scripted agent 1, and
+Excel 1. Results: calculation 2/2; comparison 2/2; retrieval Hit@3 1/1;
+evidence/provenance 1/1; unsupported-risk rate 0/3 = 0%; structured output
+1/1; tool contract 1/1; agent completion 1/1; Excel 1/1. Latency, Bedrock
+usage, and cost are explicitly `NOT_MEASURED_OFFLINE` and report-only. Overall
+status: PASS. A second run produced byte-identical authoritative JSON.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — existing Core arithmetic and comparison owners are evaluated without
+duplicating business logic; zero remains explicit; estimated and actual values
+remain distinct; retrieval similarity is graded only as Hit@3; historical
+identity/provenance is retained; the dataset is marked synthetic at dataset,
+record, and quote levels; Excel totals reconcile through C12.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — the agent cases use a fixed provider-neutral scripted trace. No live
+model, Bedrock adapter, AWS credentials, network, or LLM-as-judge is used.
+Model output remains subject to the delivered C10 typed/protocol validation.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS — report construction is allowlisted and rejects prompt/model-response,
+reviewer, workbook-byte, request/response-body, credential, token, secret, and
+customer-data fields; failure reasons are bounded categories. Tests block
+network calls and remove AWS credential/profile environment variables while
+the complete evaluation still passes. Architecture tests prove production
+modules do not import the separate evaluation owner. Threat-model coverage
+includes circular oracles, fixture tampering, dataset/version drift,
+denominator/threshold manipulation, silent skipping, synthetic-as-real
+misrepresentation, stochastic-judge authority, raw payload leakage,
+misleading PASS, production-readiness overclaim, and provenance loss.
 
 ### 13. Failures / Blockers
 
@@ -2970,44 +3023,91 @@ Exit Gate, missing C09+ verification block, and unresolved oracle, metric,
 threshold, non-determinism/trial, cost/repeatability, report, failure/
 escalation, live-Bedrock, and architecture-ownership contracts. Human-approved
 documentation-only remediation resolves those canonical gaps. No C17
-implementation started; C17 remains NOT_AUTHORIZED / NOT_STARTED.
+implementation had started at that time.
+
+During implementation, the first focused collection could not import the
+root-level offline `evaluation` package because pytest exposes only `src/`.
+The focused C17 test module now adds the repository root to its own import path;
+global pytest/runtime packaging was not widened. The first CLI evaluation also
+showed existing C16 operational log lines before the JSON report. The CLI now
+captures those lines during evaluation so stdout is exactly one authoritative
+report document without changing production logging. The first broad pytest
+command omitted `PYTHONPATH=.:src` and failed during C15 collection; the
+canonical rerun passed 468 tests. No blocker remains for independent local
+audit. The first bootstrap rerun also returned 126 PASS / 1 WARN / 1 FAIL
+because the current `Application Implementation` line had been compacted and
+no longer contained a legacy exact prefix required by the smoke check. Restoring
+the explicit enumerated current-state line made the next bootstrap pass
+127 / 1 expected dirty-tree WARN / 0 FAIL without changing semantic state.
 
 ### 14. Exit Gate Evidence
 
-The Roadmap Exit Gate and C09+ verification contract are now defined by the
-pre-C17 documentation remediation. No harness, dataset, evaluation run,
-machine report, or implementation proof exists; the C17 Exit Gate remains
-unproven.
+Local self-validation satisfies every C17 Roadmap clause: a fixed inspectable
+synthetic dataset has a version and independently checked content hash; exact
+independent expected values are not runtime-generated; all nine gating metrics
+meet their canonical thresholds; report-only metrics cannot gate; deterministic
+reruns are byte-identical; the authoritative JSON contains dataset identity,
+metric numerators/denominators/thresholds/status, case results, bounded failure
+reasons, and evidence references; privacy constraints pass; no LLM judge,
+live Bedrock, AWS, network, or production-runtime dependency exists. The result
+supports only the canonical fixed-synthetic-contract claim.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: SELF_VALIDATED / PENDING_INDEPENDENT_AUDIT
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PENDING_INDEPENDENT_AUDIT — local implementation, learning, threat-model,
+mutation, failure-injection, reproducibility, and Exit Gate evidence are
+current; the implementer does not mark independent audit PASS.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch `card/v1-c17-evaluation-harness`; base
+`11906a1acfa8c842abff4002e259779bfea9b8a5`; nothing staged, committed,
+pushed, or delivered for C17. Candidate identity is recorded after final
+validation outside the candidate itself to avoid self-reference.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+The small fixed synthetic dataset proves only the defined repository contracts,
+not open-ended retrieval/model quality, real-market commercial correctness, or
+production readiness. Tool/agent cases intentionally use C09's delivered C03
+synthetic corpus while the compact C17-owned history fixtures grade Core
+contracts. Latency, Bedrock usage, and cost are unmeasured/report-only in the
+offline baseline. No stochastic or live-model conclusions are made.
+
+Advanced-technique decisions after implementation: deterministic invariants,
+contract/integration tests, targeted mutation resistance, failure injection,
+adversarial harness-integrity testing, threat modeling, and scripted agent
+evaluation were performed. Generated property tests and fuzzing were evaluated
+but not added because the small fixed exact schema/oracle suite and explicit
+mutation cases cover the material boundary without a new generator/fuzzer.
+Differential testing was not added because no genuinely independent second
+implementation exists. Concurrency/race testing is not applicable to the
+sequential stateless runner. Formal methods are not applicable. Rollback is a
+Git restore of the last known-good harness and dataset version/hash; evaluation
+performs no production or AWS mutation requiring operational teardown.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+Stable data identity, strict case-count reconciliation, code-owned thresholds,
+and explicit report construction are all needed: deterministic fixtures alone
+do not prevent skipped cases, denominator drift, circular expectations, or
+privacy leakage. A separate root-level owner keeps the harness out of Lambda
+and production imports while still allowing it to consume public contracts.
 
 ### 19. Completion Evidence
 
-NONE
+NONE — C17 remains ACTIVE / UNDELIVERED / NOT COMPLETE. Independent local
+audit and explicit Git-delivery approval remain required.
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C17
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C18 — Guardrails and Failure Handling
 
@@ -3301,7 +3401,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C14 | Amazon S3 Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C15 | AWS Deployment | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C16 | CloudWatch Observability | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C17 | Evaluation Harness | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | PRESENT | NOT_STARTED |
+| V1-C17 | Evaluation Harness | ACTIVE | YES | PASS | SELF_VALIDATED | PENDING_INDEPENDENT_AUDIT | PRESENT | ACTIVE |
 | V1-C18 | Guardrails and Failure Handling | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -3311,7 +3411,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C16_COMPLETE
+Project Phase: V1_C17_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3328,8 +3428,9 @@ V1-C13: COMPLETE
 V1-C14: COMPLETE
 V1-C15: COMPLETE
 V1-C16: COMPLETE
-V1-C17: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C17: ACTIVE
+V1-C18: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C17
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.

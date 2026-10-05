@@ -1,0 +1,342 @@
+{
+  "dataset_schema_version": "1",
+  "dataset_version": "c17-golden-v1",
+  "synthetic": true,
+  "oracle_source": "independently_authored_and_preverified",
+  "history": [
+    {
+      "quote": {
+        "quote_id": "syn-hist-web-001",
+        "project_name": "Website migration",
+        "currency": "USD",
+        "items": [
+          {
+            "item_id": "audit",
+            "description": "Site audit",
+            "estimated_hours": {"value": "10", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          },
+          {
+            "item_id": "migration",
+            "description": "Content migration",
+            "estimated_hours": {"value": "20", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          }
+        ],
+        "status": "approved",
+        "estimated_total_cost": {"amount": "3000", "currency": "USD"},
+        "actual_total_cost": {"amount": "3600", "currency": "USD"},
+        "created_at": "2025-01-10T09:00:00Z",
+        "data_origin": "synthetic"
+      },
+      "outcome": {
+        "actual_hours": {"value": "36", "unit": "hours"},
+        "actual_cost": {"amount": "3600", "currency": "USD"},
+        "completed_at": "2025-02-10T09:00:00Z",
+        "scope_changed": false,
+        "outcome_label": "completed_with_overrun"
+      },
+      "source_id": "syn-source-web-001",
+      "data_origin": "synthetic"
+    },
+    {
+      "quote": {
+        "quote_id": "syn-hist-web-002",
+        "project_name": "Website redesign",
+        "currency": "USD",
+        "items": [
+          {
+            "item_id": "audit",
+            "description": "Site audit",
+            "estimated_hours": {"value": "8", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          },
+          {
+            "item_id": "migration",
+            "description": "Content migration",
+            "estimated_hours": {"value": "18", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          }
+        ],
+        "status": "approved",
+        "estimated_total_cost": {"amount": "2600", "currency": "USD"},
+        "actual_total_cost": {"amount": "2500", "currency": "USD"},
+        "created_at": "2025-03-01T09:00:00Z",
+        "data_origin": "synthetic"
+      },
+      "outcome": {
+        "actual_hours": {"value": "25", "unit": "hours"},
+        "actual_cost": {"amount": "2500", "currency": "USD"},
+        "completed_at": "2025-04-01T09:00:00Z",
+        "scope_changed": false,
+        "outcome_label": "completed_under_estimate"
+      },
+      "source_id": "syn-source-web-002",
+      "data_origin": "synthetic"
+    },
+    {
+      "quote": {
+        "quote_id": "syn-hist-app-003",
+        "project_name": "Mobile application",
+        "currency": "USD",
+        "items": [
+          {
+            "item_id": "api",
+            "description": "API implementation",
+            "estimated_hours": {"value": "40", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          },
+          {
+            "item_id": "ui",
+            "description": "Mobile interface",
+            "estimated_hours": {"value": "30", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          }
+        ],
+        "status": "approved",
+        "estimated_total_cost": {"amount": "7000", "currency": "USD"},
+        "actual_total_cost": {"amount": "7500", "currency": "USD"},
+        "created_at": "2025-05-01T09:00:00Z",
+        "data_origin": "synthetic"
+      },
+      "outcome": {
+        "actual_hours": {"value": "75", "unit": "hours"},
+        "actual_cost": {"amount": "7500", "currency": "USD"},
+        "completed_at": "2025-06-15T09:00:00Z",
+        "scope_changed": true,
+        "outcome_label": "completed_with_scope_change"
+      },
+      "source_id": "syn-source-app-003",
+      "data_origin": "synthetic"
+    },
+    {
+      "quote": {
+        "quote_id": "syn-hist-web-004",
+        "project_name": "Website migration support",
+        "currency": "USD",
+        "items": [
+          {
+            "item_id": "audit",
+            "description": "Site audit",
+            "estimated_hours": {"value": "12", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          },
+          {
+            "item_id": "migration",
+            "description": "Content migration",
+            "estimated_hours": {"value": "24", "unit": "hours"},
+            "hourly_rate": {"amount": "100", "currency": "USD"}
+          }
+        ],
+        "status": "approved",
+        "estimated_total_cost": {"amount": "3600", "currency": "USD"},
+        "actual_total_cost": {"amount": "4000", "currency": "USD"},
+        "created_at": "2025-07-01T09:00:00Z",
+        "data_origin": "synthetic"
+      },
+      "outcome": {
+        "actual_hours": {"value": "40", "unit": "hours"},
+        "actual_cost": {"amount": "4000", "currency": "USD"},
+        "completed_at": "2025-08-10T09:00:00Z",
+        "scope_changed": false,
+        "outcome_label": "completed_with_overrun"
+      },
+      "source_id": "syn-source-web-004",
+      "data_origin": "synthetic"
+    }
+  ],
+  "cases": {
+    "calculation": [
+      {
+        "case_id": "calc-exact-001",
+        "quote": {
+          "quote_id": "syn-calc-001",
+          "project_name": "Synthetic calculation one",
+          "currency": "USD",
+          "items": [
+            {
+              "item_id": "analysis",
+              "description": "Synthetic analysis",
+              "estimated_hours": {"value": "8", "unit": "hours"},
+              "hourly_rate": {"amount": "125", "currency": "USD"}
+            },
+            {
+              "item_id": "delivery",
+              "description": "Synthetic delivery",
+              "estimated_hours": {"value": "12.5", "unit": "hours"},
+              "hourly_rate": {"amount": "80", "currency": "USD"}
+            }
+          ],
+          "status": "draft",
+          "created_at": "2026-01-01T10:00:00Z",
+          "data_origin": "synthetic"
+        },
+        "expected_total": {"amount": "2000.0", "currency": "USD"}
+      },
+      {
+        "case_id": "calc-zero-is-explicit-002",
+        "quote": {
+          "quote_id": "syn-calc-002",
+          "project_name": "Synthetic calculation two",
+          "currency": "USD",
+          "items": [
+            {
+              "item_id": "zero-scope",
+              "description": "Explicit zero-hour item",
+              "estimated_hours": {"value": "0", "unit": "hours"},
+              "hourly_rate": {"amount": "200", "currency": "USD"}
+            },
+            {
+              "item_id": "review",
+              "description": "Synthetic review",
+              "estimated_hours": {"value": "3", "unit": "hours"},
+              "hourly_rate": {"amount": "99.5", "currency": "USD"}
+            }
+          ],
+          "status": "draft",
+          "created_at": "2026-01-02T10:00:00Z",
+          "data_origin": "synthetic"
+        },
+        "expected_total": {"amount": "298.5", "currency": "USD"}
+      }
+    ],
+    "historical_comparison": [
+      {
+        "case_id": "comparison-overrun-001",
+        "history_quote_id": "syn-hist-web-001",
+        "expected": {
+          "quote_id": "syn-hist-web-001",
+          "source_id": "syn-source-web-001",
+          "hour_variance": {"estimated": "30", "actual": "36", "variance": "6", "percentage": "20", "unit": "hours"},
+          "cost_variance": {"estimated": "3000", "actual": "3600", "variance": "600", "percentage": "20", "unit": "USD"},
+          "scope_changed": false,
+          "outcome_label": "completed_with_overrun"
+        }
+      },
+      {
+        "case_id": "comparison-underrun-002",
+        "history_quote_id": "syn-hist-web-002",
+        "expected": {
+          "quote_id": "syn-hist-web-002",
+          "source_id": "syn-source-web-002",
+          "hour_variance": {"estimated": "26", "actual": "25", "variance": "-1", "percentage": "-3.846153846153846153846153846", "unit": "hours"},
+          "cost_variance": {"estimated": "2600", "actual": "2500", "variance": "-100", "percentage": "-3.846153846153846153846153846", "unit": "USD"},
+          "scope_changed": false,
+          "outcome_label": "completed_under_estimate"
+        }
+      }
+    ],
+    "retrieval": [
+      {
+        "case_id": "retrieval-website-001",
+        "request": {
+          "project_name": "Website migration",
+          "currency": "USD",
+          "items": [
+            {
+              "item_id": "audit",
+              "description": "Site audit",
+              "estimated_hours": {"value": "9", "unit": "hours"},
+              "hourly_rate": {"amount": "100", "currency": "USD"}
+            },
+            {
+              "item_id": "migration",
+              "description": "Content migration",
+              "estimated_hours": {"value": "21", "unit": "hours"},
+              "hourly_rate": {"amount": "100", "currency": "USD"}
+            }
+          ],
+          "requested_at": "2026-02-01T10:00:00Z"
+        },
+        "history_quote_ids": ["syn-hist-web-001", "syn-hist-web-002", "syn-hist-app-003", "syn-hist-web-004"],
+        "expected_similar_quote_ids": ["syn-hist-web-001"]
+      }
+    ],
+    "risk_evidence": [
+      {
+        "case_id": "risk-hours-001",
+        "metric": "hours",
+        "history_quote_ids": ["syn-hist-web-001", "syn-hist-web-002", "syn-hist-web-004"],
+        "required_evidence": true,
+        "expected": {
+          "status": "success",
+          "comparable_project_count": 3,
+          "overrun_count": 2,
+          "overrun_rate": "0.6666666666666666666666666667",
+          "average_variance": "3",
+          "median_variance": "4",
+          "source_quote_ids": ["syn-hist-web-001", "syn-hist-web-002", "syn-hist-web-004"],
+          "source_ids": ["syn-source-web-001", "syn-source-web-002", "syn-source-web-004"],
+          "evidence_ids": ["risk-hours-overrun-rate", "risk-hours-average-variance", "risk-hours-median-variance"]
+        }
+      }
+    ],
+    "tool_call": [
+      {
+        "case_id": "tool-risk-hours-001",
+        "tool": "get_risk_evidence",
+        "arguments": {"metric": "hours"},
+        "expected_status": "success",
+        "expected_evidence_id": "risk-hours-overrun-rate"
+      }
+    ],
+    "agent_task": [
+      {
+        "case_id": "agent-scripted-001",
+        "request_id": "c17-agent-001",
+        "quotation_request": {
+          "project_name": "Synthetic service launch",
+          "currency": "USD",
+          "items": [
+            {
+              "item_id": "planning",
+              "description": "Synthetic planning",
+              "estimated_hours": {"value": "10", "unit": "hours"},
+              "hourly_rate": {"amount": "120", "currency": "USD"}
+            },
+            {
+              "item_id": "review",
+              "description": "Synthetic review",
+              "estimated_hours": {"value": "5", "unit": "hours"},
+              "hourly_rate": {"amount": "80", "currency": "USD"}
+            }
+          ],
+          "requested_at": "2026-02-02T10:00:00Z"
+        },
+        "script": [
+          {"kind": "tool", "name": "get_risk_evidence", "arguments": {"metric": "hours"}},
+          {
+            "kind": "final",
+            "narrative": "Draft for human review.",
+            "evidence_ids": ["risk-hours-overrun-rate"],
+            "risk_suggestions": [{"severity": "medium", "evidence_ids": ["risk-hours-overrun-rate"]}],
+            "missing_information": []
+          }
+        ],
+        "expected": {
+          "status": "success",
+          "quote_id": "draft-c17-agent-001",
+          "estimated_total": "1600",
+          "evidence_ids": ["risk-hours-overrun-rate"]
+        }
+      }
+    ],
+    "structured_output": [
+      {
+        "case_id": "structured-agent-001",
+        "agent_case_id": "agent-scripted-001",
+        "expected_schema": "AgentResult",
+        "expected_status": "success"
+      }
+    ],
+    "excel": [
+      {
+        "case_id": "excel-approved-001",
+        "agent_case_id": "agent-scripted-001",
+        "expected_sheets": ["Quotation", "Risk Analysis", "Historical Evidence"],
+        "expected_quote_id": "draft-c17-agent-001",
+        "expected_total": "1600"
+      }
+    ]
+  }
+}
