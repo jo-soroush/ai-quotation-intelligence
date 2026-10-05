@@ -2519,63 +2519,146 @@ Repeatable measurable checks are needed to distinguish deterministic correctness
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+A dedicated root-level `evaluation` package now owns a fixed synthetic Golden
+Dataset, its sidecar SHA-256 identity, strict loader/integrity checks,
+deterministic graders over the existing C04/C05/C06/C07/C09/C10/C12 public
+contracts, stable JSON report serialization, and a command-line runner. Ten
+inspectable cases cover two calculation cases, two historical comparisons,
+and one each for retrieval, risk/provenance, structured output, tool protocol,
+scripted agent completion, and approved Excel reconciliation. Thirty-five
+focused tests exercise normal evaluation, integrity failures, privacy,
+failure injection, and targeted mutation-equivalent defects.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The evaluation owner lives outside `src/ai_quotation_intelligence`, and
+production code is forbidden by architecture tests from importing it. Dataset
+bytes are authenticated by a sibling SHA-256 record; thresholds are canonical
+code constants rather than fixture-controlled values; every category has a
+non-empty expected case set; metric construction reconciles exact case counts
+and unique identities. Oracles are fixed authored JSON values or delivered
+typed/protocol contracts. Reports are built from an explicit bounded schema,
+not by serializing fixture, model, workbook, exception, or runtime objects.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+Separating evaluation from the production package makes the dependency
+direction visible and keeps it out of the Lambda artifact. A small static JSON
+dataset is reviewable and content-addressable without a new dependency. Using
+existing public owners exercises delivered behavior while independently
+authored expected values prevent the implementation from computing its own
+answer. Exact deterministic JSON, without timestamps or random identifiers,
+makes two-run equality a meaningful reproducibility check.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered alternatives were: place evaluation inside the production package;
+generate expected answers from Core at runtime; reuse only the C03 generator as
+both data and oracle; add an evaluation/dataframe framework; persist raw agent
+or workbook objects in the report; add LLM judgment or live Bedrock trials; and
+introduce a second implementation solely for differential comparison.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Production-package placement would weaken the one-way ownership boundary and
+enter Lambda packaging. Runtime-generated expectations and generator-as-oracle
+designs would be circular. External frameworks add dependency/license surface
+without improving the small exact suite. Raw-object reports violate the privacy
+contract. LLM/live-provider grading is stochastic, costs money, requires AWS,
+and is explicitly outside V1 C17. A synthetic second implementation would not
+be a genuinely independent oracle.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard library (`json`, `hashlib`, `decimal`, `pathlib`, `argparse`,
+`dataclasses`, and in-memory streams), existing project Pydantic/domain
+contracts, existing openpyxl-backed C12 export verification, and pytest. No new
+third-party dependency, service, AWS resource, model, or evaluation framework
+was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+They were already available, deterministic, headless, and sufficient for exact
+metric arithmetic, stable serialization, content identity, typed validation,
+workbook reconciliation, and adversarial testing. This minimizes operational,
+license, and supply-chain surface.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The initial focused pytest collection could not see the root-level evaluation
+package because the project pytest path intentionally exposes only `src/`.
+The first CLI run also included C16 operational JSON log events before the
+evaluation report. Later, the first broad pytest invocation omitted the
+repository's established `PYTHONPATH=.:src` and failed while collecting the
+C15 deployment test with `ModuleNotFoundError: deployment`. The first bootstrap
+after state reconciliation also failed its evidence-honesty smoke check because
+the current application-implementation line had been compacted and no longer
+contained the script's legacy exact C01 prefix.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first issue was the deliberate production/offline package separation
+meeting pytest's `pythonpath = ["src"]`. The second came from existing agent
+and tool instrumentation configuring a stdout handler during evaluation. The
+broad-suite failure was an invocation-environment mismatch: the deployment
+package is repository-root owned and the canonical full-suite command includes
+that root. The bootstrap failure was a machine-readable formatting mismatch,
+not a semantic contradiction: the compact line was truthful, but the smoke
+check intentionally recognizes an established exact prefix.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The focused C17 test module adds only the repository root to its own import
+path; global production packaging remains unchanged. The evaluation CLI
+captures existing operational stdout while running and emits only the stable
+authoritative report afterward; production logging code and semantics were not
+changed. The full suite was rerun with `PYTHONPATH=.:src` and passed all 468
+tests. PROJECT_CONTROL restored the explicit enumerated application state,
+after which bootstrap passed 127 / 1 expected dirty-tree WARN / 0 FAIL. Each
+recovery and its proving rerun remains visible in the Evidence Map.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+See `QUOTATION_CARD_EVIDENCE_MAP.md` V1-C17. Key results: fixed dataset
+SHA-256 `1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`;
+overall PASS on both evaluation runs; byte-identical report SHA-256
+`928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`;
+35 focused tests, 183 relevant regressions, 76 architecture tests, and 468
+full-suite tests passed.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The dataset is intentionally small and synthetic. It provides sharp regression
+signals for defined contracts but cannot establish universal retrieval quality,
+real-market commercial correctness, or production readiness. Agent/tool cases
+must consume C09's canonical C03 history because C09 rejects other history
+sources; compact C17 fixtures independently grade Core contracts. Latency,
+Bedrock usage, and cost remain unmeasured report-only fields. The authoritative
+report is generated on demand rather than stored as a raw runtime trace.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+A deterministic dataset is necessary but not sufficient. Its interpretation
+also depends on immutable identity, separately owned thresholds, exact
+denominators, full case coverage, fail-closed integrity semantics, and bounded
+report construction. Mutation-equivalent tests are valuable because a happy
+path alone would not detect silent case omission or a misleading PASS label.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Never relax a fixture, threshold, denominator, or hash check merely to regain
+PASS. A new dataset requires a new reviewed version and hash. Keep expected
+values independently authored. Keep reports allowlisted and synthetic claims
+precise. Production code must remain unaware of `evaluation`, and stochastic
+or live-model evaluation needs a new explicitly approved contract.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C18 may rely on its own delivered guardrail/security suites but must not expand
+C17 into a duplicate general security platform. C19 may use the C17 harness and
+report contract as an offline measurement mechanism, but cannot reinterpret
+the fixed synthetic PASS as real-world business truth. C18 and later Cards
+remain unauthorized.
 
 ### Pre-C17 Canonical Evaluation Contract Remediation (Documentation Only)
 

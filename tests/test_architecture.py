@@ -11,7 +11,9 @@ import pytest
 
 
 PACKAGE_NAME = "ai_quotation_intelligence"
-PACKAGE = Path(__file__).resolve().parents[1] / "src" / PACKAGE_NAME
+REPOSITORY = Path(__file__).resolve().parents[1]
+PACKAGE = REPOSITORY / "src" / PACKAGE_NAME
+EVALUATION_PACKAGE = REPOSITORY / "evaluation"
 CORE = "CORE"
 PROVIDER = "PROVIDER"
 AGENT_TOOL = "AGENT_TOOL"
@@ -68,6 +70,11 @@ MODULE_CATEGORIES = {
     "config.py": SUPPORT,
     "logging_config.py": SUPPORT,
 }
+
+# C17 is a separate offline owner, not a production architecture category.
+# Keep its complete module inventory explicit so new files cannot appear
+# without an architecture decision and test update.
+EVALUATION_MODULES = {"__init__.py", "c17.py"}
 
 
 def _module_name(relative_path: str) -> str:
@@ -171,6 +178,44 @@ def _add_module(package: Path, relative_path: str, source: str = "") -> None:
 
 def test_actual_package_tree_has_complete_classification_and_valid_imports() -> None:
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
+
+
+def test_c17_evaluation_owner_is_complete_and_outside_production_package() -> None:
+    discovered = {
+        path.relative_to(EVALUATION_PACKAGE).as_posix()
+        for path in EVALUATION_PACKAGE.rglob("*.py")
+    }
+    assert discovered == EVALUATION_MODULES
+    assert not (PACKAGE / "evaluation").exists()
+
+
+def test_production_runtime_does_not_import_offline_evaluation() -> None:
+    violations: list[str] = []
+    for relative_path in sorted(MODULE_CATEGORIES):
+        source = (PACKAGE / relative_path).read_text(encoding="utf-8")
+        module = _module_name(relative_path)
+        targets = _import_targets(
+            ast.parse(source, filename=relative_path),
+            module,
+            relative_path.endswith("/__init__.py") or relative_path == "__init__.py",
+        )
+        if any(target == "evaluation" or target.startswith("evaluation.") for target in targets):
+            violations.append(relative_path)
+    assert not violations, f"production modules import evaluation: {violations}"
+
+
+def test_c17_evaluation_has_no_provider_sdk_or_production_boundary_dependency() -> None:
+    source = (EVALUATION_PACKAGE / "c17.py").read_text(encoding="utf-8")
+    targets = _import_targets(ast.parse(source, filename="evaluation/c17.py"), "evaluation.c17", False)
+    forbidden = {
+        "boto3", "botocore", "ai_quotation_intelligence.bedrock",
+        "ai_quotation_intelligence.api", "ai_quotation_intelligence.s3_storage",
+    }
+    violations = sorted(
+        target for target in targets
+        if any(target == item or target.startswith(f"{item}.") for item in forbidden)
+    )
+    assert not violations, f"evaluation imports live/provider boundary: {violations}"
 
 
 @pytest.mark.parametrize("source_path,category", [
