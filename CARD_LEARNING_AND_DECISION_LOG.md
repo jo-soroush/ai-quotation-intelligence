@@ -2626,6 +2626,17 @@ overall PASS on both evaluation runs; byte-identical report SHA-256
 35 focused tests, 183 relevant regressions, 76 architecture tests, and 468
 full-suite tests passed.
 
+Independent audit passed for candidate identity
+`0b41e981503c02e8dd6143bfd206e6863511a83a15b585b46d4f37ec0e63a83b`.
+Delivery commit `a88fdfbe05c6e3ca8fb323557f5e71274bb71163` was pushed and
+merged by PR #51 at `528487dfa7bd49f7411fe644b6407dbd0922a48c`. On synchronized
+main, the C17 tests (35), full pytest suite (468), architecture suite (76),
+Governance Harness (61 PASS / 0 FAIL), reconciliation, ACTIVE-state check,
+and authoritative evaluation passed. Bootstrap passed with the expected
+clean-tree result. Completion reconciliation preserves the fixed dataset and
+report identities and records C17 COMPLETE with Active Card NONE; C18 remains
+NOT_AUTHORIZED. No AWS, live Bedrock, or application S3 action was performed.
+
 ### 15. Tradeoffs and Limitations
 
 The dataset is intentionally small and synthetic. It provides sharp regression
@@ -2635,6 +2646,10 @@ must consume C09's canonical C03 history because C09 rejects other history
 sources; compact C17 fixtures independently grade Core contracts. Latency,
 Bedrock usage, and cost remain unmeasured report-only fields. The authoritative
 report is generated on demand rather than stored as a raw runtime trace.
+
+The independent audit's informational note concerned only the verifier's
+initial mutation-test methodology. It identified no implementation defect;
+the note was accepted as non-blocking and was not remediated during delivery.
 
 ### 16. What We Learned
 
