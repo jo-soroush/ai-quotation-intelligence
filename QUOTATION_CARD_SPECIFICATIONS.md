@@ -2216,7 +2216,7 @@ A professional system needs measurable quality rather than reliance on a visuall
 
 ### 5. Architecture Concept
 
-Golden/evaluation cases → system execution → deterministic and AI checks → metrics → evaluation report.
+Fixed synthetic Golden Dataset → offline harness → deterministic contract graders → machine-readable metric report.
 
 ### 6. Current System Before Card
 
@@ -2226,7 +2226,7 @@ This is a contract description, not a claim that prior Cards or this Card are co
 
 ### 7. Design Decision
 
-Separate deterministic evaluation from model-quality evaluation and use repeatable cases; do not force metrics unsupported by the task.
+Evaluate defined system contracts on a fixed synthetic dataset with independent deterministic oracles. V1 does not use LLM-as-judge or claim open-ended model quality; latency, Bedrock usage, and cost are report-only where measurable.
 
 ### 8. Implementation Scope
 
@@ -2238,7 +2238,8 @@ Separate deterministic evaluation from model-quality evaluation and use repeatab
 - measure unsupported-risk rate
 - validate structured output and tool-call success
 - measure agent completion, Excel correctness, latency, and Bedrock usage/cost where measurable
-- report PASS/FAIL and metric results
+- report PASS/FAIL/ERROR, metric results, case outcomes, dataset identity, and evidence provenance
+- run offline without AWS, live Bedrock, secrets, network, or production-runtime changes
 
 ### 9. Out of Scope
 
@@ -2246,6 +2247,9 @@ Separate deterministic evaluation from model-quality evaluation and use repeatab
 - UI
 - new model architecture
 - production monitoring system
+- LLM-as-judge or subjective model-quality grading
+- live Bedrock/AWS evaluation, production deployment changes, and CI integration
+- generalized security evaluation or production-release policy
 
 ### 10. Dependencies
 
@@ -2255,13 +2259,109 @@ If a dependency is later required but cannot be verified from the Roadmap, use C
 
 ### 11. Tests / Evaluation
 
-The harness runs repeatable cases, distinguishes PASS/FAIL, reports metrics, detects intentionally bad outputs where practical, and preserves evidence traceability.
+The offline harness runs the fixed synthetic Golden Dataset deterministically,
+distinguishes PASS/FAIL/ERROR, reports metrics and per-case evidence, and
+detects contract-invalid outputs. It requires no network, AWS, live Bedrock,
+secrets, or CI service.
 
 Test not run != PASS. Design intent != implementation evidence.
 
+### 11A. Pre-Implementation Verification (C09+)
+
+- **Risk Classification: ELEVATED.** The harness is offline, but circular
+  oracles, fixture/denominator/threshold manipulation, synthetic-data misuse,
+  stochastic grading, report leakage, and false PASS claims could materially
+  misrepresent system quality or commercial correctness.
+- **Escalation Triggers:** expected values produced by the code under test;
+  confidential/real customer data; unversioned or hash-mismatched fixtures;
+  silently skipped cases or mutable denominators/thresholds; an LLM judge or
+  stochastic provider acting as PASS authority; report payload/secret leakage;
+  an evaluation dependency from production runtime; a real-world correctness
+  or production-readiness claim; AWS/network requirements; or unapproved
+  dependency/architecture expansion.
+- **Canonical Sources:** C17 Roadmap contract and Exit Gate; this
+  specification; delivered Core calculation and historical contracts, C06
+  retrieval, C07 risk/evidence, C08 provider contract, C09/C10 tool/agent
+  contracts, C11 review boundary, C12 export contracts, C13 API, C14 storage,
+  and C15/C16 deployment/observability boundaries; Commercial and Data
+  Guardrails; Engineering Harness; PROJECT_CONTROL for live state and
+  authorization.
+- **Acceptance Contract:** Given the existing delivered contracts and a fixed
+  synthetic-only Golden Dataset with independently authored expected results,
+  when the dedicated offline harness runs with deterministic provider traces,
+  then it emits reproducible, thresholded contract metrics and an authoritative
+  machine-readable report bound to the dataset version/hash. No model judge,
+  live Bedrock, AWS, network, secret, production-runtime modification, or
+  confidential data is needed. Passing means only that defined deterministic
+  contracts passed on that fixed synthetic dataset.
+- **Critical Invariants:** the dataset has stable `case_id`, version, and
+  deterministic content identity/SHA-256; expected results are independently
+  authored and never self-oracled. Required metrics and denominators are
+  determined by the fixed dataset/applicability, not silently reduced by
+  skipped cases. Calculation, historical comparison, Hit@3, evidence and
+  provenance, structured output, tool protocol, scripted-agent completion,
+  and Excel thresholds are exact as in the Roadmap. Unsupported-risk rate is
+  zero; required-but-absent risk evidence separately fails completeness.
+  Latency/usage/cost are report-only. Reports exclude secrets, real prompts or
+  responses, `reviewer_id`, workbook bytes, arbitrary bodies, and confidential
+  data. Evaluation is not business authority and production code never
+  depends on it.
+- **Verification Strategy:** validate dataset schema, stable serialization,
+  expected-value independence and hash/version; exercise each formula and
+  threshold with passing and deliberately failing deterministic fixtures;
+  verify required evidence/provenance, tool and agent protocol, typed output,
+  and C12 deterministic workbook invariants; test overall PASS/FAIL/ERROR,
+  case/metric reporting, privacy, and reproducible reruns. Challenge denominator
+  reduction, skipped cases, threshold/config tampering, and invalid dataset
+  integrity. Run offline/headless without network/AWS. Do not rerun stochastic
+  trials or call live Bedrock.
+- **Advanced Verification Decision:**
+
+  | Technique | Decision | C17-specific reason |
+  | --- | --- | --- |
+  | Deterministic invariants | REQUIRED | Fixed expected values, formulas, dataset identity, thresholds, and status transitions must be exact and reproducible. |
+  | Contract tests | REQUIRED | Dataset, metric, typed-output, tool protocol, evidence linkage, and machine-report fields have explicit contracts. |
+  | Integration | REQUIRED | The offline runner must consume fixed cases across the applicable calculation/retrieval/risk/agent/export contracts and emit one coherent report without entering production runtime. |
+  | Generated property tests | CONDITIONAL / EVALUATE | Use only if metric/dataset structures have meaningful generated invariants beyond the fixed Golden Dataset; generated results must not replace independent expected values. |
+  | Targeted mutation-resistance | REQUIRED | Show tests reject altered expected values, formula/threshold/denominator changes, case skipping, hash/version mismatch, and weakened report/status rules. |
+  | Failure injection | REQUIRED | Inject malformed datasets, hash/version mismatch, unknown metric, invalid cases, grader failures, and non-deterministic output; integrity failures must produce ERROR, not false PASS. |
+  | Fuzzing | CONDITIONAL / EVALUATE | Evaluate if dataset/report parsers accept broad untrusted input; fixed schemas may be adequately challenged with bounded adversarial malformed cases. |
+  | Differential | CONDITIONAL / EVALUATE | Use only where a genuinely independent oracle exists, such as separately authored exact expected values; do not compare the implementation to its own calculation or invent a second implementation as an oracle. |
+  | Concurrency/race | NOT_APPLICABLE | Baseline V1 harness is sequential and offline; reassess only if implementation introduces parallel execution or shared mutable state. |
+  | Adversarial testing | REQUIRED | Challenge circular oracles, fixture tampering, denominator/threshold manipulation, silent skips, synthetic-data misrepresentation, report leakage, and false PASS claims, without duplicating all prior security suites. |
+  | Threat Modeling | REQUIRED | ELEVATED risks include quality misrepresentation, provenance loss, privacy leakage, dataset drift, and non-deterministic judge authority. |
+  | Agent evals | REQUIRED | C17 explicitly grades fixed scripted-agent protocol/task cases; this is deterministic contract evaluation, not open-ended model-quality judgment. |
+  | Rollback/recovery | REQUIRED | Preserve a prior known-good harness/dataset version and define bounded revert/restore of evaluation code and fixtures after a bad harness update. |
+  | Formal methods | NOT_APPLICABLE | Exact fixture oracles, invariant/contract tests, mutation checks, and deterministic reports are proportionate; no formal proof is specified. |
+
+- **Independent Verifier Expectations:** independently verify the fixed
+  dataset/hash and expected-value provenance; recompute metric numerators,
+  denominators, thresholds, and overall status from per-case results; probe
+  case skipping and circular-oracle mutations; verify report redaction,
+  deterministic reruns, and architecture isolation; confirm FAIL/ERROR blocks
+  completion and no live AWS or LLM judge was used. Reject claims beyond the
+  fixed synthetic contracts.
+- **Evidence / Traceability:** preserve dataset version/hash, exact commands,
+  report schema/results, per-case evidence references, failures and recovery,
+  reproducibility result, dependency/architecture review, and privacy checks.
+  Clearly distinguish gating PASS/FAIL metrics from report-only observations.
+  No credentials, prohibited payloads, or confidential data are recorded.
+- **Known Non-Scope:** live Bedrock/AWS; LLM-as-judge; stochastic model trials
+  and statistical policy; CI service integration; C19 Golden Case; general
+  security-evaluation platform; C11 review-quality grading (existing C11
+  approval/rejection regression remains authoritative);
+  subjective reviewer-quality evaluation;
+  real-market/commercial correctness, profitability, or production-readiness
+  claims; production-runtime dependency; dashboards/observability; C18+ and
+  C20+ scope.
+
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require repeatable measurable evaluation with separate deterministic and AI-quality checks.
+The Roadmap Exit Gate is authoritative. C17 is deterministic-first and
+synthetic-only; live Bedrock, AWS, network access, and production-runtime
+changes are not required. Report-only latency/usage/cost cannot gate PASS.
+Failure or invalid evaluation integrity blocks the C17 Exit Gate as defined
+in the Roadmap.
 
 The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
 Before Card COMPLETE:
