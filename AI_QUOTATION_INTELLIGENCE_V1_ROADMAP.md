@@ -1119,33 +1119,86 @@ future production-release policy.
 
 ## V1-C18 — Guardrails and Failure Handling
 
-Design explicit failure behavior.
+Verification-first, hardening-only Card to prove enforcement of all 15
+canonical failure states in `COMMERCIAL_AND_DATA_GUARDRAILS.md` §8. C18 first
+maps and audits existing enforcement and evidence; it does not begin by
+inventing a new guardrail subsystem. This is a cross-cutting proof/audit Card;
+existing owning layers retain responsibility, and no new architecture
+category, module, or package is required by default. Existing C04–C17 evidence
+may be reused only when it directly and sufficiently proves the exact
+invariant. Missing proof requires bounded deterministic tests; a production
+change is permitted only for a proven enforcement gap and must be the smallest
+reversible fix.
 
-### Failure Cases
-
-```text
-invalid quotation input
-missing required fields
-no historical matches
-insufficient evidence
-invalid Bedrock output
-Bedrock unavailable
-S3 unavailable
-tool failure
-Excel generation failure
-unauthorized operation
-```
-
-### Expected Principle
+The canonical §8 states are:
 
 ```text
-fail explicitly
-preserve evidence
-avoid fabricated fallback answers
-return actionable error information
+MISSING_RATE
+MISSING_REQUIRED_HOURS
+INVALID_COMMERCIAL_VALUE
+CURRENCY_MISMATCH
+COMMERCIAL_SEMANTICS_UNVERIFIED
+DETERMINISTIC_CONFLICT
+INSUFFICIENT_EVIDENCE
+AI_UNSUPPORTED_CLAIM
+AI_INVALID
+AI_UNAVAILABLE
+AI_BOUNDARY_VIOLATION
+COMMERCIAL_INVARIANT_FAILED
+EXCEL_RECONCILIATION_FAILED
+APPROVAL_REQUIRED
+SECURITY_BOUNDARY_VIOLATION
 ```
 
-Amazon Bedrock Guardrails may be added here if they provide measurable value.
+For every state, C18 records its trigger, owner, expected fail-closed outcome,
+existing implementation/evidence, evidence sufficiency, any C18 action, and
+final verification result. Evidence classification is one of
+`EXISTING_EVIDENCE_SUFFICIENT`, `EXISTING_EVIDENCE_PARTIAL`,
+`NEW_C18_TEST_REQUIRED`, or `ENFORCEMENT_GAP_REQUIRES_FIX`. No state may be
+silently omitted or counted as passing without evidence.
+
+Failure behavior must fail closed, avoid silent success and fabricated
+fallbacks, preserve valid deterministic state only as explicitly partial,
+reject invalid AI output before it becomes authoritative, preserve approval
+authority, and return bounded actionable failures without exposing sensitive
+data. C18 reuses C16 structured observability only on paths that already use
+it; it adds no observability subsystem or infrastructure.
+
+AWS Bedrock Guardrails are declined/deferred for V1 C18. Neither AWS nor live
+Bedrock proof is required. Provider, storage, tool, and export failures are
+proved with deterministic injected failures. C18 changes no guardrail policy,
+commercial/arithmetic/approval/evidence/export authority, persistence model,
+or dependency contract. C17 is not a C18 dependency and its dataset, metrics,
+report, and evaluation logic remain unchanged.
+
+### Exit Gate — V1-C18
+
+- All 15 canonical `COMMERCIAL_AND_DATA_GUARDRAILS.md` §8 states are individually
+  mapped in the C18 evidence matrix; every row has an owner, trigger, expected
+  result, evidence source, evidence sufficiency classification, C18 action,
+  actual result, and final PASS/FAIL.
+- Every state has sufficient direct enforcement evidence. Existing evidence is
+  reused only when it proves the exact invariant; partial or missing evidence
+  receives bounded deterministic coverage. Any proven enforcement gap has the
+  smallest justified fix and regression proof. No sample-only coverage passes.
+- Invalid commercial inputs, unsupported/malformed historical evidence, invalid
+  AI/provider output, provider unavailability, tool failure, unauthorized
+  transitions, Excel failure, and S3 failure remain explicit and fail closed;
+  no fabricated fallback, false success, approval bypass, invalid authority, or
+  partial-as-complete state is possible.
+- Failure information is actionable but bounded and sanitized. Existing C16
+  observability is reused only where appropriate; no new observability
+  infrastructure is required.
+- Required deterministic failure injection, cross-cutting integration proof,
+  targeted mutation-resistance, and relevant prior-Card regressions pass.
+- Bedrock Guardrails remain deferred; no live AWS or Bedrock proof, AWS
+  preparation, new persistence, third-party dependency, or C17 Golden Dataset
+  modification is required.
+- Guardrails policy and business, arithmetic, evidence, approval, and export
+  authority are not redesigned. No production-readiness claim is made from
+  C18 alone.
+- Rollback for any bounded code fix is Git-based and individually reversible;
+  no data migration or cloud-resource rollback is introduced.
 
 ---
 
