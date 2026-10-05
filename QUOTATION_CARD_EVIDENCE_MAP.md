@@ -3146,23 +3146,25 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-ACTIVE
+COMPLETE
 
-Phase 2 public-schema correction validated; full C18 verification, audit,
-delivery, and completion remain pending.
+V1-C18 delivered via PR #54 and validated on synchronized clean main. Final
+C18 Exit Gate PASS; Active Card NONE; C19 remains NOT_AUTHORIZED / NOT_STARTED.
 
 ### 4. Human Start Approval
 
 YES
 
-Local C18 implementation authorized. A separate Phase 2 approval authorized
-only the public request correction requiring `estimated_hours.unit`.
+Local C18 implementation and exact-candidate Git delivery authorized and
+consumed. A separate Phase 2 approval authorized only the public request
+correction requiring `estimated_hours.unit`.
 
 ### 5. Files Changed
 
 `PROJECT_CONTROL.md`; `src/ai_quotation_intelligence/api.py`;
-`tests/test_api.py`; this Evidence Map; `CARD_LEARNING_AND_DECISION_LOG.md`.
-The production change is limited to the external request boundary.
+`tests/test_api.py`; `tests/test_c18_guardrail_matrix.py`; this Evidence Map;
+`CARD_LEARNING_AND_DECISION_LOG.md`. The production change is limited to the
+external request boundary; the matrix test protects evidence completeness.
 
 ### 6. Commands Run
 
@@ -3321,19 +3323,36 @@ schema fix, failure injection, adversarial checks, cross-cutting integration,
 threat reconciliation, and 12/12 targeted mutations passed. C17 remained
 byte-identical by dataset/report identities; full local validation passed.
 
-Exit Gate Status: PROVEN — LOCAL C18 EXIT GATE PASS. Independent audit and Git
-delivery remain required before completion.
+Exit Gate Status: PROVEN / PASS — all 15 guardrail rows final PASS; exact
+independent audit, delivery, clean-main validation, and completion
+reconciliation are recorded.
 
 ### 15. CARD_QUALITY_GATE
 
-PASS — local contract, evidence, validation, learning, and Exit Gate are
-current. This does not claim independent audit or delivery.
+PASS — exact-identity independent local audit, approved PR #54 delivery,
+post-merge validation, and outcome-only completion reconciliation.
 
 ### 16. Git Evidence
 
-Branch `card/v1-c18-guardrails-failure-handling`, base
-`a9fcf6de2faa466d2ab00084d4266fd5f67597c9`; no changes staged, committed,
-pushed, or delivered.
+Audited candidate identity
+`f5df6c5c8f18839b3ad0791b7405dbc236fbb996767898b76b13e9c00cba191f`
+matched the staged index and committed tree. Delivery commit
+`b2a14030d053d49a68501aee3a079c1e22e3bb92` was pushed to
+`origin/card/v1-c18-guardrails-failure-handling` and merged through PR #54
+(`https://github.com/jo-soroush/ai-quotation-intelligence/pull/54`) as merge
+commit `b5006f8d712713d6019ec655d8008032774e23c5`. On synchronized main,
+PR: MERGED — #54 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/54
+Merge: COMPLETED — `b5006f8d712713d6019ec655d8008032774e23c5`
+post-merge full pytest passed (472), architecture tests passed (76),
+Governance Harness passed (61 PASS / 0 FAIL), reconciliation and C18 final
+state consistency passed, clean bootstrap passed (128 / 0 / 0), and pip,
+compile, secret, diff, and unchanged C17 evaluation checks passed. The C17
+dataset SHA-256 remains
+`1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`; its
+report SHA-256 remains
+`928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
+Completion reconciliation records observed delivery and verification results;
+its own Git identifiers are reported after their corresponding actions.
 
 ### 17. Known Limitations
 
@@ -3341,6 +3360,30 @@ The evidence matrix is a governance artifact validated by a targeted test, not
 a runtime subsystem. C18 proves the delivered deterministic failure contracts;
 it does not establish production readiness or universal commercial correctness.
 The existing Starlette/httpx deprecation warning remains non-blocking.
+
+### 19. Completion Evidence
+
+COMPLETE — PR #54 merged at
+`b5006f8d712713d6019ec655d8008032774e23c5`; synchronized clean-main
+validation passed (27 focused API/matrix tests, 2 matrix tests, 472 full
+pytest tests, 76 architecture tests, Governance Harness 61 PASS / 0 FAIL,
+reconciliation PASS, final C18 state consistency PASS, and C17 evaluation
+PASS). All 15 canonical guardrail rows are final PASS. The historical
+`COMMERCIAL_SEMANTICS_UNVERIFIED` enforcement gap and its bounded public
+request fix remain recorded; Phase 1's 14 sufficient-evidence classifications
+remain unchanged. C17 dataset and report identities remain unchanged. Active
+Card is NONE; C19 is NOT_AUTHORIZED / NOT_STARTED. No AWS, live Bedrock,
+Bedrock Guardrails, dependency, persistence, policy, or deployment change
+occurred during delivery or completion reconciliation. This result makes no
+universal commercial-correctness or production-readiness claim.
+
+### 20. Recommended State
+
+COMPLETE
+Learning / Decision Log:
+CARD_LEARNING_AND_DECISION_LOG.md → V1-C18
+Learning Documentation Status:
+CURRENT
 
 ### 18. What We Learned
 
@@ -3567,7 +3610,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C15 | AWS Deployment | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C16 | CloudWatch Observability | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C17 | Evaluation Harness | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C18 | Guardrails and Failure Handling | ACTIVE | YES | PASS | PROVEN | PASS | PRESENT | ACTIVE / IMPLEMENTED AND VERIFIED LOCALLY / READY FOR INDEPENDENT LOCAL AUDIT / |
+| V1-C18 | Guardrails and Failure Handling | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 <!-- END GENERATED: CURRENT_CARD_TABLE -->
@@ -3576,7 +3619,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C18_ACTIVE
+Project Phase: V1_C18_COMPLETE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3594,10 +3637,10 @@ V1-C14: COMPLETE
 V1-C15: COMPLETE
 V1-C16: COMPLETE
 V1-C17: COMPLETE
-V1-C18: ACTIVE
+V1-C18: COMPLETE
 V1-C19: NOT_AUTHORIZED / NOT_STARTED
-Active Card: V1-C18
-Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16, V1-C17
+Active Card: NONE
+Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16, V1-C17, V1-C18
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
 <!-- END GENERATED: CURRENT_SUMMARY -->

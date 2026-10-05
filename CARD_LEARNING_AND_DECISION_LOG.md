@@ -2885,12 +2885,11 @@ evaluation passed with its original dataset and report hashes. The
 the C18 Evidence Map as
 history.
 
-This closes only the Phase 2 local proof for
+At the end of Phase 2, this closed only the local proof for
 `COMMERCIAL_SEMANTICS_UNVERIFIED`; its original
 `ENFORCEMENT_GAP_REQUIRES_FIX` classification is preserved. The other 14
 Phase 1 `EXISTING_EVIDENCE_SUFFICIENT` classifications were not changed or
-duplicated. C18's overall Exit Gate remains unproven and C18 remains ACTIVE,
-UNDELIVERED, and NOT COMPLETE. No AWS, live Bedrock, Bedrock Guardrails,
+duplicated. C18's overall Exit Gate remained unproven at that checkpoint. No AWS, live Bedrock, Bedrock Guardrails,
 dependency, persistence, or C17 changes occurred.
 
 ### Phase 3 — Final Cross-Cutting Local Verification
@@ -2944,8 +2943,45 @@ is bounded, false success and fabricated fallback paths are rejected, C17
 retains its exact dataset/report identities, and the full local validation
 passes. This proves the defined C18 contracts in the delivered local system;
 it does not prove production readiness or universal commercial correctness.
-C18 remains ACTIVE, UNDELIVERED, and NOT COMPLETE pending independent audit
-and separate Git-delivery approval. C19 remains unauthorized.
+At the end of Phase 3, C18 remained ACTIVE, UNDELIVERED, and NOT COMPLETE
+pending independent audit and separate Git-delivery approval. C19 remained
+unauthorized. The later delivery and completion outcome is recorded below.
+
+### Phase 4 — Delivery and Completion Reconciliation
+
+The independently audited six-file candidate identity
+`f5df6c5c8f18839b3ad0791b7405dbc236fbb996767898b76b13e9c00cba191f` matched
+the staged index and committed tree. Delivery commit
+`b2a14030d053d49a68501aee3a079c1e22e3bb92` was pushed and merged through PR
+#54 as merge commit `b5006f8d712713d6019ec655d8008032774e23c5`. The exact
+audited scope was preserved; no implementation or tests changed during
+completion reconciliation.
+
+Post-merge validation on synchronized clean main passed: C18 API/matrix tests
+27 passed; matrix tests 2 passed; full pytest 472 passed; architecture 76
+passed; Governance Harness 61 PASS / 0 FAIL; reconciliation and final card
+state consistency passed; bootstrap 128 PASS / 0 WARN / 0 FAIL; pip check,
+compile/syntax, secret scan, and diff check passed. C17 evaluation remained
+PASS with dataset SHA-256
+`1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b` and
+report SHA-256
+`928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
+
+Completion preserves the Phase 1 evidence split (14 existing-evidence-
+sufficient rows and the one original
+`COMMERCIAL_SEMANTICS_UNVERIFIED` enforcement gap), the approved boundary-local
+fix, all 15 final PASS results, failure injection PASS, mutation resistance
+12/12 CAUGHT, adversarial and threat-model PASS, and the matrix-parser test
+construction incident. The internal Hours default remains unchanged. No AWS,
+live Bedrock, Bedrock Guardrails, dependency, persistence, C17, or deployment
+change occurred. The project makes no universal commercial-correctness or
+production-readiness claim.
+
+V1-C18 is COMPLETE / DELIVERED with final Exit Gate PASS. Active Card is NONE;
+C19 remains NOT_AUTHORIZED / NOT_STARTED. This reconciliation records only
+observed outcomes and does not rewrite the implementation history. Its own
+commit, PR, and merge identifiers are reported after those Git actions rather
+than embedded recursively in this candidate.
 
 ## V1-C19 — Golden Case
 
