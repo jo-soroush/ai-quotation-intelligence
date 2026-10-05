@@ -74,7 +74,7 @@ MODULE_CATEGORIES = {
 # C17 is a separate offline owner, not a production architecture category.
 # Keep its complete module inventory explicit so new files cannot appear
 # without an architecture decision and test update.
-EVALUATION_MODULES = {"__init__.py", "c17.py"}
+EVALUATION_MODULES = {"__init__.py", "c17.py", "c19.py"}
 
 
 def _module_name(relative_path: str) -> str:
@@ -180,7 +180,7 @@ def test_actual_package_tree_has_complete_classification_and_valid_imports() -> 
     validate_architecture(PACKAGE, MODULE_CATEGORIES)
 
 
-def test_c17_evaluation_owner_is_complete_and_outside_production_package() -> None:
+def test_offline_evaluation_owner_is_complete_and_outside_production_package() -> None:
     discovered = {
         path.relative_to(EVALUATION_PACKAGE).as_posix()
         for path in EVALUATION_PACKAGE.rglob("*.py")
@@ -216,6 +216,15 @@ def test_c17_evaluation_has_no_provider_sdk_or_production_boundary_dependency() 
         if any(target == item or target.startswith(f"{item}.") for item in forbidden)
     )
     assert not violations, f"evaluation imports live/provider boundary: {violations}"
+
+
+def test_c19_golden_case_is_non_production_and_uses_injected_adapter_boundaries() -> None:
+    source = (EVALUATION_PACKAGE / "c19.py").read_text(encoding="utf-8")
+    targets = _import_targets(ast.parse(source, filename="evaluation/c19.py"), "evaluation.c19", False)
+    assert "boto3" not in targets and "botocore" not in targets
+    assert "ai_quotation_intelligence.bedrock" in targets
+    assert "ai_quotation_intelligence.s3_storage" in targets
+    assert not (PACKAGE / "evaluation").exists()
 
 
 @pytest.mark.parametrize("source_path,category", [

@@ -1,0 +1,156 @@
+{
+  "expected": {
+    "comparison": {
+      "actual_hours": "54",
+      "estimated_hours": "43",
+      "hour_variance": "11",
+      "quote_id": "synthetic-c03-quote-001",
+      "source_id": "synthetic-c03-source-001"
+    },
+    "currency": "SEK",
+    "estimated_item_costs": [
+      "1430",
+      "2625",
+      "900"
+    ],
+    "estimated_total": "4955",
+    "evidence_ids": [
+      "risk-hours-overrun-rate",
+      "risk-hours-average-variance",
+      "risk-hours-median-variance"
+    ],
+    "historical_record_count": 40,
+    "quote_id": "draft-c19-golden-001",
+    "risk_statistics": {
+      "average_variance": "11.8",
+      "comparable_project_count": 40,
+      "median_variance": "10",
+      "overrun_count": 30,
+      "overrun_rate": "0.75"
+    },
+    "selected_evidence_id": "risk-hours-overrun-rate",
+    "top_similar_quote_ids": [
+      "synthetic-c03-quote-001",
+      "synthetic-c03-quote-011",
+      "synthetic-c03-quote-021"
+    ],
+    "total_estimated_hours": "43"
+  },
+  "historical_inputs": [
+    {
+      "actual_hours": {
+        "unit": "hours",
+        "value": "54"
+      },
+      "estimated_hours": {
+        "unit": "hours",
+        "value": "43"
+      },
+      "outcome_label": "under_estimate",
+      "quote_id": "synthetic-c03-quote-001",
+      "source_id": "synthetic-c03-source-001",
+      "synthetic": true
+    }
+  ],
+  "provider_trace": [
+    {
+      "arguments": {},
+      "kind": "tool",
+      "name": "get_historical_quotes"
+    },
+    {
+      "arguments": {
+        "limit": 3
+      },
+      "kind": "tool",
+      "name": "find_similar_quotes"
+    },
+    {
+      "arguments": {},
+      "kind": "tool",
+      "name": "compare_estimate_to_actual"
+    },
+    {
+      "arguments": {
+        "metric": "hours"
+      },
+      "kind": "tool",
+      "name": "calculate_quote_statistics"
+    },
+    {
+      "arguments": {
+        "metric": "hours"
+      },
+      "kind": "tool",
+      "name": "get_risk_evidence"
+    },
+    {
+      "evidence_ids": [
+        "risk-hours-overrun-rate"
+      ],
+      "kind": "final",
+      "missing_information": [],
+      "narrative": "Validated historical risk evidence is linked to this draft for human review.",
+      "risk_suggestions": [
+        {
+          "evidence_ids": [
+            "risk-hours-overrun-rate"
+          ],
+          "severity": "medium"
+        }
+      ]
+    }
+  ],
+  "report_claim": "One fixed synthetic end-to-end Golden Case passed across the existing V1 component contracts.",
+  "request": {
+    "quotation_request": {
+      "currency": "SEK",
+      "items": [
+        {
+          "description": "Software Development design",
+          "estimated_hours": {
+            "unit": "hours",
+            "value": "13"
+          },
+          "hourly_rate": {
+            "amount": "110",
+            "currency": "SEK"
+          },
+          "item_id": "c19-design"
+        },
+        {
+          "description": "Software Development developer work",
+          "estimated_hours": {
+            "unit": "hours",
+            "value": "21"
+          },
+          "hourly_rate": {
+            "amount": "125",
+            "currency": "SEK"
+          },
+          "item_id": "c19-build"
+        },
+        {
+          "description": "Software Development verification",
+          "estimated_hours": {
+            "unit": "hours",
+            "value": "9"
+          },
+          "hourly_rate": {
+            "amount": "100",
+            "currency": "SEK"
+          },
+          "item_id": "c19-verify"
+        }
+      ],
+      "project_name": "Fictional Software Development Case 001",
+      "requested_at": "2022-01-27T09:00:00Z"
+    },
+    "request_id": "c19-golden-001"
+  },
+  "scenario_id": "c19-golden-case-001",
+  "scenario_schema_version": "1",
+  "scenario_version": "c19-golden-v1",
+  "synthetic": true,
+  "synthetic_approval_actor": "c19-test-actor"
+}
