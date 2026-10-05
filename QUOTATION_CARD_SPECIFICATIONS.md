@@ -2679,61 +2679,259 @@ V1-C19 — Golden Case
 
 ### 2. Engineering Goal
 
-Prove the complete professional V1 backend/cloud workflow end-to-end using one controlled representative quotation scenario.
+Prove one controlled, fixed, synthetic end-to-end quotation scenario across the existing V1 component contracts. C19 is local, deterministic, and repeatable; it integrates existing components only and is not a deployment or UI Card.
 
 ### 3. Learning Goal
 
-End-to-end integration, evidence gathering, workflow validation, failure visibility, and governance-compliant demonstration.
+End-to-end integration, evidence gathering, workflow validation, failure visibility, and governance-compliant demonstration using existing local/component interfaces and deterministic injected provider/storage clients.
 
 ### 4. Why It Exists
 
-A single controlled scenario verifies that the separate Cards work together without bypassing commercial, AI, evidence, or approval boundaries.
+A single controlled scenario verifies that delivered components work together without bypassing commercial, AI, evidence, human-approval, export, storage, or privacy boundaries. C19 proves this one synthetic workflow only; it does not establish real-world correctness or production readiness.
 
 ### 5. Architecture Concept
 
-Quotation Request → validation → historical/similar retrieval → comparison → RiskEvidence → agent → Bedrock → structured draft → validation → human review → approval → Excel → persistence/API → observability/evaluation.
+Fixed synthetic request → local FastAPI boundary → QuotationAgent/tools → historical and similar retrieval → estimate/actual comparison and deterministic statistics → RiskEvidence → existing provider/Bedrock adapter with fixed injected client → validated structured draft → C11 human-authority approval action → C12 Excel generation/reload/reconciliation → C14 storage adapter with injected client → applicable existing C16 structured event capture.
 
 ### 6. Current System Before Card
 
-C01–C18 may later provide the complete components. No Golden Case is implemented or evidenced; application state remains NOT_STARTED.
+C01–C18 are complete and delivered. No C19 Golden Case has been executed or evidenced; C19 remains NOT_STARTED until separately authorized. Their completion does not itself prove that their contracts compose in one end-to-end scenario.
 
 This is a contract description, not a claim that prior Cards or this Card are complete.
 
 ### 7. Design Decision
 
-C19 integrates existing components only. Failures are recorded and stopped or routed to the owning Card; they are not hidden in an end-to-end workaround.
+C19 integrates existing components only. It exercises the real local FastAPI boundary and real existing provider, storage, approval, and export interfaces, injecting deterministic clients at Bedrock/provider and S3 boundaries. There is no live AWS, Bedrock, S3, CloudWatch, Lambda, or API Gateway invocation. Failures follow their owning Card's existing contract and are never hidden behind an end-to-end workaround.
+
+C13's process-local `LocalQuoteStore` is a previously accepted V1 limitation. The complete multi-step Golden Case must not depend on deployed Lambda/API Gateway requests sharing process state; C19 does not repair this limitation. C15/C16 cloud/deployment evidence remains separate from C19's local business/application integration proof.
+
+Human approval uses the real C11 interface and a clearly identified synthetic deterministic test actor. This proves the human-owned transition contract, not that a person manually reviewed the automated run. AI cannot approve, and approval may not be achieved by direct state mutation. Reports/logs exclude `reviewer_id` where canonical privacy rules prohibit it.
 
 ### 8. Implementation Scope
 
-- execute a controlled synthetic quotation scenario
-- demonstrate retrieval, comparison, deterministic statistics, RiskEvidence, agent tool use, structured Bedrock output, validation, review, approval, Excel, reconciliation, and applicable persistence/API paths
-- collect observability and evaluation evidence
-- preserve all invariants and reproducibility
+- execute one fixed synthetic scenario through the existing local FastAPI, Core, history/retrieval/comparison/statistics, RiskEvidence, agent tools, QuotationAgent, provider/Bedrock adapter, structured-output validation, C11 approval, C12 Excel, C14 storage-adapter, and applicable existing C16 event paths
+- use a fixed deterministic provider trace and deterministic injected storage client without network or live services; validate provider output through existing contracts
+- author expected commercial results independently of the implementation under test; include explicit commercial units/currency, synthetic historical inputs, stable evidence relationships, and deterministic values
+- generate a real C12 workbook after approval, reload it, and prove exact business-value/reconciliation and existing workbook-integrity contracts; keep workbook ephemeral
+- produce one authoritative machine-readable report with scenario identity, exact required-step accounting, bounded step outcomes, commercial/evidence references, C17 regression result, and overall status
+- prove report/fixture integrity, privacy, deterministic two-run equivalence, and that a required failure, omission, skipped approval, or failed Excel reconciliation cannot produce PASS
+- collect only applicable bounded local C16 event evidence from existing event paths
 
 ### 9. Out of Scope
 
-- Demo UI
-- new architecture
-- new major technology
-- hidden refactoring of earlier Cards
+- live AWS, Bedrock, Bedrock Guardrails, S3, CloudWatch, deployed Lambda, or API Gateway invocation
+- solving C13 process-local persistence or introducing a database, persistent workflow store, migration, or new S3 data model
+- new production module/architecture category, business logic, adapter, API route/schema/auth/status redesign, deployment, or UI
+- C18's full all-15 guardrail matrix or changes to C17's dataset, metrics, report schema, or evaluation logic
+- new dependency, LLM-as-judge, real/customer/confidential data, generalized security certification, or production-readiness claim
+- committing generated workbook binaries, raw logs, or run reports by default
 
 ### 10. Dependencies
 
-Explicit Roadmap dependency: none stated. This Card remains ordered according to AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md. Do not infer additional dependencies.
+No additional explicit Roadmap dependency is created. C01–C18 are the existing component context. C17 is not a C19 dependency; it is rerun unchanged only as regression evidence. C18 is complete; C19 preserves its behavior without duplicating its all-15 matrix. Do not infer additional dependencies.
 
 If a dependency is later required but cannot be verified from the Roadmap, use CARD_SPEC_ROADMAP_MISMATCH and stop.
 
 ### 11. Tests / Evaluation
 
-Scenario reproducibility, required invariants, evidence traceability, deterministic totals, agent boundary, approval enforcement, Excel correctness, failure visibility, and evaluation report.
+The scenario is synthetic-only with stable scenario ID, explicit version, stable serialization, and SHA-256 identity. Expected values are independently fixed, never derived by the implementation under test. The machine-readable report has an explicit schema version and PASS / FAIL / ERROR semantics: PASS requires every required step exactly once and every invariant passing; FAIL means the scenario executed and one or more required contracts failed; ERROR means fixture, report, or execution integrity prevents valid evaluation, including missing, duplicated, or unaccounted required steps. A skipped or failed step cannot yield PASS.
 
-Test not run != PASS. Design intent != implementation evidence.
+The report includes at minimum `report_schema_version`, `scenario_id`,
+`scenario_version`, `scenario_sha256`, `overall_status`, all required-step
+results, deterministic expected/actual commercial reconciliation,
+retrieval/comparison references, RiskEvidence/provenance references,
+agent/tool trace outcome, structured-output validity, C11 approval result,
+C12 Excel reconciliation, C14 storage-contract result, applicable C16
+observability result, unchanged C17 regression result, and bounded failure
+category. Fixture inputs include stable request/quotation identity, items,
+rates, estimated hours with explicit unit, currency, relevant synthetic
+historical inputs, expected evidence relationships, and fixed expected values.
+The exact report filesystem path is an implementation detail.
+
+At least two independent executions must produce identical normalized reports. Normalize/exclude incidental timestamps, generated request IDs, temporary paths, and correlation IDs. Compare workbook business-cell and reconciliation results across runs rather than binary workbook hashes. Required-step failure, required-step omission, skipped approval, and failed Excel reconciliation must each prevent PASS. The report excludes credentials, secrets, raw prompts/responses/request bodies, `reviewer_id`, workbook bytes/content dumps, confidential data, and unsanitized provider errors. Reports may be ephemeral; canonical evidence records sufficient identity/results to reproduce them. Workbook, injected storage state, and captured events are ephemeral.
+
+Exercise bounded harness-integrity mutations, failure injection, and adversarial scenarios; do not duplicate C18's full failure matrix. Rerun C17 unchanged and preserve its expected dataset/report identities. Test not run != PASS. Design intent != implementation evidence.
+
+C17 regression identity is fixed as dataset version `c17-golden-v1`, dataset
+SHA-256 `1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`,
+and report SHA-256 `928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
 
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require a passing controlled end-to-end Golden Case with all applicable boundaries evidenced and no hidden component redesign.
+The dedicated `Exit Gate — V1-C19` in the Roadmap is authoritative and proves this one fixed synthetic scenario. The project-wide Roadmap `Final Gate` remains separate and broader. Every required flow step must be accounted for exactly once; missing, duplicated, or unaccounted steps are ERROR, while an executed step-contract failure is FAIL. No missing/failed step or partial execution may produce PASS. The harness must stop or record a bounded owning-contract failure and may not fabricate fallback success or invent retries. The C13 process-local limitation remains explicit. No live cloud service, new architecture, persistence, dependency, or C17 modification is required.
 
-The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
+### C09+ Pre-Implementation Verification Block
+
+#### Risk Classification
+
+**ELEVATED.** C19 integrates commercial arithmetic, evidence, AI orchestration,
+human approval, Excel, storage, API, and observability in one assurance claim.
+A false Golden PASS could materially overstate V1 integration. It is not
+CRITICAL because one synthetic local scenario adds no commercial authority,
+persistence, or cloud infrastructure and exercises existing owners.
+
+#### Escalation Triggers
+
+Stop for human direction if the scenario requires live AWS/Bedrock, deployed
+Lambda/API Gateway, real S3/CloudWatch, a new route/schema/public contract,
+new production architecture, adapter, business logic, persistence, migration,
+dependency, C13 process-local persistence repair, C17 modification, changed
+prior-Card authority, or operational/cloud cleanup. Stop if expected values
+cannot be independently authored, real/confidential data is required, a
+required step has no existing interface, or PASS would require skipping or
+concealing a failed/partial step. Resolve no contract contradiction by
+assumption.
+
+#### Canonical Sources
+
+- C19 Roadmap and its separate `Exit Gate — V1-C19`; the project-wide `Final
+  Gate` remains separate.
+- `COMMERCIAL_AND_DATA_GUARDRAILS.md` for commercial truth, evidence, AI,
+  synthetic data, approval, Excel, storage, and privacy.
+- C02–C18 Specifications, Evidence Map, tests, and public/component contracts
+  for Core, history, retrieval, comparison/statistics, RiskEvidence, provider,
+  tools/agent, C11 approval, C12 Excel, C13 API, C14 storage, C16 events, and
+  unchanged C17 regression.
+- C13's accepted process-local `LocalQuoteStore` limitation; C15/C16 cloud
+  proof remains separate.
+- `QUOTATION_ENGINEERING_HARNESS.md`, `PROJECT_CONTROL.md`, and
+  `GIT_WORKFLOW.md` for execution/evidence/state/rollback controls.
+
+#### Acceptance Contract
+
+Given one fixed synthetic scenario with verified ID/version/SHA and
+independently authored expected commercial values, execute it locally through
+existing interfaces with fixed provider/storage injection.
+
+When the local FastAPI-to-Excel/storage workflow runs, account for every
+predeclared required step exactly once and validate component contracts,
+approval, report/privacy integrity, applicable C16 evidence, and unchanged C17
+regression.
+
+Then PASS is allowed only when every required invariant passes, two independent
+normalized reports match, and workbook business/reconciliation results agree.
+An executed step-contract failure is FAIL; missing, duplicated, unaccounted, or
+invalidly evaluated steps/fixture/report are ERROR. Neither status may be
+presented as PASS.
+
+Prohibited behavior includes live cloud calls, skipped/duplicated steps,
+fabricated fallback or evidence, AI-supplied approval, circular expected
+values, sensitive report fields, and hiding the C13 process-local limitation.
+
+#### Golden Case Report Contract
+
+The authoritative machine-readable report uses explicit allowlisted fields:
+`report_schema_version`, `scenario_id`, `scenario_version`,
+`scenario_sha256`, `overall_status`, once-only required-step outcomes,
+expected/actual commercial reconciliation, retrieval/comparison references,
+RiskEvidence/provenance references, agent/tool trace outcome,
+structured-output validity, C11 approval, C12 Excel reconciliation, C14
+storage-contract result, applicable C16 observability result, unchanged C17
+regression result, and bounded failure category. It excludes raw prompts/model
+responses, `reviewer_id`, workbook bytes/content dumps, arbitrary
+request/response bodies, credentials/secrets, confidential payloads, and
+unsanitized provider errors. Report path is not frozen. Report, workbook,
+in-memory injected storage state, and local event capture may be ephemeral;
+governance evidence records their reproducible identity/results.
+
+#### Critical Invariants
+
+- Deterministic Core owns commercial arithmetic. Expected values are
+  independent of the implementation under test; units, currency, and
+  estimated/actual semantics are explicit.
+- Historical/similar outputs and RiskEvidence retain existing provenance and
+  authority; no match, evidence ID, or claim is fabricated.
+- Model output is untrusted until existing validation. Provider failure cannot
+  create a response/quotation; AI/tool output cannot create approval.
+- Approval uses the real C11 interface and an explicitly synthetic test actor;
+  no direct state mutation or claim of actual manual review is allowed.
+- The real C12 workbook is generated after approval, reloaded, and reconciled.
+  The real C14 adapter receives that artifact with an injected client and
+  cannot claim false storage success or invent bucket/key/object identity.
+- Every required step is accounted for exactly once. Partial, omitted,
+  duplicated, or failed execution cannot report PASS.
+- Reports/events are bounded and sanitized; synthetic data stays synthetic.
+  C13 process-local state is neither hidden nor repaired.
+- C17/C18 remain unchanged. No live cloud dependency or new production
+  authority, architecture, persistence, or dependency is introduced.
+
+#### Threat Model
+
+Explicitly consider false Golden PASS; omitted/duplicated steps; circular
+oracle; fixture tampering and scenario version/hash drift; commercial-total
+mismatch; fabricated evidence; AI authority expansion; approval bypass;
+invalid workbook; false storage success; misleading or missing observability;
+sensitive evidence, reviewer, prompt, response, or credential leakage;
+synthetic results presented as real-world proof; C17 contamination; accidental
+live AWS/Bedrock; and concealment of C13 process-local limitations. Naming a
+threat is not proof of control; applicable evidence is required.
+
+#### Verification Strategy
+
+Inspect existing public contracts before harness construction. Freeze and hash
+the synthetic scenario; independently review expected values. Exercise local
+FastAPI and chain real existing interfaces, including scripted provider,
+explicit C11 approval, actual C12 generation/reload/reconciliation, and C14
+storage with an injected client. Capture only applicable existing C16 events
+and verify bounded event class/name, component/operation, status, existing
+correlation semantics, and privacy. Validate allowlisted report construction
+and exact once-only step accounting. Run twice and compare normalized reports
+and workbook business semantics. Inject required-step failure/omission, skipped
+approval, and Excel-reconciliation failure; each must block PASS. Consider
+mutations for omitted/duplicated steps, failed step marked PASS, approval
+bypass, weakened fixture hash/version, wrong totals, fabricated evidence,
+invalid structured result, skipped reconciliation, false storage success,
+missing event evidence, sensitive leakage, and partial execution reported as
+PASS. Rerun C17 unchanged and relevant regressions. Do not add production
+behavior to simplify the scenario.
+
+#### Advanced Verification Decision
+
+| Technique | Decision | C19-specific reason |
+| --- | --- | --- |
+| Deterministic invariants | REQUIRED | Exact commercial values, evidence identity, approval, workbook reconciliation, and step accounting define the case. |
+| Contract tests | REQUIRED | Existing Card-owned public/component contracts must remain satisfied. |
+| Integration | REQUIRED | Existing-component end-to-end integration is C19's purpose. |
+| Generated property tests | CONDITIONAL / EVALUATE | Only if an input space materially benefits beyond the fixed scenario. |
+| Targeted mutation-resistance | REQUIRED | Detect false PASS, skipped steps, approval bypass, and integrity weakening. |
+| Failure injection | REQUIRED, HARNESS-LEVEL | Required-step failure must make PASS impossible; do not duplicate C18's matrix. |
+| Fuzzing | CONDITIONAL / EVALUATE | Only if a meaningful new parser/report attack surface exists. |
+| Differential | CONDITIONAL / EVALUATE | Only with a genuinely independent oracle. |
+| Concurrency/race | NOT_APPLICABLE by default | The scenario is sequential and adds no concurrent/shared state. |
+| Adversarial testing | REQUIRED, BOUNDED | Challenge approval, evidence, step omission, and misleading PASS. |
+| Threat modeling | REQUIRED | Golden PASS is an assurance claim that must not mislead or leak evidence. |
+| Agent evals | REQUIRED | Exercise real agent orchestration with a fixed deterministic provider trace. |
+| Rollback/recovery | REQUIRED | Harness/fixture changes are Git-reversible and generated artifacts ephemeral. |
+| Formal methods | NOT_APPLICABLE | Deterministic contracts/integration/mutation are proportionate; no formal-proof claim. |
+
+#### Independent Verifier Expectations
+
+Independently inspect scenario identity and oracle derivation, required steps,
+real component interfaces, approval, workbook values, storage evidence, C16
+events, report allowlist/status, two-run equivalence, and unchanged C17
+identity. Challenge omissions, duplicates, approval bypass, incorrect totals,
+fabricated evidence, or PASS from partial execution. Verify scope/privacy and
+C13/C17/C18 boundaries. The verifier may return BLOCKED; design intent is not
+execution evidence.
+
+#### Evidence / Traceability
+
+The Evidence Map records scenario identity, report/result identity, actual
+step results, commands, and validation. The Learning Log records actual
+rationale, alternatives, failures/fixes, tradeoffs, learning, and later-Card
+impact. Neither substitutes for the other. Generated report/workbook may be
+ephemeral; preserve bounded identity/results sufficient to reproduce. Never
+claim an unexecuted step PASS.
+
+#### Known Non-Scope
+
+Live AWS/Bedrock/S3/CloudWatch/Lambda/API Gateway; Bedrock Guardrails; solving
+C13 process-local persistence; deployment/UI; new business logic, production
+architecture/module/category, adapter, route/schema, persistence/database,
+migration, dependency, public CLI, C18 matrix duplication, C17 dataset/metric/
+report changes, LLM-as-judge, real/confidential data, retained workbook/raw
+logs, cloud cleanup, retries beyond an existing owner contract, and
+production-readiness or universal-correctness claims.
 Before Card COMPLETE:
 
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C19

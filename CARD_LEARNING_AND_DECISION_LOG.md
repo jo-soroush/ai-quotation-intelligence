@@ -2985,13 +2985,63 @@ than embedded recursively in this candidate.
 
 ## V1-C19 — Golden Case
 
+### Pre-C19 Canonical Remediation — Human-Approved Decisions (2026-10-05)
+
+The read-only C19 preflight was BLOCKED by missing canonical contract, not by
+an implementation defect: the Roadmap had no C19-specific Exit Gate, the
+C09+ pre-implementation verification block was absent, and local versus live
+execution, approval semantics, C17 relationship, fixture identity, report
+format, and retention were unresolved. Human decisions resolved these points
+before any C19 start. This record preserves that history; it does not mean
+C19 was authorized, started, or implemented.
+
+The selected approach is a local, deterministic, repeatable synthetic end-to-end
+scenario through existing public/component interfaces. A real deployed
+Lambda/API Gateway run was considered but rejected as the Golden Case oracle:
+C13's accepted `LocalQuoteStore` is process-local, so a multi-request deployed
+flow could cross execution environments and would not be a reliable
+authoritative proof. C19 does not repair that limitation. C15/C16 retain their
+separate cloud/deployment evidence. Deterministic injected provider and storage
+clients let the scenario exercise the actual existing adapter boundaries
+without live Bedrock, AWS, S3, or CloudWatch.
+
+Approval is exercised through the actual C11 interface with an explicitly
+synthetic test actor. Direct state mutation or model-generated approval was
+rejected because either would bypass the human-owned authority boundary; the
+automated actor is not represented as a person who manually reviewed the
+quotation. C17 is regression-only and unchanged, while C18 is a completed
+prerequisite whose full guardrail matrix is not duplicated in C19.
+The C17 regression identities remain dataset version `c17-golden-v1`, dataset
+SHA-256 `1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`,
+and report SHA-256 `928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
+
+The scenario identity is fixed by stable ID/version/serialization/SHA, and
+expected commercial results are independently authored rather than generated
+by the code under test. A fixed once-only step set and PASS/FAIL/ERROR report
+prevent a skipped or failed step from masquerading as success. Two normalized
+runs and workbook business/reconciliation equivalence are required; binary
+workbook hashing is not treated as the correctness oracle. The report may be
+ephemeral while canonical evidence retains reproducible identity/results;
+workbook, injected storage state, and local event capture are ephemeral.
+
+The existing Roadmap Final Gate remains project-wide; a separate C19 Exit Gate
+is needed because the single Golden Case proves only one fixed synthetic
+workflow. This avoids conflating a Card-level integration demonstration with
+overall V1 completion or making production-readiness/commercial-universality
+claims. Scope remains integration-only: no new business logic, architecture,
+adapter, route, persistence, dependency, deployment, UI, or cloud cleanup.
+
+Remediation outcome: documentation contract only. No C19 implementation, test,
+fixture, report, or runtime artifact was created. C19 remains
+NOT_AUTHORIZED / NOT_STARTED and C20 remains unauthorized.
+
 ### 1. Card
 
 V1-C19 — Golden Case
 
 ### 2. What We Intended to Build
 
-Prove one controlled end-to-end V1 quotation workflow across validation, history, deterministic analysis, RiskEvidence, agent/Bedrock behavior, approval, Excel, storage/API, observability, and evaluation.
+Prove one fixed synthetic local quotation workflow across existing validation, history, deterministic analysis, RiskEvidence, agent/provider, C11 approval, C12 Excel, C14 storage adapter, local FastAPI, and applicable existing C16 observability contracts, with deterministic injected provider/storage clients and a reproducible evidence report.
 
 ### 3. Why This Card Exists
 
