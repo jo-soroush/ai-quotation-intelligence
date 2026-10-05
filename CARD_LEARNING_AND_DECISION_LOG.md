@@ -2320,63 +2320,142 @@ Quotation workflows spanning tools, AI, storage, and cloud need traceable failur
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+Bounded JSON stdout operational events for API requests, quotation-agent
+runs, C09 tools, Bedrock Converse, and C14 S3 operations. After separately
+authorized live execution, the existing C15 Lambda package was updated in
+place and one signed health request emitted a structured C16 event into its
+retained CloudWatch log group. C16 remains ACTIVE and UNDELIVERED.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+The existing SUPPORT logging boundary owns event construction and a fixed
+metadata allowlist, including fixed event, operation, status, and sanitized
+error categories. A ContextVar carries a generated HTTP request ID and is
+reset in middleware finally; direct component calls use their validated
+request IDs. All event callsites use static names and enum-owned outcomes.
+API events include final HTTP status and duration; provider and storage events
+include bounded latency and sanitized failure category. Bedrock token counts
+are emitted only when present and valid. A narrow architecture exception
+permits API, agent, and tools to import only `logging_config`, not general
+SUPPORT modules.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The allowlist prevents arbitrary bodies, prompts, workbook bytes, exception
+text, reviewer identity, or commercial details from becoming log fields.
+Stdout JSON works locally and is compatible with the retained Lambda's
+existing platform log capture without a new SDK, IAM grant, or resource.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Per-module ad hoc text logging, a third-party logging stack, and direct
+CloudWatch SDK writes were considered.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+They would weaken schema/redaction consistency, add dependency/IAM/cost
+surface, or create AWS coupling. Context-local IDs avoid shared mutable
+request state under concurrent FastAPI requests.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+Python standard-library `logging`, `json`, `contextvars`, and monotonic
+timing; existing FastAPI, Bedrock, tool, and S3 modules. No new dependency.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+They suffice for bounded machine-parseable local events and provider-isolated
+instrumentation, with no external code incorporated.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first focused test run found two test-fixture errors: an event capture
+handler assumed every package warning carried structured metadata, and a
+synthetic API request accidentally included forbidden actual-value fields.
+The first combined regression command could not import `deployment` because
+its invocation omitted repository root from `PYTHONPATH`. The first live
+deployment step stopped before executing the prepared change set because
+CloudFormation proposed an `ApiIntegration` Modify in addition to the
+expected `ApiFunction` code update.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The new tests did not initially account for unstructured package warnings or
+the C13 transport model's intentionally narrower item schema. C15 tests
+import repository-level deployment files, requiring `PYTHONPATH=.:src` for
+that standalone pytest invocation. Final diff review also found that a
+syntactically safe but unapproved one-word error could pass the initial
+logging helper; this was a privacy hardening gap, not a failing regression.
+The integration modification was dynamic dependency propagation from
+`ApiFunction.Arn`; independent review found the ARN and effective integration
+URI would remain identical, rather than a substantive API design change.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The capture handler now ignores records without `aqi_event`; the API test
+constructs only allowed transport fields. The regression was rerun with
+repository root on the import path. No application behavior was changed to
+make either fixture pass. The emitter now accepts only fixed operational
+categories, and an adversarial test proves an unapproved error is omitted.
+The stdout formatter independently validates records, so direct package
+logger calls cannot smuggle arbitrary `aqi_event` fields past the helper.
+The operator preserved the paused change set and artifact, obtained separate
+human approval for that exact change set, and executed it without another
+build, upload, change set, template edit, or IAM/API policy change. Stack
+events reported only an in-place Lambda update, and read-only comparison
+confirmed the integration ID/URI and all route authorization stayed the same.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+`tests/test_observability.py` covers JSON schema, concurrency/context reset,
+API/agent/tool/Bedrock/S3 outcomes, sensitive-data absence, sink failure,
+and a targeted identifier-filter mutation. Architecture tests prove only the
+logging Support import exception. Full pytest and governance evidence are
+recorded in the C16 Evidence Map after execution. Its live record includes
+the immutable artifact and deployed code hashes, actual CloudWatch log
+stream/event, one signed health response, and post-live regression checks.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+Local stdout was not treated as live CloudWatch evidence; a separately
+authorized event was observed in `/aws/lambda/aqi-c15-api`. It proves only
+health-path observability and deployment reachability, not Bedrock/S3
+readiness, full quotation correctness, durable state, or production safety.
+Instrumentation is removable/revertible without changing commercial,
+approval, storage, or provider semantics; no observability resource teardown
+is needed. Log volume is bounded to one lifecycle event per operation plus
+agent start and API quotation correlation events. The retained 7-day log
+group is unchanged. The prior C15 artifact remains the bounded rollback
+option; no rollback was performed. Accepted non-blocking LOW local-audit
+findings remain limitations, not a reason to alter the frozen candidate.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Threat model: strict field allowlisting and sanitized enum categories bound
+secret/credential, prompt/response, workbook/commercial, reviewer, and raw
+provider-error leakage; ContextVar reset and concurrent tests bound
+correlation cross-contamination. Event volume and identifiers are bounded;
+local capture is never described as live CloudWatch proof. No cloud/local
+behavioral parity claim was made before separately authorized live evidence.
+The actual CloudWatch event contained only allowlisted health-path fields,
+including a request ID and duration; no payload or sensitive field appeared.
+The change-set pause reinforced that a proposed dynamic dependency change
+must be inspected rather than silently assumed harmless; independent
+diagnosis and a new human approval enabled the exact bounded execution.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Do not log `BedrockResult.message` or any `str(exc)` at these boundaries.
+Preserve the narrow architecture exception, request-context reset, and
+metadata allowlist. A passing local suite is not the C16 final Exit Gate;
+live evidence still requires independent verification and approved delivery
+before C16 can be COMPLETE. The consumed change-set approval does not
+authorize further AWS mutation.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C17 remains unauthorized. This work supplies bounded operational evidence
+only; it does not build evaluation, metrics, alarms, dashboards, or tracing.
 
 ### Pre-C16 Canonical Remediation (Documentation Only)
 

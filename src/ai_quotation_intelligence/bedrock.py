@@ -1,6 +1,7 @@
 """Provider-isolated Amazon Bedrock Converse integration for V1-C08."""
 
 from dataclasses import dataclass
+from time import monotonic_ns
 from typing import Any, Protocol
 
 import boto3
@@ -8,6 +9,7 @@ from botocore.config import Config
 
 from ai_quotation_intelligence.config import Settings, load_settings
 from ai_quotation_intelligence.domain import AgentResultStatus
+from ai_quotation_intelligence.logging_config import emit_event
 
 
 class ConverseClient(Protocol):
@@ -95,6 +97,27 @@ class BedrockConverseAdapter:
 
     def invoke(self, prompt: str, *, request_id: str = "bedrock-request") -> BedrockResult:
         """Invoke Converse and translate provider/response failures explicitly."""
+
+        started = monotonic_ns()
+        try:
+            result = self._invoke(prompt, request_id=request_id)
+        except Exception:
+            emit_event("bedrock_call", component="bedrock", operation="converse",
+                       status="failure", request_id=request_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error="unexpected_error")
+            raise
+        usage = result.usage
+        emit_event("bedrock_call", component="bedrock", operation="converse",
+                   status=result.status.value, request_id=request_id,
+                   duration_ms=(monotonic_ns() - started) // 1_000_000,
+                   input_tokens=usage.input_tokens if usage else None,
+                   output_tokens=usage.output_tokens if usage else None,
+                   sanitized_error="provider_unavailable" if result.status is AgentResultStatus.UNAVAILABLE
+                   else "invalid_provider_response" if result.status is AgentResultStatus.INVALID else None)
+        return result
+
+    def _invoke(self, prompt: str, *, request_id: str) -> BedrockResult:
 
         try:
             request = build_converse_request(prompt, self.settings)

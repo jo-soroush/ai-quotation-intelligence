@@ -7,6 +7,7 @@ approval state, or provider SDK objects to the returned domain result.
 
 import json
 import re
+from time import monotonic_ns
 from typing import Annotated, Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError
@@ -39,6 +40,7 @@ from ai_quotation_intelligence.domain import (
     RiskSeverity,
     RiskSuggestion,
 )
+from ai_quotation_intelligence.logging_config import emit_event
 
 
 # Three single-call C09 capabilities plus two metric-sensitive capabilities
@@ -232,6 +234,25 @@ class QuotationAgent:
         return prompt
 
     def run(self, value: object) -> AgentResult:
+        started = monotonic_ns()
+        request_id = value.request_id if isinstance(value, AgentRequest) else None
+        emit_event("agent_run_started", component="agent", operation="run",
+                   status="started", request_id=request_id)
+        try:
+            result = self._run(value)
+        except Exception:
+            emit_event("agent_run_finished", component="agent", operation="run",
+                       status="failure", request_id=request_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000,
+                       sanitized_error="unexpected_error")
+            raise
+        emit_event("agent_run_finished", component="agent", operation="run",
+                   status=result.status.value, request_id=result.request_id,
+                   quotation_id=result.draft_quote.quote.quote_id if result.draft_quote else None,
+                   duration_ms=(monotonic_ns() - started) // 1_000_000)
+        return result
+
+    def _run(self, value: object) -> AgentResult:
         request_id = "unknown"
         try:
             if not isinstance(value, AgentRequest):

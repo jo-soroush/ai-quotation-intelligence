@@ -2705,92 +2705,180 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE
 
 ### 4. Human Start Approval
 
-NO
+YES
 
 ### 5. Files Changed
 
-NONE
+`PROJECT_CONTROL.md`; this Evidence Map; `CARD_LEARNING_AND_DECISION_LOG.md`;
+`src/ai_quotation_intelligence/{logging_config,api,quotation_agent,agent_tools,bedrock,s3_storage}.py`;
+`tests/{test_observability,test_architecture}.py`. No dependency, deployment,
+Lambda handler, IAM, or AWS resource definition was changed. The separately
+approved live step updated the existing Lambda code in place, using the
+retained C15 stack and log group; no new stack resource was created.
 
 ### 6. Commands Run
 
-NONE
+`PYTHONPATH=.:src pytest -q` (430 passed); focused C16 and architecture
+pytest; C08/C09/C10/C13/C14/C15 regression pytest (168 passed);
+`python scripts/reconcile_governance_views.py --write` and `--check`;
+`bash scripts/final_card_state_consistency.sh V1-C16 ACTIVE`;
+`bash scripts/test_governance_harness.sh` (61 PASS / 0 FAIL);
+`bash scripts/quotation_session_bootstrap.sh` (127 PASS / one expected dirty-tree WARN / 0 FAIL);
+`python -m pip check`; `python -m compileall -q src deployment scripts`;
+`bash -n scripts/*.sh`; credential-pattern scan; `git diff --check`.
+The local-implementation checkpoint ran no AWS command. Separately approved
+live execution used read-only STS, CloudFormation, Lambda, API Gateway, IAM,
+S3, and CloudWatch checks; `aws cloudformation execute-change-set` for the
+existing `aqi-c16-997af354`; `aws cloudformation wait stack-update-complete`;
+and exactly one signed `GET /health` through `scripts/c15_signed_health.py`.
+Post-live focused/regression/full/architecture pytest, Governance Harness,
+reconciliation, ACTIVE-state check, pip, compile/shell syntax, credential
+scan, and diff checks passed at the counts above.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — `tests/test_observability.py`: 15 passed; JSON fields and stdout,
+request/quotation correlation, concurrent isolation, API latency/final status,
+agent/tool/Bedrock/S3 outcomes, token usage, sensitive-data absence, sink
+failure, no-AWS local health, and targeted identifier-filter mutation sensitivity.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS — C08/C09/C10/C13/C14/C15 combined regression: 168 passed with
+`PYTHONPATH=.:src`; full suite: 430 passed. Existing Starlette/httpx
+TestClient deprecation warning remains unrelated and accepted.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+LOCAL_PASS with bounded LIVE_CLOUDWATCH_EVIDENCE — deterministic invariants, contracts, component integration,
+failure injection, adversarial privacy tests, and targeted mutation
+sensitivity passed. Conditional concurrency/context isolation was exercised;
+generated property tests and fuzzing were not needed for this fixed schema.
+Differential, agent evaluation, and formal methods were not applicable.
+Rollback is a bounded instrumentation revert with no AWS observability
+resource to remove. The one signed live health request emitted the expected
+structured API event in the retained log group; independent live verification
+and Git delivery remain pending.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — existing commercial, review, export, and storage regressions passed;
+instrumentation neither changes these authorities nor logs commercial values.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — injected Bedrock success/failure tests prove latency, optional valid
+token counts, and sanitized failure categories without logging prompts,
+raw model responses, or `BedrockResult.message`.
 
 ### 12. Security Validation
 
-NOT_RUN
+LOCAL_PASS plus bounded live check — adversarial tests reject unsafe identifiers and raw log messages,
+exercise a provider secret-looking exception, and verify reviewer/body/prompt/
+workbook absence. Repository credential-pattern scan, package syntax, pip
+integrity, and `git diff --check` passed. The deployed runtime role remained
+log-only; the six API routes remained `AWS_IAM`, CORS was absent, and the
+observed event contained no prohibited sensitive field or payload.
 
 ### 13. Failures / Blockers
 
-No C16 implementation failures are recorded because implementation has not
-started. The read-only preflight was BLOCKED by the missing authoritative
+The read-only preflight was BLOCKED by the missing authoritative
 Roadmap Exit Gate, missing C09+ verification block, and unresolved scope and
 security ambiguities. The pre-C16 remediation addressed canonical
-documentation only. No C16 implementation was added and no AWS resource was
-modified. C16 remains NOT_AUTHORIZED / NOT_STARTED.
+documentation only; no AWS resource was modified. C16 local implementation
+was then explicitly authorized and started. Two new-test fixture defects
+(unstructured warning capture and an over-broad synthetic API payload) were
+corrected; the first C15 standalone regression invocation omitted repository
+root from `PYTHONPATH` and was rerun successfully. Final live CloudWatch
+evidence was initially paused because change set `aqi-c16-997af354` proposed
+an `ApiIntegration` Modify via dynamic `ApiFunction.Arn` dependency. An
+independent diagnosis classified this as non-semantic, and a separate human
+approval authorized execution of that exact existing change set. The
+subsequent stack events show only the in-place `ApiFunction` update; the
+integration ID and URI remained unchanged. No iterative remediation was
+performed. Independent live verification remains pending.
 
 ### 14. Exit Gate Evidence
 
-No C16 implementation or Exit Gate evidence exists. This remediation records
-the required future live evidence contract: after separate AWS approval, a
-representative structured event from the retained C15 Lambda must be
-independently observed in `/aws/lambda/aqi-c15-api`, with correlation present
-and prohibited sensitive fields absent. Local/simulated logging is not live
-evidence. No such event was emitted or inspected during this documentation
-maintenance.
+Local implementation alone did not prove the live requirement. After separate
+human approval, the retained `aqi-c15-nonprod` stack in account `553541119072`
+and region `us-east-1` executed existing change set `aqi-c16-997af354` to
+`UPDATE_COMPLETE` on 2026-10-04. It changed the `ApiFunction` code in place;
+no physical resource ID, runtime IAM, API route authorization, CORS, or
+effective API integration URI changed. The artifact key is
+`c15/997af354e5ca234fe6551ffa16dca66e5708c2ae63a995f2ba21c701a729d2e3.zip`;
+the ZIP SHA-256 is `997af354e5ca234fe6551ffa16dca66e5708c2ae63a995f2ba21c701a729d2e3`;
+Lambda `aqi-c15-api` reported `CodeSha256` =
+`mXrzVOXKI0/mVR/6FtymblcIwq5jqZXyuiHHAacp0uM=`, exactly matching the
+locally computed base64 SHA-256. The previous C15 artifact remains available
+as the rollback key.
 
-Exit Gate Status: NOT_PROVEN
+Exactly one real AWS_IAM/SigV4 `GET /health` through API `yj2yk1sk3g` at
+`https://yj2yk1sk3g.execute-api.us-east-1.amazonaws.com` returned HTTP 200
+and `{"status":"ok"}` during 2026-10-04 18:25:11–18:25:21 UTC. CloudWatch
+log group `/aws/lambda/aqi-c15-api`, stream
+`2026/10/04/[$LATEST]34cc8ca8a00f473e89456f82f128148d`, contains this
+actual structured event at 2026-10-04T18:25:17.819Z:
+
+```json
+{"component":"api","duration_ms":16,"event":"api_request","http_status":200,"operation":"health","request_id":"8dd0f9cdf3d145838b08a30996eec2ec","status":"success"}
+```
+
+The event is parseable JSON with all required health fields, a bounded
+request ID, and no credential, token, secret, prompt, raw model/provider
+message, reviewer ID, request/response body, workbook, or commercial/customer
+payload. This live proof demonstrates deployment reachability and C16
+observability only, not Bedrock/S3 readiness, business-workflow correctness,
+durable state, or production readiness. Live Bedrock and application S3 were
+not invoked; no custom metrics, alarms, dashboard, X-Ray, IAM change, or new AWS
+stack resource was introduced. The retained log group still has seven-day
+retention. Post-live local mode and suites passed (C16 15, relevant regressions
+168, full pytest 430, architecture 73, Governance Harness 61/0).
+
+Exit Gate Status: live evidence captured; independent live verification,
+Git delivery, and completion reconciliation pending.
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PENDING — local and live self-validation passed, but independent live
+verification, Git delivery, and completion reconciliation remain.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+UNDELIVERED — local working-tree candidate only; nothing staged, committed,
+pushed, or merged for C16.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+The live event proves health-path observability, not agent, Bedrock, S3,
+commercial, or production behavior. The accepted non-blocking LOW findings
+from the independent local audit remain known limitations. The C15 resources
+and new code artifact are intentionally retained; further AWS modification
+requires separate approval.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+Bounded stdout JSON and context-local IDs provide local operational visibility
+without turning logging into business authority. Raw provider messages must
+never be used as error fields. See the C16 Learning and Decision Log for the
+test-fixture failures, threat model, alternatives, and rollback rationale.
 
 ### 19. Completion Evidence
 
-NONE
+Live CloudWatch proof captured; independent live verification and approved
+Git delivery have not occurred. C16 remains ACTIVE / UNDELIVERED / NOT COMPLETE.
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C16
 Learning Documentation Status:
-NOT_STARTED
+CURRENT
 
 ## V1-C17 — Evaluation Harness
 
@@ -3173,7 +3261,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C13 | FastAPI Application | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C14 | Amazon S3 Integration | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C15 | AWS Deployment | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C16 | CloudWatch Observability | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C16 | CloudWatch Observability | ACTIVE | YES | PASS | live | PENDING | PRESENT | ACTIVE |
 | V1-C17 | Evaluation Harness | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C18 | Guardrails and Failure Handling | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
@@ -3184,7 +3272,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C15_COMPLETE
+Project Phase: V1_C16_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3200,8 +3288,9 @@ V1-C12: COMPLETE
 V1-C13: COMPLETE
 V1-C14: COMPLETE
 V1-C15: COMPLETE
-V1-C16: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C16: ACTIVE
+V1-C17: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C16
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.

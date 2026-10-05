@@ -8,6 +8,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from decimal import Decimal
 from enum import StrEnum
+from functools import wraps
+from time import monotonic_ns
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError
@@ -30,6 +32,7 @@ from ai_quotation_intelligence.domain import (
 )
 from ai_quotation_intelligence.retrieval import SimilarQuoteMatch, retrieve_similar_quotes
 from ai_quotation_intelligence.risk_evidence import Metric, RiskEvidenceReport, build_risk_evidence
+from ai_quotation_intelligence.logging_config import emit_event
 
 
 class FailureCode(StrEnum):
@@ -196,6 +199,35 @@ def _comparison(value: object, tool: str, request_id: str) -> HistoricalComparis
     )
 
 
+def _observed_tool(name: str):
+    """Instrument only the fixed C09 public operations; never serialize arguments."""
+    def decorate(method):
+        @wraps(method)
+        def wrapped(self, request):
+            started = monotonic_ns()
+            request_id = request.request_id if isinstance(request, ToolInput) else None
+            try:
+                result = method(self, request)
+            except ToolFailure as exc:
+                emit_event("tool_call", component="agent_tool", operation=name,
+                           status="failure", request_id=request_id,
+                           duration_ms=(monotonic_ns() - started) // 1_000_000,
+                           sanitized_error=exc.code.value)
+                raise
+            except Exception:
+                emit_event("tool_call", component="agent_tool", operation=name,
+                           status="failure", request_id=request_id,
+                           duration_ms=(monotonic_ns() - started) // 1_000_000,
+                           sanitized_error="unexpected_error")
+                raise
+            emit_event("tool_call", component="agent_tool", operation=name,
+                       status="success", request_id=request_id,
+                       duration_ms=(monotonic_ns() - started) // 1_000_000)
+            return result
+        return wrapped
+    return decorate
+
+
 class AgentTools:
     """Fixed, code-level C09 tool boundaries; no selection or agent loop."""
 
@@ -231,12 +263,14 @@ class AgentTools:
             raise ToolFailure(FailureCode.INVALID_OUTPUT, tool, request_id)
         return records
 
+    @_observed_tool("get_historical_quotes")
     def get_historical_quotes(self, request: HistoricalQuotesInput) -> HistoricalQuotesOutput:
         tool = "get_historical_quotes"
         data = _input(HistoricalQuotesInput, request, tool)
         records = self._source_history(tool, data.request_id)
         return HistoricalQuotesOutput(request_id=data.request_id, records=records)
 
+    @_observed_tool("find_similar_quotes")
     def find_similar_quotes(self, request: SimilarQuotesInput) -> SimilarQuotesOutput:
         tool = "find_similar_quotes"
         data = _input(SimilarQuotesInput, request, tool)
@@ -271,6 +305,7 @@ class AgentTools:
             raise ToolFailure(FailureCode.INVALID_OUTPUT, tool, data.request_id)
         return SimilarQuotesOutput(request_id=data.request_id, matches=tuple(matches))
 
+    @_observed_tool("compare_estimate_to_actual")
     def compare_estimate_to_actual(self, request: ComparisonsInput) -> ComparisonsOutput:
         tool = "compare_estimate_to_actual"
         data = _input(ComparisonsInput, request, tool)
@@ -292,6 +327,7 @@ class AgentTools:
             raise ToolFailure(FailureCode.INSUFFICIENT_EVIDENCE, tool, data.request_id)
         return ComparisonsOutput(request_id=data.request_id, comparisons=comparisons)
 
+    @_observed_tool("calculate_quote_statistics")
     def calculate_quote_statistics(self, request: StatisticsInput) -> StatisticsOutput:
         tool = "calculate_quote_statistics"
         data = _input(StatisticsInput, request, tool)
@@ -333,6 +369,7 @@ class AgentTools:
             raise ToolFailure(FailureCode.INVALID_OUTPUT, tool, data.request_id)
         return StatisticsOutput(request_id=data.request_id, metric=data.metric, summary=summary, sources=tuple(sources))
 
+    @_observed_tool("get_risk_evidence")
     def get_risk_evidence(self, request: RiskEvidenceInput) -> RiskEvidenceOutput:
         tool = "get_risk_evidence"
         data = _input(RiskEvidenceInput, request, tool)
