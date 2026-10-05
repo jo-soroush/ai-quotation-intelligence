@@ -67,6 +67,38 @@ def make_draft(client: TestClient, request_id: str = "api-case") -> str:
     return response.json()["quote_id"]
 
 
+def test_external_request_rejects_missing_estimated_hours_unit(live_api) -> None:
+    client, store, _ = live_api
+    payload = body("missing-unit")
+    del payload["quotation_request"]["items"][0]["estimated_hours"]["unit"]
+
+    response = client.post("/quotes/draft", json=payload)
+
+    assert response.status_code == 422
+    assert response.json() == {"code": "invalid_request"}
+    assert not store._entries
+
+
+def test_external_request_accepts_explicit_estimated_hours_unit(live_api) -> None:
+    client, _, _ = live_api
+    payload = body("explicit-unit")
+    payload["quotation_request"]["items"][0]["estimated_hours"]["unit"] = "hours"
+
+    response = client.post("/quotes/draft", json=payload)
+
+    assert response.status_code == 200, response.json()
+    assert response.json()["status"] == "success"
+    schema = client.app.openapi()
+    request_schema = schema["components"]["schemas"]["AgentInput"]
+    item_ref = request_schema["properties"]["quotation_request"]["$ref"].split("/")[-1]
+    quotation_schema = schema["components"]["schemas"][item_ref]
+    item_ref = quotation_schema["properties"]["items"]["items"]["$ref"].split("/")[-1]
+    item_schema = schema["components"]["schemas"][item_ref]
+    hours_ref = item_schema["properties"]["estimated_hours"]["$ref"].split("/")[-1]
+    hours_schema = schema["components"]["schemas"][hours_ref]
+    assert "unit" in hours_schema["required"]
+
+
 def approve(client: TestClient, quote_id: str, status: str = "approved"):
     return client.post(f"/quotes/{quote_id}/approve", json={
         "status": status, "reviewer_id": "caller-asserted-reviewer",

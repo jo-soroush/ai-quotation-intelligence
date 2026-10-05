@@ -3146,54 +3146,94 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE
+
+Phase 2 public-schema correction validated; full C18 verification, audit,
+delivery, and completion remain pending.
 
 ### 4. Human Start Approval
 
-NO
+YES
+
+Local C18 implementation authorized. A separate Phase 2 approval authorized
+only the public request correction requiring `estimated_hours.unit`.
 
 ### 5. Files Changed
 
-NONE
+`PROJECT_CONTROL.md`; `src/ai_quotation_intelligence/api.py`;
+`tests/test_api.py`; this Evidence Map; `CARD_LEARNING_AND_DECISION_LOG.md`.
+The production change is limited to the external request boundary.
 
 ### 6. Commands Run
 
-NONE
+Pre-fix reproduction: `.venv/bin/pytest -q
+tests/test_api.py::test_external_request_rejects_missing_estimated_hours_unit`
+(failed as expected: HTTP 200 instead of 422). Phase 2 and Phase 3 then ran
+the focused API/schema proof, the exact matrix-integrity tests, directly reused
+C02–C16 evidence suites, deterministic failure-injection/adversarial subsets,
+isolated source-copy mutation probes A–K, mutation L, full pytest,
+architecture, Governance Harness, reconciliation, ACTIVE-state consistency,
+bootstrap, pip/compile/secret/diff checks, and the unchanged C17 evaluation.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — Phase 2 omitted-unit rejection and explicit-unit acceptance/OpenAPI
+requiredness: 2 passed. Phase 3 matrix completeness and omission resistance:
+2 passed. No production test was duplicated merely to carry a C18 label.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+Directly reused C02–C16 evidence suite: 309 passed. Deterministic failure
+injection subset: 42 passed. Adversarial subset: 39 passed. Full pytest: 472
+passed. Architecture: 76 passed. Governance Harness: 61 PASS / 0 FAIL. C17
+evaluation: PASS; dataset SHA-256
+`1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`;
+authoritative report SHA-256
+`928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+PASS — all 15 canonical rows resolved and final PASS; failure injection,
+cross-cutting integration, adversarial verification, threat reconciliation,
+and targeted mutation resistance all passed locally. This is a local contract
+gate, not independent audit, delivery, production readiness, or C19 evidence.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — missing versus zero, invalid/non-finite values, explicit currency/unit,
+deterministic arithmetic/reconciliation, evidence provenance, and approval
+authority remain fail closed under the cited direct evidence.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — malformed/authority-seeking model output, provider invalidity and
+unavailability, unsupported tools/actions, fabricated evidence, and tool
+failure remain explicit and cannot create a draft or fallback success.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS — API mass assignment, provider/storage/export error sanitization,
+observability allowlisting/redaction, secret/payload exclusion, and bounded
+failure mappings passed their direct tests and mutation challenges.
 
 ### 13. Failures / Blockers
 
-The read-only C18 preflight was BLOCKED by canonical-documentation gaps:
-missing Roadmap Exit Gate and C09+ verification block; ambiguity over whether
-all 15 Guardrails §8 states or a subset were required; ambiguity over reuse of
-prior-Card evidence versus duplicate C18 tests; unresolved Bedrock Guardrails,
-observability reuse, live AWS/Bedrock proof, and architecture decisions. Human
-decisions approved the documentation-only contract recorded here and in the
-Roadmap/Specification. This remediation did not start C18 or change its live
-authorization/state. No C18 implementation failure is claimed.
+The C18 read-only preflight was blocked by canonical-documentation gaps; the
+human-approved documentation remediation resolved them. C18 was subsequently
+authorized and activated. Phase 1 classified 14 states
+`EXISTING_EVIDENCE_SUFFICIENT` and identified one proven gap:
+`COMMERCIAL_SEMANTICS_UNVERIFIED`, because the public request boundary accepted
+missing `estimated_hours.unit` and the domain default supplied `hours`.
+Phase 2 added a boundary-local required field and focused regression. Phase 3
+completed the all-state local verification without finding another enforcement
+gap. Independent audit and Git delivery remain outstanding.
+
+Phase 3 test-construction failure retained: the first run of
+`test_c18_matrix_omission_mutation_is_caught` failed because its parser also
+treated the earlier canonical-state code block as matrix rows and reported a
+duplicate `MISSING_RATE`. This was not a runtime enforcement gap. The parser
+was bounded to Markdown table lines beginning with `|`; the focused rerun then
+passed, followed by the complete focused/full suites.
 
 ### Pre-C18 Canonical Remediation — Contract, Not Execution Evidence
 
@@ -3217,62 +3257,99 @@ APPROVAL_REQUIRED
 SECURITY_BOUNDARY_VIOLATION
 ```
 
-C18's future primary evidence artifact must contain one row per state and at
-least these fields: canonical state; triggering condition; owning component /
-layer; expected result/status; existing implementation path; existing
-test/evidence reference; evidence classification; C18 action; final
-verification result. The required classifications are
-`EXISTING_EVIDENCE_SUFFICIENT`, `EXISTING_EVIDENCE_PARTIAL`,
-`NEW_C18_TEST_REQUIRED`, and `ENFORCEMENT_GAP_REQUIRES_FIX`. These rows are
-currently **UNASSESSED**; this contract is not evidence that any state passes.
+C18's primary evidence artifact contains one row per state with the canonical
+trigger, owner, expected result, implementation/test evidence, original
+classification, C18 action, and final result. Historical classifications are
+preserved: 14 `EXISTING_EVIDENCE_SUFFICIENT` and one
+`ENFORCEMENT_GAP_REQUIRES_FIX`.
 
 | Canonical state | Trigger | Owning component / layer | Expected result / status | Existing implementation and test/evidence | Evidence classification | C18 action | Final verification result |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| MISSING_RATE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| MISSING_REQUIRED_HOURS | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| INVALID_COMMERCIAL_VALUE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| CURRENCY_MISMATCH | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| COMMERCIAL_SEMANTICS_UNVERIFIED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| DETERMINISTIC_CONFLICT | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| INSUFFICIENT_EVIDENCE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| AI_UNSUPPORTED_CLAIM | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| AI_INVALID | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| AI_UNAVAILABLE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| AI_BOUNDARY_VIOLATION | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| COMMERCIAL_INVARIANT_FAILED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| EXCEL_RECONCILIATION_FAILED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| APPROVAL_REQUIRED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
-| SECURITY_BOUNDARY_VIOLATION | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| MISSING_RATE | Required `hourly_rate` absent from a quotation item | C02 domain / C04 deterministic Core | Validation fails before calculation or authoritative quote state | `QuoteItem` required field; `test_missing_hours_or_rate_are_rejected_before_calculation` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| MISSING_REQUIRED_HOURS | Required `estimated_hours` absent | C02 domain / C04 deterministic Core | Validation fails; missing is never zero | `QuoteItem` required field; `test_missing_hours_or_rate_are_rejected_before_calculation` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| INVALID_COMMERCIAL_VALUE | Negative, non-finite, or malformed hours/money | C02 domain models | Typed validation rejects value before arithmetic/state | `test_money_rejects_invalid_values`, `test_negative_inputs_are_rejected_by_c02_models`, `test_non_finite_numeric_inputs_are_rejected_by_c02_models` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| CURRENCY_MISMATCH | Quote items or actual/estimated values use incompatible currency | C02 domain / C04-C06 comparison/retrieval | Explicit validation failure; no conversion or comparison success | `test_mixed_currency_and_empty_quotes_are_rejected_by_c02_models`, `test_actual_cost_currency_mismatch_is_rejected`, `test_incompatible_currency_is_rejected_without_conversion` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| COMMERCIAL_SEMANTICS_UNVERIFIED | External request omits `estimated_hours.unit` | C13 public request schema | HTTP 422 `invalid_request`; no stored/application state; schema advertises required unit | `RequestHours` / `ItemInput`; `test_external_request_rejects_missing_estimated_hours_unit`, `test_external_request_accepts_explicit_estimated_hours_unit` | ENFORCEMENT_GAP_REQUIRES_FIX | BOUNDED_EXTERNAL_SCHEMA_FIX_PLUS_REGRESSION | PASS |
+| DETERMINISTIC_CONFLICT | Supplied/model value conflicts with deterministic commercial truth | C04 Core / C09-C10 agent boundary | Deterministic value remains authoritative; conflict rejected/no draft | `test_supplied_total_must_reconcile_with_authoritative_item_costs`, `test_invalid_model_generated_tool_arguments_cannot_override_request`, `test_fabricated_evidence_commercial_claims_and_approval_fail` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| INSUFFICIENT_EVIDENCE | No history, no applicable outcomes, or no validated risk evidence | C06-C07 retrieval/risk; C09-C10 tool/agent | Explicit empty/insufficient result; no match/evidence/draft fabricated | `test_empty_history_is_explicitly_insufficient`, `test_missing_cost_is_insufficient_for_cost_metric`, `test_unavailable_c09_capability_and_missing_evidence_are_explicit`, `test_missing_risk_evidence_remains_visible` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| AI_UNSUPPORTED_CLAIM | Model asserts commercial/risk/approval facts outside validated evidence | C10 quotation agent | INVALID result, no draft or authority promotion | `test_unsafe_model_missing_information_prose_fails_closed`, `test_malformed_or_authority_seeking_model_response_is_invalid`, `test_fabricated_evidence_commercial_claims_and_approval_fail` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| AI_INVALID | Provider/model envelope or structured action is malformed | C08 adapter / C10 agent | Explicit INVALID; no authoritative draft/fallback | `test_missing_or_empty_response_is_invalid`, `test_wrong_content_type_is_invalid`, `test_malformed_or_authority_seeking_model_response_is_invalid`, `test_provider_failures_and_invalid_envelopes_cannot_create_drafts` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| AI_UNAVAILABLE | Provider or required tool raises/unavailable status | C08 adapter / C09 tools / C10 agent | Explicit UNAVAILABLE, sanitized message, no draft | `test_provider_failure_is_unavailable_without_secret_details`, `test_unavailable_c09_capability_and_missing_evidence_are_explicit`, `test_c09_delegated_failure_does_not_leak_exception_detail`, `test_provider_failures_and_invalid_envelopes_cannot_create_drafts` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| AI_BOUNDARY_VIOLATION | Unsupported tool/action, authority override, or invalid tool result/evidence identity | C09 tool resolver / C10 agent | INVALID bounded result; no unsupported execution/final success | `test_fixed_resolver_rejects_future_and_arbitrary_operations`, `test_unknown_deferred_and_future_operations_fail_closed`, `test_malformed_tool_output_is_not_accepted`, `test_prompt_injection_cannot_grant_future_tool_or_approval` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| COMMERCIAL_INVARIANT_FAILED | Quote total/state/provenance fails deterministic validation | C02 domain / C04 Core / C11 review | Reject before review/export/authoritative state | `test_supplied_total_must_reconcile_with_authoritative_item_costs`, `test_historical_quote_rejects_mismatched_provenance`, `test_invalid_start_state_and_false_commercial_total_fail` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| EXCEL_RECONCILIATION_FAILED | Commercial/evidence reconciliation, render, or workbook validation fails | C12 Excel export | Explicit `ExportFailure`; no workbook bytes or success artifact returned | `test_core_reconciliation_failure_blocks_export`, `test_invalid_workbook_and_generation_failure_never_return_partial_success`, `test_reload_validation_rejects_injected_formula_link_or_macro` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| APPROVAL_REQUIRED | Export attempted pending/rejected or transition repeated/invalid/model-authored | C11 review / C12 export / C13 API | Explicit rejection/error; no export or approval impersonation | `test_human_rejection_is_visible_and_not_eligible`, `test_every_repeat_or_opposite_decision_fails`, `test_invalid_action_and_model_text_cannot_impersonate_human`, `test_unreviewed_rejected_and_unsuccessful_results_never_export`, `test_export_still_depends_on_c11_gate` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
+| SECURITY_BOUNDARY_VIOLATION | Mass assignment, fabricated evidence, provider/storage false-success, or sensitive logging/error data | C09/C13/C14/C16 boundaries | Reject or sanitize; no authority/persistence success or sensitive output | `test_top_level_mass_assignment_rejected`, `test_fabricated_risk_evidence_and_counts_are_rejected`, `test_malformed_put_success_never_becomes_stored_artifact`, `test_untrusted_metadata_and_unstructured_message_never_escape`, `test_provider_and_internal_exceptions_are_sanitized` | EXISTING_EVIDENCE_SUFFICIENT | NO_ACTION_REUSE_EVIDENCE | PASS |
 
-Documentation decisions now canonicalized: verification-first and
-hardening-only; all 15 states required; direct/sufficient prior evidence may be
-reused without duplicate tests; Bedrock Guardrails deferred; no live AWS or
-Bedrock proof; existing C16 observability reused only where applicable; no new
-runtime subsystem or architecture category by default; and C17 is not a
-dependency. No implementation, tests, fixtures, Bedrock call, AWS change,
-dependency, or evaluation result was created by this pre-Card remediation.
+Phase 1 classifications and Phase 2 remediation history are preserved. Phase
+3 re-read the implementations and assertions behind all 14 reused rows; the
+309-test direct suite passed. Failure injection passed 42 tests; adversarial
+verification passed 39. Isolated source-copy mutations A–K were all caught by
+independent assertions. Mutation L is enforced by
+`tests/test_c18_guardrail_matrix.py`: removing one row makes completeness false,
+and the live matrix test requires exactly 15 ordered, resolved rows with the
+historical 14/1 classifications.
+
+Failure-injection results: invalid commercial input, invalid/unavailable
+provider, tool failure, storage failure/malformed success, Excel reconciliation
+or render failure, and approval/transition failure all remained explicit; no
+false success or fabricated fallback occurred. Cross-cutting propagation from
+commercial validation to quote state, provider/tool to agent result, approval
+to export, storage provider to typed failure, API failure mapping, and existing
+C16 runtime paths to bounded structured events passed.
+
+Threat model reconciliation: silent success, fabricated quotation, commercial
+invariant bypass, approval bypass, invalid AI promotion, evidence fabrication,
+unsupported action, false storage/export success, provider-error leakage,
+secret/payload leakage, partial-state misrepresentation, omitted matrix rows,
+and misleading all-pass claims are all directly covered and PASS. Generated
+property tests, fuzzing, differential testing, and concurrency/race testing
+were evaluated but not added: fixed boundary cases and existing concurrent
+transition/context tests are sufficient, no independent differential oracle
+exists, and no new shared-mutable implementation was introduced. Formal
+methods remain NOT_APPLICABLE.
+
+Rollback remains Git-only: the Phase 2 API change is individually reversible;
+there is no migration, persistent-format, deployment, AWS-resource, dependency,
+or operational rollback. Bedrock Guardrails remain deferred. No AWS/live
+Bedrock action, persistence, policy redesign, dependency, or C17 change occurred.
 
 ### 14. Exit Gate Evidence
 
-NONE
+All 15 rows are complete and final PASS. Direct reused evidence, the Phase 2
+schema fix, failure injection, adversarial checks, cross-cutting integration,
+threat reconciliation, and 12/12 targeted mutations passed. C17 remained
+byte-identical by dataset/report identities; full local validation passed.
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: PROVEN — LOCAL C18 EXIT GATE PASS. Independent audit and Git
+delivery remain required before completion.
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PASS — local contract, evidence, validation, learning, and Exit Gate are
+current. This does not claim independent audit or delivery.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch `card/v1-c18-guardrails-failure-handling`, base
+`a9fcf6de2faa466d2ab00084d4266fd5f67597c9`; no changes staged, committed,
+pushed, or delivered.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+The evidence matrix is a governance artifact validated by a targeted test, not
+a runtime subsystem. C18 proves the delivered deterministic failure contracts;
+it does not establish production readiness or universal commercial correctness.
+The existing Starlette/httpx deprecation warning remains non-blocking.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+The internal `Hours` default can be useful for existing internal construction,
+but reusing that permissive model directly at the public request boundary
+silently invents a caller's unit. An API-owned subclass with a required
+`unit` field keeps public schema validation strict without changing global
+domain semantics. The test first reproduced HTTP 200 before the change, then
+proved 422/no stored state, valid explicit input, and OpenAPI requiredness.
 
 ### 19. Completion Evidence
 
@@ -3280,11 +3357,12 @@ NONE
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE / IMPLEMENTED AND VERIFIED LOCALLY / READY FOR INDEPENDENT LOCAL AUDIT /
+UNDELIVERED / NOT COMPLETE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C18
 Learning Documentation Status:
-PRE-IMPLEMENTATION DECISION HISTORY RECORDED; C18 IMPLEMENTATION LEARNING NOT_STARTED
+CURRENT — pre-implementation decisions and Phase 2 implementation learning recorded; remaining C18 learning will be added only as evidence exists
 
 ## V1-C19 — Golden Case
 
@@ -3489,7 +3567,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C15 | AWS Deployment | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C16 | CloudWatch Observability | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C17 | Evaluation Harness | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C18 | Guardrails and Failure Handling | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C18 | Guardrails and Failure Handling | ACTIVE | YES | PASS | PROVEN | PASS | PRESENT | ACTIVE / IMPLEMENTED AND VERIFIED LOCALLY / READY FOR INDEPENDENT LOCAL AUDIT / |
 | V1-C19 | Golden Case | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 | V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
 <!-- END GENERATED: CURRENT_CARD_TABLE -->
@@ -3498,7 +3576,7 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C17_COMPLETE
+Project Phase: V1_C18_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3516,8 +3594,9 @@ V1-C14: COMPLETE
 V1-C15: COMPLETE
 V1-C16: COMPLETE
 V1-C17: COMPLETE
-V1-C18: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C18: ACTIVE
+V1-C19: NOT_AUTHORIZED / NOT_STARTED
+Active Card: V1-C18
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16, V1-C17
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.

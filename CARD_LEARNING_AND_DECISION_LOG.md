@@ -2855,6 +2855,98 @@ C18 remains NOT_AUTHORIZED / NOT_STARTED; C19 remains unauthorized. C18 does
 not depend on or modify C17. If separately authorized, C19 may rely on proven
 C18 outcomes but must not infer them from this documentation remediation.
 
+### Phase 2 — Public Request Unit Enforcement
+
+Human-approved scope was limited to requiring `estimated_hours.unit` at the
+external quotation request boundary. Phase 1 demonstrated that `ItemInput`
+used the domain `Hours` contract directly; its `unit = TimeUnit.HOURS` default
+made a request omitting the unit succeed and created domain state with the
+assumed value. This violated the existing boundary rule that commercial units
+must be explicit.
+
+The regression was added first and run against unchanged production code. It
+failed for the expected reason: the request returned HTTP 200 rather than the
+existing validation response HTTP 422. No unrelated failure caused that
+result. The bounded fix introduces `RequestHours` in the existing API module,
+subclasses the existing `Hours` contract, and overrides `unit` as required.
+`ItemInput` uses that API-owned type. Internal `Hours` defaults, domain-wide
+semantics, route/method/authentication, error envelope, calculations, approval,
+export, storage, and agent behavior remain unchanged. OpenAPI now lists `unit`
+as required. An explicit `unit: "hours"` request remains accepted.
+
+Validation observed: both focused omission/explicit-unit regressions passed;
+the directly relevant API/domain/calculation/comparison/agent suites passed
+140 tests; full pytest passed 470 tests; architecture tests passed 76;
+Governance Harness passed 61 with 0 failures; governance reconciliation and
+ACTIVE-state consistency passed; pip check and compile checks passed; bootstrap
+reported 127 PASS / 1 expected dirty-tree WARN / 0 FAIL. The unchanged C17
+evaluation passed with its original dataset and report hashes. The
+`git diff --check` whitespace check passed. The pre-fix failure is retained in
+the C18 Evidence Map as
+history.
+
+This closes only the Phase 2 local proof for
+`COMMERCIAL_SEMANTICS_UNVERIFIED`; its original
+`ENFORCEMENT_GAP_REQUIRES_FIX` classification is preserved. The other 14
+Phase 1 `EXISTING_EVIDENCE_SUFFICIENT` classifications were not changed or
+duplicated. C18's overall Exit Gate remains unproven and C18 remains ACTIVE,
+UNDELIVERED, and NOT COMPLETE. No AWS, live Bedrock, Bedrock Guardrails,
+dependency, persistence, or C17 changes occurred.
+
+### Phase 3 — Final Cross-Cutting Local Verification
+
+Phase 3 made no production change. It re-read the implementation and assertions
+behind all 14 reused-evidence classifications and ran the complete direct
+C02–C16 evidence set (309 tests). A 42-test deterministic failure-injection
+subset and 39-test adversarial subset separately exercised invalid commercial
+input, invalid/unavailable provider behavior, tool failure, storage failure and
+malformed success, Excel reconciliation/render failure, approval/transition
+failure, authority-seeking AI output, fabricated evidence, mass assignment,
+and bounded error/observability behavior.
+
+The main additional verification decision was to add one evidence-integrity
+test module. The C18 matrix was previously Markdown only, so mutation L (omit
+one canonical state) had no executable fail-closed mechanism. The focused test
+parses only the C18 table, requires the exact ordered 15-state set, eight fields
+per row, final PASS, no unresolved markers, and the preserved 14/1 historical
+classification split. A second test removes one row in memory and proves the
+matrix is rejected. This is governance evidence integrity, not a new runtime
+guardrail subsystem.
+
+The first omission-mutation test run failed during test construction because
+the parser also read the canonical state-name code block and saw duplicate
+rows. The root cause was an overly broad line parser, not a product defect or
+matrix omission. Restricting parsing to Markdown table lines (`|...|`) was the
+smallest fix; the focused rerun and subsequent suites passed. The failure is
+kept as evidence that the integrity test itself was challenged before use.
+
+Mutation probes A–K used isolated temporary source copies so the candidate was
+never modified. Each changed an actual enforcement condition and ran an
+independent assertion: numeric acceptance, failure status, approval bypass,
+invalid AI parsing, evidence validation, tool allowlisting, S3 success
+validation, workbook validation, provider fallback, partial-state handling,
+and event redaction. All eleven were caught; matrix omission mutation L was
+also caught. This methodology avoids monkeypatching the same value read by both
+implementation and assertion.
+
+No further enforcement gap was found. The important tradeoff is that C18
+reuses strong prior-Card tests instead of cloning them into a broad C18 suite;
+the matrix test protects coverage completeness while cited component tests
+retain ownership of behavior. Generated property tests and fuzzing were not
+added because the fixed typed boundary cases already cover the relevant input
+classes. Differential testing had no genuinely independent second oracle.
+Concurrency/race required no new work because Phase 3 introduced no shared
+mutable runtime behavior and existing review/context race tests remain direct.
+Formal methods remain not applicable.
+
+The local Exit Gate is PASS: all 15 rows are final PASS, failure information
+is bounded, false success and fabricated fallback paths are rejected, C17
+retains its exact dataset/report identities, and the full local validation
+passes. This proves the defined C18 contracts in the delivered local system;
+it does not prove production readiness or universal commercial correctness.
+C18 remains ACTIVE, UNDELIVERED, and NOT COMPLETE pending independent audit
+and separate Git-delivery approval. C19 remains unauthorized.
+
 ## V1-C19 — Golden Case
 
 ### 1. Card

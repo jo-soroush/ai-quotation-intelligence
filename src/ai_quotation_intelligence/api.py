@@ -17,7 +17,7 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints, Validation
 
 from ai_quotation_intelligence.domain import (
     AgentRequest, AgentResult, AgentResultStatus, ApprovalDecision,
-    ApprovalStatus, DraftQuote, Hours, Money, NewQuoteRequest, QuoteItem,
+    ApprovalStatus, DraftQuote, Hours, Money, NewQuoteRequest, QuoteItem, TimeUnit,
 )
 from ai_quotation_intelligence.excel_export import ExportFailure, ExportFailureCode, export_approved_quote
 from ai_quotation_intelligence.human_review import ReviewFailure, ReviewFailureCode, ReviewSession
@@ -36,10 +36,16 @@ class TransportModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class RequestHours(Hours):
+    """Public request time value; callers must state its unit explicitly."""
+
+    unit: TimeUnit
+
+
 class ItemInput(TransportModel):
     item_id: SafeId
     description: ShortText
-    estimated_hours: Hours
+    estimated_hours: RequestHours
     hourly_rate: Money
 
 
