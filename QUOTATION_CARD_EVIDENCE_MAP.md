@@ -3409,6 +3409,67 @@ CURRENT — pre-implementation decisions and Phase 2 implementation learning rec
 
 ## V1-C19 — Golden Case
 
+### Pre-C19 Canonical Remediation — Documentation Only; Not C19 Execution Evidence
+
+The read-only C19 preflight was BLOCKED: the Roadmap lacked a C19-specific
+Exit Gate, the C09+ verification block was missing, and local/live execution,
+approval, C17 relationship, scenario identity, artifact format, and retention
+were unresolved. Human decisions resolved these contract questions. This
+documentation remediation adds the separate C19 Exit Gate and verification
+contract while preserving the project-wide Roadmap Final Gate.
+
+The approved execution model is one local, deterministic, repeatable synthetic
+Golden Case through existing component contracts. Local FastAPI is exercised;
+provider and storage boundaries use deterministic injected clients; approval
+uses the existing C11 path with an explicitly synthetic test actor; applicable
+existing C16 events are captured locally. Live AWS, Bedrock, S3, CloudWatch,
+Lambda, and API Gateway are not required. C13 process-local state remains an
+accepted limitation and is not repaired. C17 is not a dependency and remains
+unchanged; its existing identities are regression evidence only. C18 remains
+a completed prerequisite without duplicating its all-15 matrix.
+
+The unchanged C17 regression identity is dataset version `c17-golden-v1`,
+dataset SHA-256 `1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`,
+and report SHA-256 `928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
+
+The contract now requires a fixed synthetic scenario ID/version/SHA, stable
+serialization, independently authored expected values, exact once-only
+required-step accounting, a bounded machine-readable PASS/FAIL/ERROR report,
+two-run normalized reproducibility, ephemeral workbook/report/injected
+storage/event artifacts, privacy controls, harness-level failure/mutation/
+adversarial proof, Git-only rollback, and a claim bounded to one synthetic
+scenario. The C13 process-local limitation is not a C19 deliverable.
+
+No C19 implementation, tests, fixture, report, workbook, or other runtime
+artifact was created or executed by this remediation. C19 remains
+NOT_AUTHORIZED / NOT_STARTED; no C20 work is authorized. The status and
+execution fields below remain NOT_RUN / NOT_PROVEN and are not converted into
+PASS by this contract change.
+
+### Documentation-Remediation Validation Evidence (2026-10-05)
+
+- `python scripts/reconcile_governance_views.py --write`: PASS.
+- `python scripts/reconcile_governance_views.py --check`: PASS.
+- Initial `.venv/bin/pytest -q` invocation stopped during collection because
+  the repository `PYTHONPATH=.:src` was not set (`ModuleNotFoundError:
+  deployment`). No tests ran in that invocation. Corrected invocation
+  `PYTHONPATH=.:src .venv/bin/pytest -q`: 472 passed, one existing
+  Starlette/httpx deprecation warning.
+- `.venv/bin/pytest -q tests/test_architecture.py`: 76 passed.
+- `bash scripts/test_governance_harness.sh`: 61 PASS / 0 FAIL. Its expected
+  invalid-fixture argparse diagnostic was emitted during a passing case.
+- `bash scripts/quotation_session_bootstrap.sh`: 127 PASS / 1 expected
+  dirty-tree WARN / 0 FAIL; secret-bearing filename and obvious credential
+  pattern checks passed.
+- `.venv/bin/python -m pip check`: no broken requirements.
+- `.venv/bin/python -m compileall -q src tests`: PASS.
+- `git diff --check`: PASS. No credential/private-key pattern was found in
+  the four authorized documents.
+
+These are repository/governance validation results for the documentation
+candidate only. They are not C19 Golden Case execution, scenario, component,
+cloud, or Exit Gate evidence. No AWS/Bedrock call was made.
+
 ### 1. Card
 
 V1-C19 — Golden Case
