@@ -2324,7 +2324,9 @@ Bounded JSON stdout operational events for API requests, quotation-agent
 runs, C09 tools, Bedrock Converse, and C14 S3 operations. After separately
 authorized live execution, the existing C15 Lambda package was updated in
 place and one signed health request emitted a structured C16 event into its
-retained CloudWatch log group. C16 remains ACTIVE and UNDELIVERED.
+retained CloudWatch log group. Independent live verification passed; C16 was
+delivered through PR #48 and is COMPLETE after post-merge validation and
+outcome-only completion reconciliation.
 
 ### 5. Key Design Decisions
 
@@ -2447,9 +2449,9 @@ diagnosis and a new human approval enabled the exact bounded execution.
 
 Do not log `BedrockResult.message` or any `str(exc)` at these boundaries.
 Preserve the narrow architecture exception, request-context reset, and
-metadata allowlist. A passing local suite is not the C16 final Exit Gate;
-live evidence still requires independent verification and approved delivery
-before C16 can be COMPLETE. The consumed change-set approval does not
+metadata allowlist. The final C16 Exit Gate required the live CloudWatch
+event, independent verification, approved delivery, post-merge validation,
+and final state consistency. The consumed change-set approval does not
 authorize further AWS mutation.
 
 ### 18. Impact on Later Cards
@@ -2476,6 +2478,30 @@ custom metrics, EMF, alarms, dashboards, X-Ray/distributed tracing, and
 third-party/enterprise observability. No C16 implementation, dependency, AWS
 resource, or runtime IAM change was made. C16 remains NOT_AUTHORIZED /
 NOT_STARTED; Active Card remains NONE and C17 remains NOT_AUTHORIZED.
+
+### C16 delivery and completion reconciliation
+
+The exact independently audited candidate identity
+`edbb6a9df2737722484fc24a2ac210645483823ca466b39c24dd0810d7e04d98` matched
+the worktree, staged index, and committed tree. Delivery commit
+`00ddb696f965ef695e7bef547d0541c97604500b` was pushed and merged by PR #48
+at merge commit `810cab18e20c9e4560eaee52e2043d32ba40f75b`. Post-merge main
+validation passed: full pytest 430, architecture 73, Governance Harness
+61/0, reconciliation, clean bootstrap 128/0/0, and pip, syntax, secret, and
+diff checks. Outcome-only reconciliation then recorded C16 COMPLETE, Active
+Card NONE, Exit Gate PROVEN, and C17 NOT_AUTHORIZED; no implementation or AWS
+change occurred during delivery or reconciliation.
+
+The independent local audit's two accepted non-blocking LOW findings remain
+as limitations: ContextVar reset is defensive but its removal is not uniquely
+caught by current tests; redaction coverage follows the structured logging
+pathway and does not exercise hypothetical stray `print()`/secondary-logger
+paths, although no such path exists in the delivered candidate. They were
+not remediated during delivery. The existing `aqi-c15-nonprod` stack, Lambda
+`aqi-c15-api`, API `yj2yk1sk3g`, log group, and artifact bucket remain
+intentionally retained. The health event proves observability/reachability
+only, not business correctness or production readiness. C17 remains
+unauthorized.
 
 ## V1-C17 — Evaluation Harness
 
