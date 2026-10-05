@@ -2732,63 +2732,128 @@ The system must reject invalid or unsupported states visibly rather than silentl
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+No C18 implementation was built in this pre-Card remediation. The read-only
+preflight was BLOCKED by canonical-documentation gaps. Human-approved C18
+decisions were recorded in the Roadmap, Specification, and Evidence Map only;
+C18 remains NOT_AUTHORIZED / NOT_STARTED.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+This is a verification-first, hardening-only Card, not a new guardrail
+subsystem. All 15 exact `COMMERCIAL_AND_DATA_GUARDRAILS.md` §8 states must be
+accounted for. Existing C04–C17 evidence may be reused when it directly and
+sufficiently proves the exact invariant. Evidence is classified per state as
+`EXISTING_EVIDENCE_SUFFICIENT`, `EXISTING_EVIDENCE_PARTIAL`,
+`NEW_C18_TEST_REQUIRED`, or `ENFORCEMENT_GAP_REQUIRES_FIX`. Bedrock Guardrails
+are declined/deferred; live AWS/Bedrock proof is not required. C18 reuses C16
+observability where already present and does not add an architecture category
+or runtime owner by default.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The preflight exposed uncertainty about scope breadth, evidence reuse,
+Bedrock Guardrails, observability, live proof, and architecture ownership.
+Canonicalizing the human decisions first prevents a later implementation from
+silently sampling the 15-state policy, duplicating already-sufficient tests,
+or expanding into cloud/product features without demonstrated need. A matrix
+with explicit evidence classification prevents absence of evidence from being
+treated as PASS. Deterministic local failure injection is sufficient for the
+approved proof goal and avoids destructive cloud testing.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Alternatives considered in the preflight decision were: treating the Roadmap's
+illustrative subset as the scope; requiring new C18-labelled tests for every
+state; introducing AWS Bedrock Guardrails; requiring live AWS/Bedrock proof;
+building a central guardrail manager or new architecture category; and adding
+a new observability subsystem.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+The human decision requires all 15 canonical states while allowing direct,
+sufficient existing evidence reuse, so both subset-only proof and duplicate
+tests are incorrect. Bedrock Guardrails are optional in existing canonical
+technology posture and are deferred for V1 C18. Live proof is unnecessary
+because provider-neutral/injected failures can prove local fail-closed
+behavior. C18 audits across current owners; creating a manager, architecture
+category, or observability stack would add ownership and scope without an
+identified enforcement gap.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+None introduced by this documentation-only remediation. No source code,
+dependency, fixture, AWS resource, or Bedrock integration was added.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+No technology choice or adoption was made. Future C18 proof is constrained to
+existing contracts and deterministic local/injected failure mechanisms unless
+later implementation evidence demonstrates a gap and remains within the
+approved scope.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+The read-only C18 preflight was BLOCKED: the Roadmap Exit Gate and C09+
+verification block were missing, and scope, evidence reuse, optional Bedrock
+Guardrails, observability reuse, live proof, and architecture impact were
+unresolved. This was a documentation/decision gap, not an observed runtime
+failure.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+Canonical C18 material described representative failure cases but did not
+define a complete all-15-state proof contract, evidence sufficiency rules,
+product/live-cloud boundaries, or verification ownership. The earlier Roadmap
+language was illustrative while the §8 source taxonomy was exact.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+This maintenance change documents the approved contract in the Roadmap,
+Specification, Evidence Map, and Learning Log. It preserves the exact §8 names,
+adds the full future evidence-matrix schema and sufficiency classifications,
+defines the Exit Gate and advanced-verification decisions, and records that
+C18 remains unauthorized and unstarted. No runtime issue was fixed and no
+implementation change was made.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+The read-only preflight result and human-approved decisions are recorded in
+`QUOTATION_CARD_EVIDENCE_MAP.md` under V1-C18, including the complete 15-state
+matrix template marked UNASSESSED / NOT_RUN. This section records governance
+decision provenance only; implementation/test evidence remains NOT_RUN until
+a separately authorized C18 execution.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The all-15 matrix makes C18 broader than the earlier illustrative Roadmap
+subset. Reusing evidence is efficient but requires a verifier to ensure direct
+invariant coverage; classifications and references make that judgment
+auditable. Documentation does not establish that the current runtime enforces
+any state. No production-readiness claim follows from the future C18 proof.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+Cross-cutting hardening needs a complete policy-to-owner-to-evidence map before
+implementation. Explicitly separating existing evidence sufficiency from
+missing tests and proven enforcement gaps avoids both false PASS and redundant
+test creation. Cloud product features and live failure tests should not be
+assumed when deterministic local injection can establish the approved
+invariant.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+During an authorized C18 start, inspect all 15 names directly from Guardrails
+§8 and do not treat the UNASSESSED matrix as implementation evidence. Preserve
+business, arithmetic, evidence, approval, and export authority. Fix only proven
+gaps, keep failure results bounded/sanitized, and do not expand into Bedrock
+Guardrails, live cloud proof, a new subsystem, or C17 changes without new
+authority.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C18 remains NOT_AUTHORIZED / NOT_STARTED; C19 remains unauthorized. C18 does
+not depend on or modify C17. If separately authorized, C19 may rely on proven
+C18 outcomes but must not infer them from this documentation remediation.
 
 ## V1-C19 — Golden Case
 

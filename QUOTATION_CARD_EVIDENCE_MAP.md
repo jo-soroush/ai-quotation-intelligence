@@ -3186,7 +3186,71 @@ NOT_RUN
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+The read-only C18 preflight was BLOCKED by canonical-documentation gaps:
+missing Roadmap Exit Gate and C09+ verification block; ambiguity over whether
+all 15 Guardrails §8 states or a subset were required; ambiguity over reuse of
+prior-Card evidence versus duplicate C18 tests; unresolved Bedrock Guardrails,
+observability reuse, live AWS/Bedrock proof, and architecture decisions. Human
+decisions approved the documentation-only contract recorded here and in the
+Roadmap/Specification. This remediation did not start C18 or change its live
+authorization/state. No C18 implementation failure is claimed.
+
+### Pre-C18 Canonical Remediation — Contract, Not Execution Evidence
+
+The exact Guardrails §8 state set is:
+
+```text
+MISSING_RATE
+MISSING_REQUIRED_HOURS
+INVALID_COMMERCIAL_VALUE
+CURRENCY_MISMATCH
+COMMERCIAL_SEMANTICS_UNVERIFIED
+DETERMINISTIC_CONFLICT
+INSUFFICIENT_EVIDENCE
+AI_UNSUPPORTED_CLAIM
+AI_INVALID
+AI_UNAVAILABLE
+AI_BOUNDARY_VIOLATION
+COMMERCIAL_INVARIANT_FAILED
+EXCEL_RECONCILIATION_FAILED
+APPROVAL_REQUIRED
+SECURITY_BOUNDARY_VIOLATION
+```
+
+C18's future primary evidence artifact must contain one row per state and at
+least these fields: canonical state; triggering condition; owning component /
+layer; expected result/status; existing implementation path; existing
+test/evidence reference; evidence classification; C18 action; final
+verification result. The required classifications are
+`EXISTING_EVIDENCE_SUFFICIENT`, `EXISTING_EVIDENCE_PARTIAL`,
+`NEW_C18_TEST_REQUIRED`, and `ENFORCEMENT_GAP_REQUIRES_FIX`. These rows are
+currently **UNASSESSED**; this contract is not evidence that any state passes.
+
+| Canonical state | Trigger | Owning component / layer | Expected result / status | Existing implementation and test/evidence | Evidence classification | C18 action | Final verification result |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MISSING_RATE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| MISSING_REQUIRED_HOURS | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| INVALID_COMMERCIAL_VALUE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| CURRENCY_MISMATCH | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| COMMERCIAL_SEMANTICS_UNVERIFIED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| DETERMINISTIC_CONFLICT | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| INSUFFICIENT_EVIDENCE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| AI_UNSUPPORTED_CLAIM | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| AI_INVALID | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| AI_UNAVAILABLE | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| AI_BOUNDARY_VIOLATION | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| COMMERCIAL_INVARIANT_FAILED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| EXCEL_RECONCILIATION_FAILED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| APPROVAL_REQUIRED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+| SECURITY_BOUNDARY_VIOLATION | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | TO_BE_ASSESSED | NOT_RUN |
+
+Documentation decisions now canonicalized: verification-first and
+hardening-only; all 15 states required; direct/sufficient prior evidence may be
+reused without duplicate tests; Bedrock Guardrails deferred; no live AWS or
+Bedrock proof; existing C16 observability reused only where applicable; no new
+runtime subsystem or architecture category by default; and C17 is not a
+dependency. No implementation, tests, fixtures, Bedrock call, AWS change,
+dependency, or evaluation result was created by this pre-Card remediation.
 
 ### 14. Exit Gate Evidence
 
@@ -3220,7 +3284,7 @@ NOT_STARTED
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C18
 Learning Documentation Status:
-NOT_STARTED
+PRE-IMPLEMENTATION DECISION HISTORY RECORDED; C18 IMPLEMENTATION LEARNING NOT_STARTED
 
 ## V1-C19 — Golden Case
 

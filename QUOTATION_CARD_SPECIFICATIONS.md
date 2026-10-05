@@ -2406,7 +2406,9 @@ Input / Tool / Provider / Storage / AI Output → validation boundary → explic
 
 ### 6. Current System Before Card
 
-C01–C17 may later provide the workflow and evaluation context. Failure enforcement is not implemented; application state remains NOT_STARTED.
+C01–C17 provide the existing system and evidence context. C18-wide enforcement
+has not yet been audited; do not assume either absence or sufficiency of an
+individual control before inspection. C18 implementation remains NOT_STARTED.
 
 This is a contract description, not a claim that prior Cards or this Card are complete.
 
@@ -2416,11 +2418,33 @@ Align enforcement with COMMERCIAL_AND_DATA_GUARDRAILS.md and reject invalid stat
 
 ### 8. Implementation Scope
 
-- enforce applicable missing-rate/hour, invalid-value, currency, semantics, evidence, AI, commercial, Excel, approval, and security failures
-- cover tool, S3, malformed historical, provider-output, approval, and transition failures
-- preserve partial deterministic state only as explicitly partial
-- keep failure states observable
-- prevent invalid AI output from authoritative application state
+- VERIFICATION-FIRST and HARDENING-ONLY: map and inspect enforcement for every
+  canonical failure state in `COMMERCIAL_AND_DATA_GUARDRAILS.md` §8 before
+  proposing implementation changes.
+- Prove ALL 15 canonical states:
+  `MISSING_RATE`, `MISSING_REQUIRED_HOURS`, `INVALID_COMMERCIAL_VALUE`,
+  `CURRENCY_MISMATCH`, `COMMERCIAL_SEMANTICS_UNVERIFIED`,
+  `DETERMINISTIC_CONFLICT`, `INSUFFICIENT_EVIDENCE`, `AI_UNSUPPORTED_CLAIM`,
+  `AI_INVALID`, `AI_UNAVAILABLE`, `AI_BOUNDARY_VIOLATION`,
+  `COMMERCIAL_INVARIANT_FAILED`, `EXCEL_RECONCILIATION_FAILED`,
+  `APPROVAL_REQUIRED`, and `SECURITY_BOUNDARY_VIOLATION`.
+- For each state, record trigger, owner, expected fail-closed result, current
+  implementation path, existing test/evidence, sufficiency classification,
+  new C18 action, and final verification result in the C18 evidence matrix.
+- Classify evidence as `EXISTING_EVIDENCE_SUFFICIENT`,
+  `EXISTING_EVIDENCE_PARTIAL`, `NEW_C18_TEST_REQUIRED`, or
+  `ENFORCEMENT_GAP_REQUIRES_FIX`. Reuse existing C04–C17 evidence only when it
+  directly and sufficiently proves the exact invariant. Never add a duplicate
+  test just to label it C18. Partial/missing evidence gets bounded deterministic
+  tests; production changes require a proven gap and the smallest justified
+  fix plus regression test.
+- Preserve valid deterministic state only when explicitly marked partial;
+  invalid AI/provider output cannot become authoritative; missing evidence,
+  provider/storage/tool/export failure, unauthorized transitions, or rejection
+  cannot become silent success or fabricated fallback.
+- Reuse C16 structured logging only for affected paths that already use it;
+  retain bounded sanitization and correlation. Do not create a new
+  observability subsystem.
 
 ### 9. Out of Scope
 
@@ -2442,9 +2466,193 @@ Test not run != PASS. Design intent != implementation evidence.
 
 ### 12. Exit Gate
 
-The Roadmap Exit Gate is expanded only to require evidenced enforcement of applicable guardrails with explicit fail-closed behavior.
+The Roadmap C18 Exit Gate is authoritative and requires every one of the 15
+canonical §8 states to have sufficient enforcement evidence and a final PASS.
+Sample coverage is insufficient. Evidence reuse is allowed only when direct
+and sufficient. A partial or missing row blocks completion until a bounded
+test proves it; a proven gap requires the minimal fix and regression proof.
 
-The exact Roadmap Exit Gate remains authoritative; this section expands it without changing its meaning.
+The Exit Gate also requires explicit proof that commercial input failures,
+historical/evidence failure, invalid or unavailable AI/provider behavior, tool
+failure, approval/unauthorized operations, Excel/export failure, and S3/storage
+failure remain fail-closed; no fallback quotation is fabricated, no invalid
+AI output is promoted, no partial state is presented as complete, and no
+failure is masked as success. Failure information is bounded and sanitized.
+Existing C16 observability may be reused where already present; no new
+observability resources are required.
+
+Bedrock Guardrails product integration is declined/deferred for V1 C18. No
+live AWS or Bedrock proof, AWS preparation, new persistence, new dependency,
+or C17 dataset/report/evaluation change is required. C18 does not redesign
+guardrail policy or commercial, arithmetic, evidence, approval, or export
+authority. C18 alone does not establish production readiness. Any bounded
+implementation fix is Git-reversible and introduces no migration or cloud
+rollback requirement.
+
+### C09+ Pre-Implementation Verification Block
+
+#### Risk Classification
+
+**ELEVATED.** C18 spans commercial invariants, AI-output rejection, evidence
+integrity, approval boundaries, provider/storage/tool failures, and
+security-sensitive fail-closed behavior. Incorrect enforcement can create
+silent false-success or misleading commercial state. It is not CRITICAL because
+the approved scope adds no new commercial authority, persistence, or cloud
+infrastructure by default; it verifies and hardens existing authority.
+
+#### Escalation Triggers
+
+Stop for human direction if a material policy contradiction is discovered, an
+existing authority boundary must change, a fix requires new persistence/cloud
+resources, live AWS/Bedrock or Bedrock Guardrails appears necessary, a new
+dependency is claimed necessary, or an enforcement gap cannot be fixed without
+changing prior-Card authority. Do not turn a missing or partial proof into
+PASS.
+
+#### Canonical Sources
+
+- `COMMERCIAL_AND_DATA_GUARDRAILS.md` §8: exact 15-state taxonomy and policy.
+- C18 Roadmap Exit Gate: all-state acceptance contract and approved scope.
+- C04–C17 Specifications, Evidence Map, and tests: implementation contracts
+  and potentially reusable direct evidence.
+- C16 observability contract: existing bounded logging behavior where present.
+- C11/C12/C13/C14 contracts: approval, export, API, and storage boundaries.
+
+#### Acceptance Contract
+
+Use the all-15 evidence matrix. Every row must identify canonical state,
+trigger, owner, expected result, existing implementation path and evidence,
+sufficiency classification, action, actual result, and final PASS/FAIL. Existing
+evidence is reused only when it directly proves the exact invariant. The full
+matrix, not a sample, must pass before C18 can pass its Exit Gate.
+
+#### Critical Invariants
+
+- Deterministic Core owns commercial arithmetic; the LLM never owns or silently
+  overrides authoritative commercial arithmetic or deterministic evidence.
+- Invalid commercial input fails before authoritative quotation state.
+- Evidence/provenance, human approval, and export authority remain with their
+  existing owners.
+- Invalid AI output cannot become authoritative state; failures do not create
+  fabricated fallback quotations or false success.
+- Partial state remains explicitly partial; unavailable/rejected/failed states
+  remain explicit and bounded.
+- No policy redesign, new persistence authority, or live cloud dependency.
+
+#### Failure-Handling Contract
+
+Every covered state terminates as an explicit typed failure, bounded error,
+rejected transition, unavailable result, or explicitly partial state according
+to its existing owner. Never report silent success, fabricate a fallback
+quotation/evidence/object identity, mask a provider/storage/tool/export failure,
+promote invalid AI output, bypass approval, or relabel partial state complete.
+Do not invent retries or recovery behavior.
+
+For commercial input and deterministic conflicts, fail before invalid input
+becomes authoritative quotation state. For historical no-match, malformed data,
+or insufficient evidence, follow the owning canonical contract with an
+explicit empty/no-match/insufficient-evidence result; never fabricate a match.
+Provider invalidity/unavailability remains explicit and preserves only valid
+deterministic state. Tool failures remain bounded and cannot create evidence or
+unsupported actions. Approval and unauthorized transitions remain owned by
+C11/current workflow contracts. Excel failure cannot report a successful
+artifact or bypass reconciliation. S3 failure cannot report stored success or
+fabricate object identity and must retain sanitized failure information. An
+existing C13 API boundary surfaces bounded failures under its current contract;
+change no route/status/schema absent a proven gap and separate authority.
+
+#### Security / Privacy and Observability
+
+Preserve current security/privacy behavior. Failure output must not expose AWS
+credentials/tokens, secrets, raw provider exception details where sanitization
+is required, raw prompts or model responses, `reviewer_id`, workbook binary,
+arbitrary request bodies, or confidential commercial/customer payload. Reuse
+C16 structured logging only on paths that already use it; where emitted, the
+failure outcome remains visible with bounded correlation and existing
+sanitization. Do not force every failure into CloudWatch or add a broad event
+taxonomy.
+
+#### Data, Persistence, and Dependency Boundary
+
+C18 adds no database, persistence authority, S3 data model, customer-data
+collection, secret, credential, or third-party dependency. Prefer current
+stdlib, project types, test mechanisms, and injectable provider/storage
+boundaries. Do not add resilience, retry, guardrail, or policy frameworks
+without a new human decision. Bedrock Guardrails product integration is
+DECLINED / DEFERRED for V1 C18. No live AWS/Bedrock call or preparation is
+required or authorized by this contract.
+
+#### C16 and C17 Relationship
+
+C16 observability is reused where an affected runtime path already supports
+it; C18 creates no log group, metric, alarm, dashboard, X-Ray, or other
+observability resource. C17 is NOT a C18 dependency. Do not modify its Golden
+Dataset, metrics, report schema, or evaluation logic. C17 may be run as
+regression evidence, but C18 owns its own all-15-state matrix.
+
+#### Verification Strategy
+
+Audit existing paths and tests first; trace each §8 state to its owning layer;
+reuse sufficient evidence with references; add bounded deterministic tests only
+for partial/missing evidence; inject provider/storage/tool/export failures
+through existing boundaries; make the smallest reversible fix only for a
+proven gap; then rerun the complete matrix, cross-cutting integration and
+relevant prior-Card regressions. Verify any applicable C16 log event remains
+sanitized. Do not perform destructive live failure tests.
+
+#### Architecture Ownership
+
+C18 begins as a cross-cutting proof/audit Card, not a new runtime subsystem.
+Existing owning layers remain responsible for their failure states; no new
+architecture category, source module, or package is required by default. Do
+not create a central guardrail manager. If later evidence makes a narrow
+architecture change appear necessary, stop for justification and independent
+review under the authorized C18 scope.
+
+#### Advanced Verification Decision
+
+| Technique | Decision | C18-specific reason |
+| --- | --- | --- |
+| Deterministic invariants | REQUIRED | Each fail-closed state and authority boundary needs an exact expected outcome. |
+| Contract tests | REQUIRED | Existing component/API/provider/storage/tool contracts are the enforcement boundaries. |
+| Integration | REQUIRED | Failure propagation crosses existing layers and must not become success between them. |
+| Generated property tests | CONDITIONAL / EVALUATE | Useful only if numeric/input boundaries have meaningful combinatorial space beyond fixed cases. |
+| Targeted mutation-resistance | REQUIRED | Challenge silent success, bypass, fabricated fallback, and weakened failure states. |
+| Failure injection | REQUIRED | Provider, storage, tool, and export unavailability are explicit C18 concerns. |
+| Fuzzing | CONDITIONAL / EVALUATE | Use only where a parser/schema/input surface warrants it. |
+| Differential | CONDITIONAL / EVALUATE | Use only if a genuinely independent oracle exists; do not duplicate implementation logic as an oracle. |
+| Concurrency/race | CONDITIONAL / EVALUATE | Needed only where affected transitions use shared mutable state or concurrency. |
+| Adversarial testing | REQUIRED | Exercise approval bypass, invalid AI output, fabricated evidence, unsupported actions, and misleading failures. |
+| Threat modeling | REQUIRED | The Card spans commercial, evidence, AI, approval, storage, and security boundaries. |
+| Agent evals | REQUIRED where agent/provider/tool failure paths are involved | Deterministic scripted traces must show invalid AI/tool outcomes fail closed. |
+| Rollback/recovery | REQUIRED | Each bounded fix must be Git-reversible; current scope adds no cloud/data rollback. |
+| Formal methods | NOT_APPLICABLE | Contract, injection, and mutation evidence is proportionate; no formal-proof claim is made. |
+
+#### Independent Verifier Expectations
+
+Independently inspect all 15 rows against Guardrails §8 and cited evidence;
+challenge whether reuse actually proves the exact invariant; check for omitted
+states, false-green classifications, untested failure propagation, unsafe
+fallbacks, authority changes, sensitive leakage, and C17/C19 leakage. A verifier
+may return BLOCKED when a row is not directly proven.
+
+#### Evidence / Traceability
+
+The Evidence Map is the technical matrix and records actual commands/results
+only after execution. The Learning Log records rationale and actual problems
+or remediation without inventing implementation history. Each row links its
+source contract, owner, test/evidence, classification, C18 action, and final
+result. No evidence is inferred from design intent.
+
+#### Known Non-Scope
+
+Bedrock Guardrails product, live AWS/Bedrock proof, destructive cloud tests,
+new observability infrastructure, custom metrics/alarms/dashboards/X-Ray,
+policy redesign, new guardrail manager/subsystem or architecture category,
+new runtime module/package by default, new persistence/database,
+new customer-data collection, new third-party dependency, automatic retry or
+circuit-breaker infrastructure, C17 dataset/metrics/report changes, C19+, and
+production-readiness claims.
 Before Card COMPLETE:
 
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C18
