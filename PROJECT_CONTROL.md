@@ -49,7 +49,7 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C19_COMPLETE
+Project Phase: V1_C20_ACTIVE
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +58,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT IMPLEMENTED / DELIVERED / V1-C16 CLOUDWATCH OBSERVABILITY IMPLEMENTED / DELIVERED / V1-C17 EVALUATION HARNESS IMPLEMENTED / DELIVERED / V1-C18 GUARDRAILS AND FAILURE HANDLING IMPLEMENTED / DELIVERED / V1-C19 GOLDEN CASE IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT IMPLEMENTED / DELIVERED / V1-C16 CLOUDWATCH OBSERVABILITY IMPLEMENTED / DELIVERED / V1-C17 EVALUATION HARNESS IMPLEMENTED / DELIVERED / V1-C18 GUARDRAILS AND FAILURE HANDLING IMPLEMENTED / DELIVERED / V1-C19 GOLDEN CASE IMPLEMENTED / DELIVERED / V1-C20 DEMO UI AUTHORIZED / ACTIVE / UNDELIVERED
+Active Card: V1-C20
+Active Card State: ACTIVE
 Last COMPLETE Card: V1-C19 — Golden Case
-Next Roadmap Card: V1-C20 — Demo UI (NOT_AUTHORIZED / NOT_STARTED)
-Next Card Authorized: NO — V1-C20 remains NOT_AUTHORIZED / NOT_STARTED
-Implementation Authorization: V1-C19 local deterministic Golden Case authorization consumed by completion; Git delivery separately GRANTED / CONSUMED for PR #57; later Cards not authorized
+Next Roadmap Card: V1-C20 — Demo UI (AUTHORIZED / ACTIVE)
+Next Card Authorized: YES — V1-C20 local implementation and self-validation only
+Implementation Authorization: V1-C20 React/TypeScript/Vite local demo implementation GRANTED; Git delivery, project-wide finalization, AWS/live Bedrock, backend/API/CORS changes, persistence, and authentication are not authorized
 Live AWS Outcome: us-east-1 stack aqi-c15-nonprod UPDATE_COMPLETE; C15's first signed /health returned HTTP 500 due to missing packaged opentelemetry and its approved repaired-artifact retry returned HTTP 200; separately approved C16 in-place code update and one signed /health emitted a structured CloudWatch health event; resources retained by human choice
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
@@ -125,7 +125,7 @@ AWS Deployment: COMPLETE / DELIVERED — non-production stack UPDATE_COMPLETE; r
 CloudWatch: V1-C16 COMPLETE / DELIVERED; independent live verification and Exit Gate PASS; one real structured health event observed in retained log group
 Evaluation Harness: COMPLETE / DELIVERED — offline deterministic harness; fixed synthetic Golden Dataset; C17 Exit Gate PASS
 Golden Case: COMPLETE / DELIVERED / FINAL EXIT GATE PASS
-Demo UI: NOT_STARTED
+Demo UI: AUTHORIZED / ACTIVE / UNDELIVERED / NOT COMPLETE
 ```
 
 Do not infer external AWS setup into repository implementation state.
@@ -133,26 +133,26 @@ Do not infer external AWS setup into repository implementation state.
 ## 5. Active Card Record
 
 ```
-Card ID: V1-C19
-Title: Golden Case
-State: COMPLETE
-State Detail: delivered and independently audited; final Exit Gate PASS; one fixed synthetic Golden Case passed across the existing V1 component contracts
-Branch: card/v1-c19-golden-case
-Start Commit: 009c281ae26c5d6e59fefbff0add0d511cf58650
+Card ID: V1-C20
+Title: Demo UI
+State: ACTIVE
+State Detail: implementation and local self-validation authorized; UNDELIVERED / NOT COMPLETE
+Branch: card/v1-c20-demo-ui
+Start Commit: d0c9b9e842b04d7e62f644aaf241acf7781e3c72
 Initial Working Tree State: CLEAN
-Delivery Commit: 5c7f048875a01eb66fef2f75d1a5b19d7ff99024
-PR: MERGED — #57 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/57
-Merge Commit: 0d4b4f4daf3d2d3d19c3384fdb2afa3b15831f50
+Delivery Commit: NOT_CREATED
+PR: NOT_CREATED
+Merge Commit: NOT_CREATED
 Human Start Approval: YES
-Human Start Approval Detail: Explicit V1-C19 local implementation authorization granted for one fixed synthetic Golden Case.
-Authorized Scope: local deterministic integration of existing V1 contracts, fixed synthetic fixture, non-production harness/tests, and governance evidence; no production change, AWS/live Bedrock, dependency, persistence, Git delivery, or C20 work
-ROADMAP_ALIGNMENT_GATE: PASS — C19 canonical contract, authorized base, existing component owners, and explicit approval verified before implementation
-CARD_QUALITY_GATE: PASS — exact candidate independently audited PASS, delivery PR #57 merged, clean-main validation passed, completion reconciliation recorded
+Human Start Approval Detail: Explicit V1-C20 local implementation authorization granted for the canonical React/TypeScript/Vite demo UI and approved frontend test stack.
+Authorized Scope: `frontend/`, bounded non-production local composition, frontend tests/configuration, narrow architecture evidence, and C20 governance; no production backend, API/CORS, persistence, authentication, AWS/live Bedrock, Git delivery, or project finalization
+ROADMAP_ALIGNMENT_GATE: PASS — exact C20 contract, completed C01–C19 dependencies, delivered API presentation contract, clean authorized base, and explicit human approval verified before implementation
+CARD_QUALITY_GATE: PASS — local self-validation evidence and learning are current; independent audit and delivery remain pending
 ```
 
 Safe Checkpoint:
 
-V1-C01 through V1-C19 are complete and delivered. C19 proves one fixed synthetic end-to-end Golden Case across existing V1 component contracts; this claim does not establish production readiness or universal commercial correctness. C20 remains NOT_AUTHORIZED / NOT_STARTED.
+V1-C01 through V1-C19 are complete and delivered. V1-C20 is authorized and ACTIVE on `card/v1-c20-demo-ui` from exact base `d0c9b9e842b04d7e62f644aaf241acf7781e3c72`; implementation and self-validation only are authorized. Git delivery and project-wide finalization are not authorized.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
 FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C19 COMPLETE on synchronized clean main after completion reconciliation.
 
@@ -193,7 +193,7 @@ Push: COMPLETED — origin/card/v1-c19-golden-case (C19 delivery)
 PR: MERGED — #57 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/57
 Merge: COMPLETED — 0d4b4f4daf3d2d3d19c3384fdb2afa3b15831f50 (C19 delivery)
 V1-C19 Completion Reconciliation: outcome-only state/evidence update after delivery and clean-main validation; delivered separately
-Next Card: V1-C20 NOT_AUTHORIZED
+V1-C20 Start Approval: GRANTED — local React/TypeScript/Vite implementation and self-validation only; Git delivery and project finalization NOT_AUTHORIZED
 V1-C14: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -268,7 +268,7 @@ PR: MERGED — #41 (C14 delivery)
 Merge: COMPLETED — 2f99f4c24f9182029ded27b15c4f123c810a61fe (C14 delivery)
 ```
 
-V1-C01 through V1-C19 implementation, validation, independent audit, approved delivery, and post-merge validation are complete. V1-C20 remains unauthorized.
+V1-C01 through V1-C19 implementation, validation, independent audit, approved delivery, and post-merge validation are complete. V1-C20 is ACTIVE, implemented and self-validated locally, UNDELIVERED, and NOT COMPLETE.
 
 ## 7. Roadmap Position
 
@@ -276,8 +276,8 @@ V1-C01 through V1-C19 implementation, validation, independent audit, approved de
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability; V1-C17 — Evaluation Harness; V1-C18 — Guardrails and Failure Handling; V1-C19 — Golden Case
-Active Card: NONE
-Next Roadmap Card: V1-C20 — Demo UI (NOT_AUTHORIZED / NOT_STARTED)
+Active Card: V1-C20 — Demo UI
+Next Roadmap Card: NONE — V1-C20 is ACTIVE
 Completed Cards: V1-C01 through V1-C19
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
@@ -288,7 +288,9 @@ V1-C17 Git Delivery: GRANTED / CONSUMED — PR #51 merged
 V1-C18 Start Approval: GRANTED — verification-first/hardening-only local implementation
 V1-C18 Git Delivery: GRANTED / CONSUMED — PR #54 merged
 V1-C19 Start Approval: GRANTED / CONSUMED — local deterministic implementation; completion reconciled after delivery
-Later Cards: V1-C20 and later NOT_AUTHORIZED
+V1-C20 Start Approval: YES — local implementation and self-validation only
+V1-C20 Git Delivery: NOT_AUTHORIZED
+Later Cards: NONE — V1-C20 is the final Roadmap Card; project-wide final audit remains separate and NOT_STARTED
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
@@ -297,7 +299,7 @@ V1-C01 start authorization was consumed by completion. Being next in sequence do
 
 V1-C01 through V1-C19 implementation, validation, independent audit, Git delivery, and post-merge validation are complete.
 
-Current blockers: NONE. C19's fixed synthetic scenario, 18/18 Golden Flow, two-run report equivalence, six failure injections, 13/13 canonical mutations caught, duplicate-step probe, independent auditor probes 8/8 caught, adversarial/privacy/threat checks, and unchanged C17 evaluation passed. No production source, AWS/live Bedrock, real S3, live CloudWatch, dependency, persistence, C17, or C18 change occurred. The accepted C13 process-local limitation remains. Independent audit accepted one non-blocking LOW harness note and one non-blocking INFORMATIONAL Learning Log template note; neither was remediated.
+Current blockers: NONE for independent C20 audit. The local candidate implements the authorized presentation layer and non-production composition without production backend, API, CORS, persistence, authentication, AWS, or live Bedrock changes. Strict type/build, 22 frontend tests, two real Chromium E2E flows, 11/11 applicable isolated mutations, 513 Python tests, 79 architecture tests, C18, and unchanged C17/C19 identities pass. The accepted C13 process-local limitation and the existing generic-JSON OpenAPI description for the runtime-XLSX export response remain explicit limitations. Git delivery and project-wide finalization are not authorized.
 
 Resolved migration blockers:
 
@@ -315,15 +317,15 @@ Resolved migration blockers:
 
 ```
 ROADMAP_ALIGNMENT_GATE: PASS
-Reason: V1-C19 local deterministic integration contract, existing C04–C18 component owners, authorized clean base, and explicit human approval were verified; discovery found no production change requirement.
+Reason: V1-C20 React/TypeScript/Vite presentation contract, completed C01–C19 dependencies, delivered C13 presentation fields, exact authorized base, and explicit human approval were verified; implementation required no production backend or public API change.
 ```
 
 ## 10. Contract / Risk Map State
 
 ```
-Contract Map: COMPLETE / V1-C19 existing FastAPI, Core, retrieval/comparison, RiskEvidence, provider, agent/tools, approval, Excel, storage, observability, and C17 regression interfaces mapped
-Risk Map: COMPLETE / V1-C19 ELEVATED false-PASS, oracle, fixture-integrity, approval, evidence, artifact, privacy, and accidental-live-service risks recorded in the canonical contract
-Reason: Existing C04–C18 owners and tests were inspected. The Golden Case can be built outside production with deterministic injected provider/storage clients and ephemeral artifacts.
+Contract Map: COMPLETE / V1-C20 presentation, typed HTTP transport, local Vite proxy, non-production FastAPI composition, backend-owned evidence/review/export, and synthetic-data boundaries mapped
+Risk Map: COMPLETE / V1-C20 MODERATE authority drift, false success, unsafe text, approval/export bypass, synthetic ambiguity, secrets, and stale request risks tested
+Reason: The UI consumes existing C13 contracts only. Real Core, agent/tools, C11 review, and C12 export are composed locally with an injected deterministic provider client; no frontend business owner or live service was introduced.
 ```
 
 These are mandatory after explicit Card approval and before the first implementation write.
@@ -377,7 +379,8 @@ pytest project baseline: ESTABLISHED
 Evaluation Harness implementation: COMPLETE / DELIVERED; evaluation remains OFFLINE and outside the production package
 V1-C18: COMPLETE / DELIVERED / FINAL EXIT GATE PASS
 Golden Case: COMPLETE / DELIVERED / FINAL EXIT GATE PASS
-Card tests: C17 evidence remains preserved; C18 focused and broad local validation recorded in its Evidence Map
+Demo UI: ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE
+Card tests: 513 full Python tests; 79 architecture tests; 5 C20 Python composition/contract tests; 22 Vitest tests; 2 Playwright Chromium E2E tests; 11/11 applicable C20 mutations caught
 ```
 
 Bootstrap inspection is not V1 Card test evidence.
@@ -389,7 +392,7 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01–V1-C19 COMPLETE / DELIVERED; V1-C20 NOT_STARTED / NOT_AUTHORIZED
+Implementation Evidence: V1-C01–V1-C19 COMPLETE / DELIVERED; V1-C20 ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability; V1-C17 — Evaluation Harness
 V1-C01 CARD_QUALITY_GATE: PASS
 V1-C09 CARD_QUALITY_GATE: PASS — implementation validation, independent audit, and approved delivery
@@ -403,7 +406,7 @@ V1-C05 Exit Gate: PROVEN — deterministic variance, aggregate, missing-outcome,
 V1-C06 Exit Gate: PROVEN — deterministic, bounded, explainable retrieval and empty/insufficient-result behavior passed
 V1-C07 Exit Gate: PROVEN — deterministic, traceable risk evidence and insufficient-evidence behavior passed
 V1-C09 Exit Gate: PROVEN by implementation validation and independently audited delivery
-V1-C10 Exit Gate: PROVEN against six Roadmap clauses by validation and independent audit; V1-C11 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C12 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C13 Exit Gate: PROVEN by six-route validation, authority/security tests, independent audit, and approved delivery; V1-C14 Exit Gate: PROVEN by storage contract, conditional no-overwrite, retrieval integrity, sanitized failures, architecture and local tests, independent audit, and approved delivery; V1-C15 Exit Gate PROVEN; V1-C16 Exit Gate PROVEN by structured live CloudWatch event and independent verification; V1-C17 Exit Gate PROVEN by independent audit, fixed synthetic Golden Dataset evaluation, approved delivery, and clean-main validation; V1-C18 Exit Gate PROVEN by all-15 guardrail evidence, independent audit, approved delivery, and clean-main validation; V1-C19 Exit Gate PASS / PROVEN by 18/18 Golden steps, independent audit, PR #57 delivery, and clean-main validation; V1-C20 NOT_PROVEN
+V1-C10 Exit Gate: PROVEN against six Roadmap clauses by validation and independent audit; V1-C11 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C12 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C13 Exit Gate: PROVEN by six-route validation, authority/security tests, independent audit, and approved delivery; V1-C14 Exit Gate: PROVEN by storage contract, conditional no-overwrite, retrieval integrity, sanitized failures, architecture and local tests, independent audit, and approved delivery; V1-C15 Exit Gate PROVEN; V1-C16 Exit Gate PROVEN by structured live CloudWatch event and independent verification; V1-C17 Exit Gate PROVEN by independent audit, fixed synthetic Golden Dataset evaluation, approved delivery, and clean-main validation; V1-C18 Exit Gate PROVEN by all-15 guardrail evidence, independent audit, approved delivery, and clean-main validation; V1-C19 Exit Gate PASS / PROVEN by 18/18 Golden steps, independent audit, PR #57 delivery, and clean-main validation; V1-C20 Exit Gate SELF-VALIDATED LOCALLY / independent audit and delivery pending
 ```
 
 Governance migration validation is not V1 implementation evidence.
@@ -411,7 +414,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C17_COMPLETE
+Checkpoint Type: V1_C20_LOCAL_CANDIDATE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -419,10 +422,10 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01–V1-C18 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
-Last COMPLETE Card: V1-C18 — Guardrails and Failure Handling
+Application implementation: V1-C01–V1-C19 IMPLEMENTED / DELIVERED; V1-C20 IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED
+Active Card: V1-C20 — Demo UI
+Active Card State: ACTIVE / UNDELIVERED / NOT COMPLETE
+Last COMPLETE Card: V1-C19 — Golden Case
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -466,9 +469,9 @@ These are governance decisions, not implementation claims.
 | V1-C17 | Evaluation Harness | COMPLETE | YES | PASS | PRESENT — independent audit, deterministic fixed-synthetic evaluation, approved delivery, post-merge validation, and completion reconciliation |
 | V1-C18 | Guardrails and Failure Handling | COMPLETE | YES | PASS | PRESENT — independent audit PASS, PR #54 delivered, clean-main validation PASS; all 15 final PASS and C18 Exit Gate PASS |
 | V1-C19 | Golden Case | COMPLETE | YES | PASS | PRESENT — independent audit PASS, PR #57 delivery, post-merge validation, and final Exit Gate PASS |
-| V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | PENDING |
+| V1-C20 | Demo UI | ACTIVE | YES | PASS — local self-validation; independent audit pending | PRESENT — local candidate |
 
-V1-C01 through V1-C19 are COMPLETE and DELIVERED. Active Card is NONE. V1-C20 remains NOT_AUTHORIZED / NOT_STARTED.
+V1-C01 through V1-C19 are COMPLETE and DELIVERED. Active Card is V1-C20. C20 is implemented and self-validated locally but remains UNDELIVERED / NOT COMPLETE.
 
 ## 19. Resume Protocol
 
@@ -499,19 +502,19 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01–V1-C19 IMPLEMENTED / DELIVERED
-Active Card: NONE
-Active Card State: NONE
+Application Implementation: V1-C01–V1-C19 IMPLEMENTED / DELIVERED; V1-C20 IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED
+Active Card: V1-C20 — Demo UI
+Active Card State: ACTIVE / UNDELIVERED / NOT COMPLETE
 Last COMPLETE Card: V1-C19 — Golden Case
-Next Card: V1-C20 NOT_AUTHORIZED
-Next Roadmap Card: V1-C20 — Demo UI (NOT_AUTHORIZED / NOT_STARTED)
+Next Card: NONE — V1-C20 is the final Roadmap Card and is ACTIVE
+Next Roadmap Card: NONE
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
 Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: none; C19 is complete. V1-C20 remains NOT_AUTHORIZED / NOT_STARTED and requires separate explicit human authorization.
+Safe next action: independent audit of the frozen V1-C20 local candidate. Git delivery remains separately unauthorized.
 
 Do not start any later Card automatically.
 
@@ -525,5 +528,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01 THROUGH V1-C19 ARE COMPLETE AND DELIVERED; ACTIVE CARD IS NONE; V1-C20 REMAINS UNAUTHORIZED.
+V1-C01 THROUGH V1-C19 ARE COMPLETE AND DELIVERED; V1-C20 IS ACTIVE, LOCALLY SELF-VALIDATED, UNDELIVERED, AND NOT COMPLETE.
 ```

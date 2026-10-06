@@ -235,11 +235,11 @@ while IFS= read -r -d '' path; do
     .env|.env.*|credentials|credentials.json|aws_credentials|*.pem|*.key|secret*|token*)
       warn "SECRET_OR_SENSITIVE_FILE_DETECTED: $path"; secret_found=1 ;;
   esac
-done < <(find . -path './.git' -prune -o -path './.venv' -prune -o -path './venv' -prune -o -path './__pycache__' -prune -o -path './build' -prune -o -path './dist' -prune -o -type f -print0)
+done < <(find . -path './.git' -prune -o -path './.venv' -prune -o -path './venv' -prune -o -path '*/node_modules' -prune -o -path '*/.playwright-browsers' -prune -o -path '*/__pycache__' -prune -o -path '*/build' -prune -o -path '*/dist' -prune -o -type f -print0)
 [[ "$secret_found" -eq 0 ]] && pass "no suspicious secret-bearing filenames detected"
 
 say "CREDENTIAL PATTERN CHECK"
-credential_files="$(rg -l --hidden --glob '!.git/**' --glob '!.venv/**' --glob '!venv/**' --glob '!__pycache__/**' --glob '!build/**' --glob '!dist/**' '(AKIA|ASIA)[A-Z0-9]{12,}' . 2>/dev/null || true)"
+credential_files="$(rg -l --hidden --glob '!.git/**' --glob '!.venv/**' --glob '!venv/**' --glob '!**/node_modules/**' --glob '!**/.playwright-browsers/**' --glob '!**/__pycache__/**' --glob '!**/build/**' --glob '!**/dist/**' '(AKIA|ASIA)[A-Z0-9]{12,}' . 2>/dev/null || true)"
 if [[ -n "$credential_files" ]]; then
   while IFS= read -r path; do [[ -n "$path" ]] && warn "possible credential pattern detected in $path"; done <<< "$credential_files"
 else

@@ -7,3 +7,12 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 *.pyc
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/playwright-report/
+frontend/test-results/
+frontend/blob-report/
+frontend/.playwright-browsers/
+frontend/downloads/
+frontend/*.tsbuildinfo
