@@ -4192,3 +4192,26 @@ Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08,
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
 <!-- END GENERATED: CURRENT_SUMMARY -->
+
+## Final V1 Project-Wide AWS Evidence Re-verification — 2026-10-06
+
+Source: human-supplied execution report titled “Final V1 live AWS evidence
+re-verification,” reporting a separately authorized read-only verification by
+Codex GPT-6 Luna — Medium. The detailed attributed operational record is in
+`PROJECT_CONTROL.md` §13. The original CLI/API output and a durable raw audit
+artifact were not retained or available to the documentation reconciliation
+agent; no AWS calls or independent reproduction were performed for this entry.
+
+Bounded Final Gate evidence classification from the supplied report:
+
+| Project-wide Final Gate row | Reported evidence | Classification / limit |
+| --- | --- | --- |
+| `cloud deployment works` | Reported healthy CloudFormation/Lambda/API configuration and one SigV4-signed `/health` request returning HTTP 200 with `{"status":"ok"}` | **REPORTED PASS, bounded to deployment/resource health and one signed health request**; no full cloud quotation workflow or live Bedrock inference was exercised |
+| `observability works` | One structured successful API health event was observed in CloudWatch and associated with the request by timestamp/invocation window | **REPORTED PASS, bounded to the health path**; direct request-ID correlation and all-path/failure observability were not established |
+
+The report states that no AWS mutation, deployment, live Bedrock call, object
+listing/access, or full quotation workflow occurred. Its observations describe
+the reported verification time only and do not certify continuing cloud
+health. These two classifications do not pass the complete Project-Wide Final
+Gate or declare V1 finalized. They supplement, and do not rewrite, the
+historical C15 deployment and C16 observability records above.

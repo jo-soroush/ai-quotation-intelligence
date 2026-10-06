@@ -380,6 +380,56 @@ Deployment: existing stack `aqi-c15-nonprod` UPDATE_COMPLETE with immutable C16 
 
 Do not infer account configuration or credentials from local tools or external systems.
 
+### Reported Read-Only AWS Re-verification — 2026-10-06
+
+Source/provenance: human-supplied completion report titled “Final V1 live AWS
+evidence re-verification,” reporting execution by Codex GPT-6 Luna — Medium
+under separate human authorization. This entry records the observations as
+reported; this documentation task performed no AWS calls and did not
+independently reproduce them. Original CLI/API output, response headers,
+request identifier, and a durable raw audit artifact were not retained or
+available for this reconciliation. No account number or credential material
+is copied here. The report states that identity was checked with STS and
+matched the expected account, in `us-east-1`, using the existing shared AWS
+credentials file.
+
+Reported observations at that verification time:
+
+- CloudFormation stack `aqi-c15-nonprod` existed in `UPDATE_COMPLETE`; all
+  13 resources had completed create/update states, with no failed or active
+  update reported.
+- Lambda `aqi-c15-api` was `Active`, last update `Successful`, Python 3.13,
+  handler `lambda_handler.handler`, 512 MB, 30-second timeout, x86_64.
+- The expected HTTP API had six `AWS_IAM` routes using the same Lambda proxy
+  integration; `$default` auto-deploy was enabled and no API CORS configuration
+  was reported.
+- Exactly one SigV4-signed `GET /health` was made through API Gateway. It
+  returned HTTP 200 and `{"status":"ok"}`. No separate Lambda invocation or
+  retry occurred. Response headers were not retained.
+- The Lambda log group existed with seven-day retention. The invocation
+  produced platform events and a structured application event with
+  `component=api`, `event=api_request`, `operation=health`, `status=success`,
+  and `HTTP status=200`. The event was associated with the request by
+  timestamp/invocation window; direct request-ID correlation was unavailable.
+- The execution role reportedly trusted `lambda.amazonaws.com`, had one
+  inline log-only policy, no attached managed policies or permission boundary,
+  and no application Bedrock or S3 permission. Lambda invoke permission was
+  restricted to the expected API Gateway source. This was not a complete
+  organization-wide effective-permission analysis.
+- Deployment-artifact bucket metadata was inspected: public-access blocks were
+  enabled, ownership was `BucketOwnerEnforced`, and default encryption was
+  SSE-S3/AES256. No objects were listed or accessed.
+
+The report states that no AWS resource was modified, no deployment occurred,
+and no live Bedrock call or full cloud quotation workflow was performed. These
+reported observations support only the bounded Final V1 rows “cloud deployment
+works” (resource health plus one signed health request) and “observability
+works” (one structured health event, correlated by time/invocation window).
+They do not prove live quotation inference, all-path observability, or
+production readiness, and they do not assert cloud state after 2026-10-06.
+No full credential or session token was reported as exposed; credential
+contents are intentionally omitted.
+
 ## 14. Test / Evaluation State
 
 ```
