@@ -3366,63 +3366,156 @@ The finished system needs an understandable professional demonstration of eviden
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+One bounded React + TypeScript + Vite local presentation client, its typed
+existing-FastAPI API client and UI components, and a non-production local
+composition/launcher. The launcher delegates through the existing FastAPI
+application, deterministic Core, AgentTools, QuotationAgent, C11 review and
+C12 Excel path using an injected scripted provider; it does not return canned
+business results. No production `src/` behavior or public API contract changed.
+The interface uses synthetic input, presents backend evidence separately from
+the constrained AI interpretation, and leaves commercial, review, and export
+authority with the backend.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+Keep the browser boundary HTTP-only and use the Vite `/api` proxy to avoid a
+backend CORS change. Use a small standard-library bridge around the existing
+application because no ASGI server dependency was available or authorized;
+keep the existing application and TestClient/store stable for a local session.
+Inject only the provider transport, preserving real agent/tool/schema/evidence
+validation. The UI uses React state rather than a new state framework and
+renders server-controlled strings as ordinary text. The API, not the browser,
+owns totals, evidence, approval state, and workbook generation.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+The user-facing goal was a professional portfolio demonstration, but C20's
+canonical boundary prohibited turning the browser into a second business
+system. The selected presentation/API/composition split demonstrated the
+workflow while retaining existing service ownership. A local deterministic
+provider made browser and backend behavior reproducible without live Bedrock;
+the real backend path remained exercised. The fixed UI-owned preset improves
+repeatability but is explicitly synthetic and is not an evaluation oracle.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Considered the historical Streamlit preference, a browser-to-FastAPI
+cross-origin connection, a new ASGI server dependency, live Bedrock, runtime
+coupling to the C19 evaluator, and a separate canned API server. React/Vite was
+the explicit human-approved choice; direct cross-origin access would have
+required CORS; adding a server package was unnecessary; live Bedrock would
+weaken determinism and exceed scope; C19 is prior evidence rather than a
+runtime dependency; and a canned server would not prove real integration.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+Those alternatives either conflicted with the approved stack/topology, added
+dependencies or cloud reliance, duplicated existing behavior, or bypassed the
+real FastAPI and backend contracts. The bounded standard-library bridge was
+chosen over adding infrastructure because the existing application factory and
+injected provider boundary already supported the real local workflow.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+React 19.3.0, React DOM 19.3.0, TypeScript 7.0.2, Vite 8.3.3, Vitest 5.0.3,
+React Testing Library 16.3.3, Testing Library DOM/user-event, and Playwright
+1.63.0 are pinned in `frontend/package.json` / `frontend/package-lock.json`.
+The backend composition uses Python standard-library HTTP support and the
+existing project dependencies. No added backend runtime dependency or external
+template was incorporated.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+React/TypeScript/Vite were the explicitly approved presentation stack; Vitest
+and Testing Library cover behavior and API mapping, while Playwright provides
+two bounded real-browser flows. The lockfile fixes compatible versions and
+supports repeatable local installation. The standard-library launcher avoids
+an additional Python service dependency and delegates to existing code rather
+than duplicating business logic. No design system or global state framework
+was needed for this bounded UI.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Initial focused runs exposed configuration, test discovery, fixture, and test
+construction errors; each was boundedly corrected and rerun. Chromium first
+could not launch in the default macOS sandbox, then the approved browser run
+revealed that an error-first display expression hid an explicit no-draft
+outcome. Route/schema probes also corrected mistaken assumptions about the
+quote path identifier and public request-hours model, then surfaced the
+pre-existing OpenAPI XLSX-description mismatch. A tablet full-page image raised
+a possible sticky-header overlap, but independent audit did not reproduce a
+functional defect. Port 8000 belonged to an unrelated process and was left
+untouched; the local demo used port 8765.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The launch block preceded page execution, so it was an environment sandbox
+restriction rather than an application defect. The first browser behavior
+issue was caused by choosing the transport error before the backend's explicit
+no-draft message. The OpenAPI concern is pre-existing response-description
+metadata, not runtime export behavior. The screenshot concern was not
+confirmed as an interactive layout failure. No evidence supports expanding
+these observations into backend or UI contract changes.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+The UI error/message presentation and its focused test were corrected, then
+both real Chromium flows passed. The browser run used the separately approved
+execution permission, while preserving the existing process on port 8000.
+Runtime XLSX behavior was verified without changing the pre-existing API
+metadata. The possible tablet screenshot issue was accepted as
+non-blocking/unconfirmed rather than altered speculatively. Original failures
+and recovery are retained in the Evidence Map §13.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+Technical evidence is in `QUOTATION_CARD_EVIDENCE_MAP.md` → V1-C20 §§6–19:
+strict TypeScript/build, 22 Vitest tests, 5 Python composition/contract tests,
+2 real Chromium E2E flows, 11/11 applicable mutation probes, 513 Python tests,
+79 architecture tests, Harness 61/0, reconciliation, C17/C18/C19 regressions,
+privacy/secret checks, and the merged delivery record for PR #61. PR #61 merged
+as `4a3781beb01e4db00e6ff6bda673911011de2cf3`; delivery commit
+`b345b1c29dfb028bc8d1b5767c3f17d9956d209e` contains the audited 35-path
+candidate. The independent audit disposition is reported PASS by the approved
+completion input; no separate audit artifact was found in the repository.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+C13 LocalQuoteStore remains process-local, single-process, and non-durable.
+Provider transport is deterministic and injected, not a live-model claim. E2E
+uses one Chromium engine; there is no cross-browser or accessibility
+certification claim. Existing OpenAPI metadata describes the XLSX export as
+generic JSON, although the real browser download succeeded; this pre-existing
+LOW finding is accepted and not changed. The possible tablet screenshot
+overlap remains unconfirmed and accepted INFORMATIONAL. The maximum claim is
+one professional local synthetic demonstration of existing V1 contracts.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+The strongest integration evidence came from preserving the actual FastAPI,
+agent/tool, review, and Excel owners while replacing only the external provider
+transport. A local UI can be convincing without owning commercial arithmetic
+or treating model text as evidence. The real-browser provider-failure flow
+found a truthful-message defect that component coverage had missed; this
+reinforced that browser-visible outcomes need their own executed proof.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Keep the synthetic disclosure, backend-authoritative totals and workflow,
+safe text rendering, and the process-local limitation visible. Do not repair
+the accepted OpenAPI metadata or screenshot note as part of C20 completion.
+Any later technical change needs its own authorization and must not turn this
+local demo into a production-readiness claim. Run the separate project-wide
+Final Gate only after C20 completion; it is not implied by this Card.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C20 completes the portfolio presentation layer and is the final Roadmap Card.
+Its completion does not modify C17/C18/C19, authorize another Card, or declare
+the project-wide V1 Final Gate passed. The next governance activity after C20
+is a separate project-wide audit/reconciliation of all Final Gate rows,
+including README architecture/setup/evidence/limitations and retained AWS
+status. No C21 work is defined or authorized.
 
 ### Pre-C20 Canonical Remediation — Approved Decisions (2026-10-05)
 

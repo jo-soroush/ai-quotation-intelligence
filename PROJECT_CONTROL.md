@@ -49,7 +49,8 @@ Never invent convenient state.
 ```
 Project: AI Quotation Intelligence System
 Target: V1
-Project Phase: V1_C20_ACTIVE
+Project Phase: V1_C20_COMPLETE
+Project V1 Finalization: NOT_FINALIZED — separate project-wide Final Gate audit pending
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -58,13 +59,13 @@ Learning Governance: COMPLETE
 Governance Hardening: COMPLETE
 Final Governance Hardening Audit: PASS
 Hardening Blockers: NONE
-Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT IMPLEMENTED / DELIVERED / V1-C16 CLOUDWATCH OBSERVABILITY IMPLEMENTED / DELIVERED / V1-C17 EVALUATION HARNESS IMPLEMENTED / DELIVERED / V1-C18 GUARDRAILS AND FAILURE HANDLING IMPLEMENTED / DELIVERED / V1-C19 GOLDEN CASE IMPLEMENTED / DELIVERED / V1-C20 DEMO UI AUTHORIZED / ACTIVE / UNDELIVERED
-Active Card: V1-C20
-Active Card State: ACTIVE
-Last COMPLETE Card: V1-C19 — Golden Case
-Next Roadmap Card: V1-C20 — Demo UI (AUTHORIZED / ACTIVE)
-Next Card Authorized: YES — V1-C20 local implementation and self-validation only
-Implementation Authorization: V1-C20 React/TypeScript/Vite local demo implementation GRANTED; Git delivery, project-wide finalization, AWS/live Bedrock, backend/API/CORS changes, persistence, and authentication are not authorized
+Application Implementation: V1-C01 BASELINE IMPLEMENTED / V1-C02 DOMAIN CONTRACTS IMPLEMENTED / V1-C03 SYNTHETIC DATA FOUNDATION IMPLEMENTED / V1-C04 CALCULATION ENGINE IMPLEMENTED / V1-C05 HISTORICAL COMPARISON IMPLEMENTED / V1-C06 SIMILAR QUOTE RETRIEVAL IMPLEMENTED / V1-C07 RISK EVIDENCE ENGINE IMPLEMENTED / V1-C08 AMAZON BEDROCK INTEGRATION IMPLEMENTED / V1-C09 AGENT TOOLS IMPLEMENTED / V1-C10 QUOTATION AGENT IMPLEMENTED / DELIVERED / V1-C11 HUMAN REVIEW GATE IMPLEMENTED / DELIVERED / V1-C12 EXCEL EXPORT IMPLEMENTED / DELIVERED / V1-C13 FASTAPI APPLICATION IMPLEMENTED / DELIVERED / V1-C14 AMAZON S3 STORAGE IMPLEMENTED / DELIVERED / V1-C15 AWS DEPLOYMENT IMPLEMENTED / DELIVERED / V1-C16 CLOUDWATCH OBSERVABILITY IMPLEMENTED / DELIVERED / V1-C17 EVALUATION HARNESS IMPLEMENTED / DELIVERED / V1-C18 GUARDRAILS AND FAILURE HANDLING IMPLEMENTED / DELIVERED / V1-C19 GOLDEN CASE IMPLEMENTED / DELIVERED / V1-C20 DEMO UI IMPLEMENTED / DELIVERED
+Active Card: NONE
+Active Card State: NONE
+Last COMPLETE Card: V1-C20 — Demo UI
+Next Roadmap Card: NONE — C20 is the final Roadmap Card; project-wide audit remains separate
+Next Card Authorized: NO — later Cards not authorized
+Implementation Authorization: C20 implementation and Git delivery authorization consumed by completion; authorization consumed by completion; later Cards not authorized; project-wide finalization requires a separate audit
 Live AWS Outcome: us-east-1 stack aqi-c15-nonprod UPDATE_COMPLETE; C15's first signed /health returned HTTP 500 due to missing packaged opentelemetry and its approved repaired-artifact retry returned HTTP 200; separately approved C16 in-place code update and one signed /health emitted a structured CloudWatch health event; resources retained by human choice
 Human Final Authority: YES
 Commercial Finalization Without Human Approval: PROHIBITED
@@ -125,36 +126,38 @@ AWS Deployment: COMPLETE / DELIVERED — non-production stack UPDATE_COMPLETE; r
 CloudWatch: V1-C16 COMPLETE / DELIVERED; independent live verification and Exit Gate PASS; one real structured health event observed in retained log group
 Evaluation Harness: COMPLETE / DELIVERED — offline deterministic harness; fixed synthetic Golden Dataset; C17 Exit Gate PASS
 Golden Case: COMPLETE / DELIVERED / FINAL EXIT GATE PASS
-Demo UI: AUTHORIZED / ACTIVE / UNDELIVERED / NOT COMPLETE
+Demo UI: COMPLETE / DELIVERED / C20 Exit Gate PROVEN
 ```
 
 Do not infer external AWS setup into repository implementation state.
 
-## 5. Active Card Record
+## 5. Active Card Record / Last Completed Card
 
 ```
 Card ID: V1-C20
 Title: Demo UI
-State: ACTIVE
-State Detail: implementation and local self-validation authorized; UNDELIVERED / NOT COMPLETE
+State: COMPLETE
+State Detail: COMPLETE / DELIVERED; dedicated C20 Exit Gate PROVEN; project-wide V1 finalization NOT_FINALIZED
 Branch: card/v1-c20-demo-ui
 Start Commit: d0c9b9e842b04d7e62f644aaf241acf7781e3c72
 Initial Working Tree State: CLEAN
-Delivery Commit: NOT_CREATED
-PR: NOT_CREATED
-Merge Commit: NOT_CREATED
+Delivery Commit: b345b1c29dfb028bc8d1b5767c3f17d9956d209e
+PR: MERGED — #61 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/61
+Merge Commit: 4a3781beb01e4db00e6ff6bda673911011de2cf3
 Human Start Approval: YES
-Human Start Approval Detail: Explicit V1-C20 local implementation authorization granted for the canonical React/TypeScript/Vite demo UI and approved frontend test stack.
-Authorized Scope: `frontend/`, bounded non-production local composition, frontend tests/configuration, narrow architecture evidence, and C20 governance; no production backend, API/CORS, persistence, authentication, AWS/live Bedrock, Git delivery, or project finalization
+Human Start Approval Detail: Explicit V1-C20 local implementation authorization was granted and consumed. Exact candidate identity `9ba7309505f18d976c079de9b5635e760fd5ecc97f308ec208ebf17dc49a05a6` was delivered in PR #61.
+Authorized Scope: `frontend/`, bounded non-production local composition, frontend tests/configuration, narrow architecture evidence, and C20 governance; no production backend, API/CORS, persistence, authentication, AWS/live Bedrock, or project-wide finalization
 ROADMAP_ALIGNMENT_GATE: PASS — exact C20 contract, completed C01–C19 dependencies, delivered API presentation contract, clean authorized base, and explicit human approval verified before implementation
-CARD_QUALITY_GATE: PASS — local self-validation evidence and learning are current; independent audit and delivery remain pending
+CARD_QUALITY_GATE: PASS — implementation, completed Learning Record, independent audit disposition, delivery, and post-merge validation are reconciled
+V1-C20 Exit Gate: PROVEN — every mandatory C20 requirement has direct implementation/test/audit/post-merge evidence in QUOTATION_CARD_EVIDENCE_MAP.md §14
+Completion Reconciliation Candidate: PREPARED / UNDELIVERED — candidate is on a maintenance branch; the final runtime consistency gate remains pending delivery to synchronized clean main
 ```
 
 Safe Checkpoint:
 
-V1-C01 through V1-C19 are complete and delivered. V1-C20 is authorized and ACTIVE on `card/v1-c20-demo-ui` from exact base `d0c9b9e842b04d7e62f644aaf241acf7781e3c72`; implementation and self-validation only are authorized. Git delivery and project-wide finalization are not authorized.
+V1-C01 through V1-C20 are COMPLETE and DELIVERED in this governance candidate. C20 implementation PR #61 merged at `4a3781beb01e4db00e6ff6bda673911011de2cf3`. This candidate is based on that clean main state; it is not yet delivered. The final C20 runtime consistency gate must be run after this reconciliation is delivered on synchronized clean main. Project V1 remains NOT_FINALIZED; the separate project-wide Final Gate audit is PENDING.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
-FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C19 COMPLETE on synchronized clean main after completion reconciliation.
+Prior FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C19 COMPLETE on synchronized clean main after its completion reconciliation. V1-C20 final gate: NOT YET RUN / cannot PASS until this candidate is delivered and clean-main runtime facts are verified.
 
 ## 6. Authorization Ledger
 
@@ -193,7 +196,12 @@ Push: COMPLETED — origin/card/v1-c19-golden-case (C19 delivery)
 PR: MERGED — #57 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/57
 Merge: COMPLETED — 0d4b4f4daf3d2d3d19c3384fdb2afa3b15831f50 (C19 delivery)
 V1-C19 Completion Reconciliation: outcome-only state/evidence update after delivery and clean-main validation; delivered separately
-V1-C20 Start Approval: GRANTED — local React/TypeScript/Vite implementation and self-validation only; Git delivery and project finalization NOT_AUTHORIZED
+V1-C20 Start Approval: GRANTED / CONSUMED — local React/TypeScript/Vite implementation and self-validation
+V1-C20 Git Delivery: GRANTED / CONSUMED — exact audited candidate identity `9ba7309505f18d976c079de9b5635e760fd5ecc97f308ec208ebf17dc49a05a6`; PR #61 merged
+V1-C20 Delivery Commit: `b345b1c29dfb028bc8d1b5767c3f17d9956d209e`
+V1-C20 PR: MERGED — #61 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/61
+V1-C20 Merge: COMPLETED — `4a3781beb01e4db00e6ff6bda673911011de2cf3`
+V1-C20 Completion Reconciliation: PREPARED / UNDELIVERED — governance-only candidate; final runtime consistency gate pending delivery
 V1-C14: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C01: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
 V1-C03: START APPROVAL GRANTED (HISTORICAL; CARD COMPLETE)
@@ -268,17 +276,17 @@ PR: MERGED — #41 (C14 delivery)
 Merge: COMPLETED — 2f99f4c24f9182029ded27b15c4f123c810a61fe (C14 delivery)
 ```
 
-V1-C01 through V1-C19 implementation, validation, independent audit, approved delivery, and post-merge validation are complete. V1-C20 is ACTIVE, implemented and self-validated locally, UNDELIVERED, and NOT COMPLETE.
+V1-C01 through V1-C20 implementation and delivery are complete in this candidate. C20 post-merge validation and independent audit disposition are recorded in the Evidence Map. This completion reconciliation is not yet delivered, so the final runtime consistency gate is pending. Project V1 is NOT_FINALIZED; the project-wide Final Gate audit remains pending.
 
 ## 7. Roadmap Position
 
 ```
 Roadmap: AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 Cards: V1-C01 through V1-C20
-Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability; V1-C17 — Evaluation Harness; V1-C18 — Guardrails and Failure Handling; V1-C19 — Golden Case
-Active Card: V1-C20 — Demo UI
-Next Roadmap Card: NONE — V1-C20 is ACTIVE
-Completed Cards: V1-C01 through V1-C19
+Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability; V1-C17 — Evaluation Harness; V1-C18 — Guardrails and Failure Handling; V1-C19 — Golden Case; V1-C20 — Demo UI
+Active Card: NONE
+Next Roadmap Card: NONE — C20 is the final Roadmap Card; separate project-wide Final Gate audit pending
+Completed Cards: V1-C01 through V1-C20
 V1-C01 Start Approval: YES
 V1-C02 Start Approval: YES — explicit human authorization (historical; completed)
 V1-C16 Start Approval: YES — local implementation (historical; consumed by completion)
@@ -288,18 +296,19 @@ V1-C17 Git Delivery: GRANTED / CONSUMED — PR #51 merged
 V1-C18 Start Approval: GRANTED — verification-first/hardening-only local implementation
 V1-C18 Git Delivery: GRANTED / CONSUMED — PR #54 merged
 V1-C19 Start Approval: GRANTED / CONSUMED — local deterministic implementation; completion reconciled after delivery
-V1-C20 Start Approval: YES — local implementation and self-validation only
-V1-C20 Git Delivery: NOT_AUTHORIZED
-Later Cards: NONE — V1-C20 is the final Roadmap Card; project-wide final audit remains separate and NOT_STARTED
+V1-C20 Start Approval: GRANTED / CONSUMED — local implementation and self-validation
+V1-C20 Git Delivery: GRANTED / CONSUMED — PR #61 merged
+V1-C20 Completion Reconciliation Delivery: NOT AUTHORIZED BY THIS TASK
+Later Cards: NONE — C20 is the final Roadmap Card; project-wide Final Gate audit remains separate and PENDING
 ```
 
 V1-C01 start authorization was consumed by completion. Being next in sequence does not authorize later Cards.
 
 ## 8. Current Blockers and Pending Control
 
-V1-C01 through V1-C19 implementation, validation, independent audit, Git delivery, and post-merge validation are complete.
+V1-C01 through V1-C20 implementation and delivery are complete in this candidate.
 
-Current blockers: NONE for independent C20 audit. The local candidate implements the authorized presentation layer and non-production composition without production backend, API, CORS, persistence, authentication, AWS, or live Bedrock changes. Strict type/build, 22 frontend tests, two real Chromium E2E flows, 11/11 applicable isolated mutations, 513 Python tests, 79 architecture tests, C18, and unchanged C17/C19 identities pass. The accepted C13 process-local limitation and the existing generic-JSON OpenAPI description for the runtime-XLSX export response remain explicit limitations. Git delivery and project-wide finalization are not authorized.
+Current blockers: NONE for the C20 implementation Exit Gate. Completion reconciliation is prepared but undelivered; the deterministic final-card consistency script cannot return PASS on this dirty maintenance branch and must be rerun after reconciliation delivery on synchronized clean main. The separate project-wide Final Gate audit remains PENDING. C20 evidence records Python 513, architecture 79, Harness 61 PASS / 0 FAIL, 22 Vitest, two real Chromium E2E flows, 11/11 applicable mutations CAUGHT, unchanged C17/C18/C19, and the accepted C13 process-local limitation. The pre-existing generic-JSON OpenAPI description for runtime XLSX and unconfirmed tablet screenshot observation remain accepted non-blocking findings. No project-wide V1 finalization is claimed.
 
 Resolved migration blockers:
 
@@ -379,7 +388,7 @@ pytest project baseline: ESTABLISHED
 Evaluation Harness implementation: COMPLETE / DELIVERED; evaluation remains OFFLINE and outside the production package
 V1-C18: COMPLETE / DELIVERED / FINAL EXIT GATE PASS
 Golden Case: COMPLETE / DELIVERED / FINAL EXIT GATE PASS
-Demo UI: ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE
+Demo UI: COMPLETE / DELIVERED / dedicated C20 Exit Gate PROVEN
 Card tests: 513 full Python tests; 79 architecture tests; 5 C20 Python composition/contract tests; 22 Vitest tests; 2 Playwright Chromium E2E tests; 11/11 applicable C20 mutations caught
 ```
 
@@ -392,7 +401,7 @@ Canonical Evidence Map:
 ```
 QUOTATION_CARD_EVIDENCE_MAP.md
 20 Card records: PRESENT
-Implementation Evidence: V1-C01–V1-C19 COMPLETE / DELIVERED; V1-C20 ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE
+Implementation Evidence: V1-C01–V1-C20 COMPLETE / DELIVERED in this completion candidate; final C20 runtime consistency gate awaits reconciliation delivery
 Completed Cards: V1-C01 — Repository Baseline; V1-C02 — Domain Models; V1-C03 — Synthetic Historical Data; V1-C04 — Quote Calculation Engine; V1-C05 — Historical Comparison Engine; V1-C06 — Similar Quote Retrieval; V1-C07 — Risk Evidence Engine; V1-C08 — Amazon Bedrock Integration; V1-C09 — Agent Tools; V1-C10 — Quotation Agent; V1-C11 — Human Review Gate; V1-C12 — Excel Generation; V1-C13 — FastAPI Application; V1-C14 — Amazon S3 Integration; V1-C15 — AWS Deployment; V1-C16 — CloudWatch Observability; V1-C17 — Evaluation Harness
 V1-C01 CARD_QUALITY_GATE: PASS
 V1-C09 CARD_QUALITY_GATE: PASS — implementation validation, independent audit, and approved delivery
@@ -406,7 +415,7 @@ V1-C05 Exit Gate: PROVEN — deterministic variance, aggregate, missing-outcome,
 V1-C06 Exit Gate: PROVEN — deterministic, bounded, explainable retrieval and empty/insufficient-result behavior passed
 V1-C07 Exit Gate: PROVEN — deterministic, traceable risk evidence and insufficient-evidence behavior passed
 V1-C09 Exit Gate: PROVEN by implementation validation and independently audited delivery
-V1-C10 Exit Gate: PROVEN against six Roadmap clauses by validation and independent audit; V1-C11 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C12 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C13 Exit Gate: PROVEN by six-route validation, authority/security tests, independent audit, and approved delivery; V1-C14 Exit Gate: PROVEN by storage contract, conditional no-overwrite, retrieval integrity, sanitized failures, architecture and local tests, independent audit, and approved delivery; V1-C15 Exit Gate PROVEN; V1-C16 Exit Gate PROVEN by structured live CloudWatch event and independent verification; V1-C17 Exit Gate PROVEN by independent audit, fixed synthetic Golden Dataset evaluation, approved delivery, and clean-main validation; V1-C18 Exit Gate PROVEN by all-15 guardrail evidence, independent audit, approved delivery, and clean-main validation; V1-C19 Exit Gate PASS / PROVEN by 18/18 Golden steps, independent audit, PR #57 delivery, and clean-main validation; V1-C20 Exit Gate SELF-VALIDATED LOCALLY / independent audit and delivery pending
+V1-C10 Exit Gate: PROVEN against six Roadmap clauses by validation and independent audit; V1-C11 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C12 Exit Gate: PROVEN by focused/architecture validation, independent audit, and approved delivery; V1-C13 Exit Gate: PROVEN by six-route validation, authority/security tests, independent audit, and approved delivery; V1-C14 Exit Gate: PROVEN by storage contract, conditional no-overwrite, retrieval integrity, sanitized failures, architecture and local tests, independent audit, and approved delivery; V1-C15 Exit Gate PROVEN; V1-C16 Exit Gate PROVEN by structured live CloudWatch event and independent verification; V1-C17 Exit Gate PROVEN by independent audit, fixed synthetic Golden Dataset evaluation, approved delivery, and clean-main validation; V1-C18 Exit Gate PROVEN by all-15 guardrail evidence, independent audit, approved delivery, and clean-main validation; V1-C19 Exit Gate PASS / PROVEN by 18/18 Golden steps, independent audit, PR #57 delivery, and clean-main validation; V1-C20 Exit Gate PROVEN by independent audit disposition, PR #61 delivery, and recorded post-merge validation; final C20 state consistency remains pending reconciliation delivery
 ```
 
 Governance migration validation is not V1 implementation evidence.
@@ -414,7 +423,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: V1_C20_LOCAL_CANDIDATE
+Checkpoint Type: V1_C20_COMPLETION_RECONCILIATION_CANDIDATE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -422,10 +431,11 @@ Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
 Learning Governance Final Audit: PASS
 Learning Governance: COMPLETE
-Application implementation: V1-C01–V1-C19 IMPLEMENTED / DELIVERED; V1-C20 IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED
-Active Card: V1-C20 — Demo UI
-Active Card State: ACTIVE / UNDELIVERED / NOT COMPLETE
-Last COMPLETE Card: V1-C19 — Golden Case
+Application implementation: V1-C01–V1-C20 IMPLEMENTED / DELIVERED
+Active Card: NONE
+Active Card State: NONE in the completion candidate; runtime consistency is pending delivery
+Last COMPLETE Card: V1-C20 — Demo UI
+Project V1: NOT_FINALIZED; project-wide Final Gate audit PENDING
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
@@ -469,9 +479,9 @@ These are governance decisions, not implementation claims.
 | V1-C17 | Evaluation Harness | COMPLETE | YES | PASS | PRESENT — independent audit, deterministic fixed-synthetic evaluation, approved delivery, post-merge validation, and completion reconciliation |
 | V1-C18 | Guardrails and Failure Handling | COMPLETE | YES | PASS | PRESENT — independent audit PASS, PR #54 delivered, clean-main validation PASS; all 15 final PASS and C18 Exit Gate PASS |
 | V1-C19 | Golden Case | COMPLETE | YES | PASS | PRESENT — independent audit PASS, PR #57 delivery, post-merge validation, and final Exit Gate PASS |
-| V1-C20 | Demo UI | ACTIVE | YES | PASS — local self-validation; independent audit pending | PRESENT — local candidate |
+| V1-C20 | Demo UI | COMPLETE | YES | PASS | PRESENT — PR #61 delivered; Exit Gate evidence, independent audit disposition, and post-merge validation recorded |
 
-V1-C01 through V1-C19 are COMPLETE and DELIVERED. Active Card is V1-C20. C20 is implemented and self-validated locally but remains UNDELIVERED / NOT COMPLETE.
+V1-C01 through V1-C20 are COMPLETE / DELIVERED in this completion candidate. Active Card is NONE. The C20 completion reconciliation itself is not yet delivered; run FINAL_CARD_STATE_CONSISTENCY_GATE after its delivery. Project V1 remains NOT_FINALIZED and the separate project-wide Final Gate audit is PENDING.
 
 ## 19. Resume Protocol
 
@@ -502,11 +512,11 @@ During the final governance phase also read PROJECT_MIGRATION_STATUS.md. Never r
 Governance migration files have been migrated and reconciled. Strict governance audit and Learning Governance final audit passed. Learning Governance integration is complete.
 
 ```
-Application Implementation: V1-C01–V1-C19 IMPLEMENTED / DELIVERED; V1-C20 IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED
-Active Card: V1-C20 — Demo UI
-Active Card State: ACTIVE / UNDELIVERED / NOT COMPLETE
-Last COMPLETE Card: V1-C19 — Golden Case
-Next Card: NONE — V1-C20 is the final Roadmap Card and is ACTIVE
+Application Implementation: V1-C01–V1-C20 IMPLEMENTED / DELIVERED in the completion candidate
+Active Card: NONE
+Active Card State: NONE — candidate awaits outcome-only reconciliation delivery and runtime gate
+Last COMPLETE Card: V1-C20 — Demo UI
+Next Card: NONE — C20 is the final Roadmap Card; separate project-wide audit remains pending
 Next Roadmap Card: NONE
 V1-C01 Start Authorization: GRANTED (historical; Card complete)
 V1-C03 Start Authorization: GRANTED (historical; Card complete)
@@ -514,7 +524,7 @@ Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: independent audit of the frozen V1-C20 local candidate. Git delivery remains separately unauthorized.
+Safe next action: independent completion audit of this three-file governance candidate; then obtain any separately required Git delivery approval, deliver the reconciliation, verify clean synchronized main, and run FINAL_CARD_STATE_CONSISTENCY_GATE. The project-wide V1 Final Gate audit is a later separate activity.
 
 Do not start any later Card automatically.
 
@@ -528,5 +538,5 @@ NO EVIDENCE → NO CLAIM.
 NO APPROVAL → NO CONSEQUENTIAL ACTION.
 NO AUTHORIZED CARD → NO APPLICATION IMPLEMENTATION.
 GOVERNANCE MIGRATION AND LEARNING GOVERNANCE ARE COMPLETE.
-V1-C01 THROUGH V1-C19 ARE COMPLETE AND DELIVERED; V1-C20 IS ACTIVE, LOCALLY SELF-VALIDATED, UNDELIVERED, AND NOT COMPLETE.
+V1-C01 THROUGH V1-C20 ARE RECORDED COMPLETE / DELIVERED IN THIS CANDIDATE; THE C20 COMPLETION RECONCILIATION IS NOT YET DELIVERED; PROJECT V1 IS NOT_FINALIZED AND ITS PROJECT-WIDE FINAL GATE IS PENDING.
 ```

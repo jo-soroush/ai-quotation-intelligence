@@ -3732,7 +3732,7 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-ACTIVE / AUTHORIZED / UNDELIVERED / NOT COMPLETE
+COMPLETE
 
 ### 4. Human Start Approval
 
@@ -3742,7 +3742,8 @@ Explicit V1-C20 local implementation and self-validation authorization was
 granted on 2026-10-06 for branch `card/v1-c20-demo-ui` from exact base
 `d0c9b9e842b04d7e62f644aaf241acf7781e3c72`. Git delivery, production
 backend/API/CORS changes, persistence, authentication, live AWS/Bedrock, and
-project-wide V1 finalization are not authorized.
+project-wide V1 finalization were not part of the start approval. Separate
+human Git-delivery approval was granted and consumed by PR #61.
 
 ### 5. Files Changed
 
@@ -3778,6 +3779,15 @@ binaries/reports, downloads, caches, and TypeScript build-info are ignored.
   Governance Harness 61 PASS / 0 FAIL; bootstrap 127 PASS / one expected dirty
   worktree WARN / 0 FAIL; pip check, Python compilation, shell syntax, bundle/
   diff credential scan, and `git diff --check` PASS.
+- Completion reconciliation validation on `maintenance/v1-c20-completion-reconciliation`
+  (base `4a3781beb01e4db00e6ff6bda673911011de2cf3`): full pytest 513 passed
+  using `PYTHONPATH=.`; C20 composition tests 5 passed; architecture 79 passed;
+  C18 tests 2 passed; C19 Golden Case 26 passed; Governance Harness 61 PASS /
+  0 FAIL; governance reconciliation write/check PASS; bootstrap 127 PASS /
+  1 expected dirty-tree WARN / 0 FAIL; C17 PASS with exact hashes below; pip
+  check, compilation, shell syntax, and `git diff --check` PASS. Initial plain
+  pytest invocation failed collection because the repository root was absent
+  from the import path; the environment-only `PYTHONPATH=.` retry passed.
 
 ### 7. Focused Tests
 
@@ -3792,7 +3802,12 @@ process disclosures, keyboard focus, and current OpenAPI route/request shapes.
 PASS — full pytest 513 passed (baseline 506 + 5 C20 composition/contract tests
 + 2 architecture tests). Architecture 79 passed (baseline 77 + 2). C18 matrix
 2 passed. C19 focused 26 passed with 18/18 Golden steps. Exact C17/C19
-identities remained unchanged.
+identities remained unchanged. C17 dataset SHA-256 is
+`1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`; report
+SHA-256 is `928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
+C19 scenario SHA-256 is
+`672c675ed79c98caf0b7cccbf1ea32d908107ec7d0846f56d0c7454c5d822c1e`; report
+SHA-256 is `c3dc642907993c9658e091755893fdb2b976773bf88b0b4cd3dd9d1ec8fc0312`.
 
 ### 9. Card Evaluation
 
@@ -3838,6 +3853,18 @@ Runtime/browser XLSX proof remains authoritative and a backend metadata change
 is out of scope. Visual review prompted display-only decimal formatting; Ctrl-C
 handling was bounded at the launcher edge. No unresolved blocker remains.
 
+During completion reconciliation, an initial plain pytest invocation failed
+collection because this project's pytest configuration adds `src/` but not the
+repository root, where `demo/`, `evaluation/`, and `deployment/` live. Running
+the same suite with `PYTHONPATH=.` passed all 513 tests. The first candidate
+final-state consistency probe also identified two Evidence Map serialization
+details required by the validator: an exact `COMPLETE` Learning Documentation
+Status token and canonical `PR: MERGED` / `Merge: COMPLETED` Git evidence
+labels. These were corrected. The repeat probe passes the governance-state
+checks; its remaining failures are the expected non-default branch, missing
+upstream, and dirty-tree checks, which can pass only after this candidate is
+delivered and the gate is rerun on clean synchronized main.
+
 ### 14. Exit Gate Evidence
 
 | C20 Exit Gate area | Direct evidence | Local result |
@@ -3853,21 +3880,97 @@ handling was bounded at the launcher edge. No unresolved blocker remains.
 | Test/mutation/prior regressions | 22 Vitest, 2 Chromium, 11/11 applicable mutations, 513 Python, C17/C18/C19 | PASS |
 | No cloud/persistence/auth and bounded claim | injected clients, loopback only, visible disclosures, no production source | PASS |
 
-Exit Gate Status: PASS — LOCAL SELF-VALIDATION ONLY. Every C20 Exit Gate area
-has direct local evidence. Independent audit, delivery, completion, and the
-separate project-wide Final Gate audit remain pending and are not claimed.
+Exit Gate Status: PROVEN — the C20-specific Roadmap Exit Gate is satisfied by
+the exact merged implementation candidate, the independent audit disposition
+reported for candidate identity
+`9ba7309505f18d976c079de9b5635e760fd5ecc97f308ec208ebf17dc49a05a6`, and the
+recorded post-merge validation. PR #61 merged at
+`4a3781beb01e4db00e6ff6bda673911011de2cf3`. No separate audit report artifact
+was found in the repository; the PASS disposition is attributed to the
+authorized completion input and is not assigned a fabricated file reference.
+This proves the C20 Card Exit Gate only. The separate project-wide Final Gate
+audit remains PENDING and Project V1 remains NOT_FINALIZED.
+
+### C20 Exit Gate Completion Evidence Matrix
+
+The detailed Roadmap Exit Gate clauses are grouped below only where one direct
+test or artifact proves the same bounded contract. Evidence paths name delivered
+source/tests; execution counts are from the recorded PR #61 post-merge run,
+not newly claimed as rerun by this governance edit. The independently supplied
+audit PASS is not represented as a repository artifact.
+
+| # | Mandatory C20 requirement | Direct evidence | Result / limitation |
+| --- | --- | --- | --- |
+| 1 | React + TypeScript + Vite frontend and bounded npm stack | `frontend/package.json`, `frontend/package-lock.json`, `frontend/src/` | PASS — approved stack only |
+| 2 | Strict TypeScript, typed API requests/responses/errors, production build | `frontend/tsconfig.app.json`, `frontend/src/types.ts`, `frontend/src/api.ts`; PR #61 validation | PASS — strict typecheck and build reported PASS |
+| 3 | Existing FastAPI routes/contracts and local `/api` proxy; no backend CORS/API redesign | `frontend/vite.config.ts`, `frontend/src/api.ts`, `tests/test_c20_demo_ui.py::test_frontend_contract_matches_current_fastapi_openapi` | PASS — existing routes; no CORS/backend contract change |
+| 4 | No frontend business logic or authoritative commercial arithmetic | `frontend/src/App.tsx`, `frontend/src/components/`, `tests/test_architecture.py`; mutation report | PASS — backend values remain authoritative; total-substitution mutation caught |
+| 5 | Synthetic request, multiple items, explicit hours units, visible synthetic disclosure | `frontend/src/demoPreset.ts`, `frontend/src/components/QuoteRequestForm.tsx`, `tests/test_c20_demo_ui.py` | PASS — free-form and preset inputs are synthetic; explicit units used |
+| 6 | Backend quote totals displayed without client-side recomputation | `frontend/src/App.tsx`, `frontend/src/types.ts`, successful E2E | PASS — preset result 4620 SEK; no client authority |
+| 7 | Comparable historical quotations and similarity signals | `frontend/src/components/EvidencePanel.tsx`, API response fixtures, successful E2E | PASS — backend-returned evidence only |
+| 8 | Estimate/actual comparison evidence and variance | `frontend/src/components/EvidencePanel.tsx`, typed API fixtures, successful E2E | PASS — backend projection only |
+| 9 | Structured RiskEvidence/provenance and clear separation from AI interpretation | `frontend/src/components/EvidencePanel.tsx`, `frontend/src/App.tsx`, component tests | PASS — deterministic evidence and constrained narrative are distinct |
+| 10 | Missing-information, validation, provider and sanitized API/network failures | `frontend/src/api.ts`, `frontend/src/App.test.tsx`, provider-failure E2E | PASS — real provider failure remained HTTP 503 with no draft |
+| 11 | Backend-derived review/workflow state; truthful loading, empty, and terminal states | `frontend/src/App.tsx`, `frontend/src/components/ReviewPanel.tsx`, component tests | PASS |
+| 12 | Explicit approve/reject through existing backend review route; AI/local UI cannot approve | `frontend/src/components/ReviewPanel.tsx`, composition tests, E2E and mutation probes | PASS — backend response is authoritative |
+| 13 | Export remains unavailable when backend denies/pre-approval | `frontend/src/App.tsx`, `frontend/src/components/ReviewPanel.tsx`, E2E | PASS — pre-approval restriction exercised |
+| 14 | Actual backend-generated XLSX download after approval; no frontend workbook | C12 export in `demo/c20_backend.py`, `frontend/src/api.ts`, Chromium success E2E | PASS — genuine XLSX download observed; pre-existing generic-JSON OpenAPI description accepted as LOW |
+| 15 | Safe rendering; no unsafe HTML, prompts, raw model/provider errors, reviewer identity, or arbitrary payload dumps | React text rendering, `frontend/src/security.test.ts`, component/security tests, mutation probes | PASS — prohibited raw content not rendered |
+| 16 | No secrets in bundle and no prohibited sensitive browser storage | package build, secret scan, `frontend/src/security.test.ts`, mutation probes | PASS — no browser storage; bundle scan clean; npm audit had 0 vulnerabilities |
+| 17 | Semantic labels, keyboard operation, visible focus, readable status/error feedback | `frontend/src/components/QuoteRequestForm.tsx`, `ReviewPanel.tsx`, component accessibility tests | PASS — no WCAG certification claim |
+| 18 | Desktop/laptop/tablet usability and layout review | `frontend/src/styles.css`; recorded desktop/tablet visual review | PASS — possible screenshot-only sticky overlap not reproduced; accepted INFORMATIONAL |
+| 19 | Vitest/React Testing Library component and UI tests | `frontend/src/App.test.tsx`, `api.test.ts`, `security.test.ts`; PR #61 validation | PASS — 22 tests |
+| 20 | API request/response contract tests against current FastAPI | `frontend/src/api.test.ts`, `tests/test_c20_demo_ui.py::test_frontend_contract_matches_current_fastapi_openapi` | PASS |
+| 21 | Real-browser successful request → evidence/draft → approval → Excel flow | `frontend/e2e/demo.spec.ts`; PR #61 Chromium result | PASS — 1 successful real Chromium flow |
+| 22 | Real-browser meaningful failure flow | `frontend/e2e/demo.spec.ts`; PR #61 Chromium result | PASS — provider unavailable, no false draft; 1 failure flow |
+| 23 | Targeted mutation resistance | `frontend/scripts/mutation-probes.mjs`; PR #61 result | PASS — 11/11 applicable mutations CAUGHT |
+| 24 | Bounded failure injection, adversarial checks, and C20 threat review | Python provider-failure composition test, UI failure/E2E tests, 11 mutation probes, supplied independent audit | PASS — bounded C20 scope; no duplicate C18 matrix |
+| 25 | No production backend, API, CORS, persistence, auth, cloud, or live AWS changes | merged PR #61 exact file list; `tests/test_architecture.py`; source review recorded in PR | PASS — presentation/composition only; no live AWS/Bedrock/S3/CloudWatch |
+| 26 | C13 process-local limitation and maximum claim remain explicit | `frontend/README.md`, UI disclosure, merged Evidence Map §17 and PR #61 description | PASS — local synthetic demo only; no production/multi-instance claim |
+| 27 | C17/C18/C19 remain unchanged and regressions pass | C17 hashes below; `tests/test_c18_guardrail_matrix.py`; `tests/test_c19_golden_case.py`; post-merge run | PASS — identities unchanged |
+| 28 | Independent audit and delivery/post-merge evidence | exact audited identity; PR #61 merged; GitHub PR body; post-merge validation recorded below | PASS — audit outcome supplied as PASS; no separate audit artifact found |
+
+### C20 Advanced Verification Reconciliation
+
+| Technique | Canonical disposition | Actual evidence / decision | Outcome |
+| --- | --- | --- | --- |
+| Deterministic invariants | REQUIRED | backend totals/evidence and approval/export ordering asserted in composition, component, and browser tests | PASS |
+| Contract tests | REQUIRED | frontend API tests plus OpenAPI-to-frontend contract test | PASS |
+| Integration | REQUIRED | real local FastAPI/Vite composition; two Chromium E2E paths | PASS |
+| Generated property tests | CONDITIONAL / EVALUATE | no additional transformation invariant beyond explicit typed/request contracts was identified | NOT RUN — justified |
+| Targeted mutation resistance | REQUIRED | isolated UI mutation runner | PASS — 11/11 caught |
+| Failure injection | REQUIRED, BOUNDED | provider unavailable through real injected backend; validation/review/export/network cases covered in focused tests | PASS |
+| Fuzzing | CONDITIONAL / EVALUATE | no custom parser/serializer was introduced | NOT RUN — justified |
+| Differential | NOT_APPLICABLE | no independent second frontend implementation exists | NOT APPLICABLE |
+| Concurrency/race | CONDITIONAL / EVALUATE | duplicate/stale request behavior considered and bounded by UI state/tests; no shared backend concurrency was added | NOT APPLICABLE beyond tested UI behavior |
+| Adversarial testing | REQUIRED, BOUNDED | unsafe-text, authority, fabricated-success, disclosure, evidence, and error mutations | PASS — 11/11 applicable probes caught |
+| Threat modeling | REQUIRED | C20 browser/privacy/authority risks mapped and checked in Evidence §§12–14 and independent audit | PASS |
+| Agent evaluations | NOT_APPLICABLE for C20 | agent behavior unchanged; C19 remains the existing regression owner | NOT APPLICABLE; C19 rerun PASS |
+| Rollback/recovery | REQUIRED | tracked changes are Git-reversible; generated browser/build/download artifacts are ignored/ephemeral; no cloud/data migration | PASS |
+| Formal methods | NOT_APPLICABLE | disproportionate for this presentation layer; contracts, E2E, and mutations supply proportionate checks | NOT APPLICABLE |
 
 ### 15. CARD_QUALITY_GATE
 
-PASS — narrative, decisions, alternatives, technology rationale, preserved
-failure/root-cause/fix history, tradeoffs, learning, future reminder, and
-technical evidence are current. Independent audit remains separate.
+PASS — implementation narrative, decisions, alternatives, technology
+rationale, preserved failure/root-cause/fix history, tradeoffs, completed
+learning, future reminder, later-Card impact, and evidence references are
+current in the Learning Log. Independent audit PASS and delivery are reconciled.
 
 ### 16. Git Evidence
 
-Branch `card/v1-c20-demo-ui`; exact base
-`d0c9b9e842b04d7e62f644aaf241acf7781e3c72`; nothing staged, committed,
-pushed, or delivered. Candidate identity pending the final evidence update.
+Implementation branch `card/v1-c20-demo-ui`; exact base
+`d0c9b9e842b04d7e62f644aaf241acf7781e3c72`; audited candidate identity
+`9ba7309505f18d976c079de9b5635e760fd5ecc97f308ec208ebf17dc49a05a6`.
+Delivery commit: `b345b1c29dfb028bc8d1b5767c3f17d9956d209e`.
+PR: MERGED — #61 — https://github.com/jo-soroush/ai-quotation-intelligence/pull/61
+Merge: COMPLETED — `4a3781beb01e4db00e6ff6bda673911011de2cf3`.
+
+Completion-reconciliation candidate: branch
+`maintenance/v1-c20-completion-reconciliation`, base
+`4a3781beb01e4db00e6ff6bda673911011de2cf3`; exact governance candidate
+identity is generated after validation. Nothing is staged, committed, or
+pushed by this reconciliation task. The final-state consistency run on clean
+synchronized main remains required after delivery.
 
 ### 17. Known Limitations
 
@@ -3876,6 +3979,11 @@ pushed, or delivered. Candidate identity pending the final evidence update.
 - One Chromium engine; no cross-browser or accessibility-certification claim.
 - Export OpenAPI metadata says generic JSON while runtime returns proven XLSX.
 - Existing Starlette/httpx TestClient deprecation warning remains unrelated.
+- Accepted LOW audit finding: pre-existing OpenAPI metadata describes XLSX
+  export as generic JSON; runtime XLSX download passed and the metadata was not
+  changed.
+- Accepted INFORMATIONAL audit note: possible tablet full-page sticky-header
+  overlap was not reproduced as an interactive defect and was not changed.
 - Claim remains limited to a professional local synthetic demonstration.
 
 ### 18. What We Learned
@@ -3884,18 +3992,36 @@ CURRENT — see the full C20 narrative in `CARD_LEARNING_AND_DECISION_LOG.md`.
 
 ### 19. Completion Evidence
 
-Local implementation/self-validation evidence is present. Independent audit,
-Git delivery, completion reconciliation, and separate project-wide Final Gate
-audit remain NOT_RUN / NOT_AUTHORIZED.
+Implementation delivery is verified: PR #61 is MERGED at
+`4a3781beb01e4db00e6ff6bda673911011de2cf3`, with delivery commit
+`b345b1c29dfb028bc8d1b5767c3f17d9956d209e` and the audited identity recorded
+above. Independent audit disposition PASS (no separate audit file exists in
+the repository; see §14). Recorded post-merge validation is PASS: full Python
+513, architecture 79, Harness 61/0, reconciliation PASS, bootstrap 128/0/0,
+TypeScript/build PASS, Vitest 22, Chromium 2, mutations 11/11, and C17/C18/C19
+regressions PASS. This governance-only completion candidate records
+C20 COMPLETE / DELIVERED and Active Card NONE, subject to its own authorized
+delivery. The final runtime consistency gate has NOT YET PASSED; it must be
+run on synchronized clean main after this candidate is delivered. Project V1
+remains NOT_FINALIZED; the separate project-wide Final Gate audit is PENDING.
+
+The candidate consistency probe reports 26 governance-state PASS checks. Its
+only remaining failures are runtime Git requirements: current branch must be
+default `main`, a synchronized upstream must exist, and the working tree must
+be clean. This expected pre-delivery FAIL is not recorded as the final gate;
+the final gate must be rerun after authorized completion-reconciliation
+delivery.
 
 ### 20. Recommended State
 
-ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE
+COMPLETE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C20
 Learning Documentation Status:
-CURRENT — actual implementation, choices, alternatives, dependency rationale,
-failures/root causes/fixes, tradeoffs, learning, and reminders recorded.
+COMPLETE
+Implementation, alternatives, technology rationale, preserved failures/root
+causes/fixes, tradeoffs, learning, future reminders, and later Card impact are
+recorded from actual implementation and delivery evidence.
 
 ### Pre-C20 Canonical Remediation — Approved Contract Decisions (2026-10-05)
 
@@ -4033,14 +4159,14 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C17 | Evaluation Harness | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C18 | Guardrails and Failure Handling | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C19 | Golden Case | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C20 | Demo UI | ACTIVE | YES | PASS | PASS | PASS — local self-validation; independent audit pending | PRESENT | ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE |
+| V1-C20 | Demo UI | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 <!-- END GENERATED: CURRENT_CARD_TABLE -->
 
 ## 18. Current Summary
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C20_ACTIVE
+Project Phase: V1_C20_COMPLETE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -4060,9 +4186,9 @@ V1-C16: COMPLETE
 V1-C17: COMPLETE
 V1-C18: COMPLETE
 V1-C19: COMPLETE
-V1-C20: ACTIVE
-Active Card: V1-C20
-Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16, V1-C17, V1-C18, V1-C19
+V1-C20: COMPLETE
+Active Card: NONE
+Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16, V1-C17, V1-C18, V1-C19, V1-C20
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.
 <!-- END GENERATED: CURRENT_SUMMARY -->
