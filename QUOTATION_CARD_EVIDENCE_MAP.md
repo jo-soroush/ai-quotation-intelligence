@@ -3732,81 +3732,170 @@ Roadmap identity and title verified from AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md
 
 ### 3. State
 
-NOT_STARTED
+ACTIVE / AUTHORIZED / UNDELIVERED / NOT COMPLETE
 
 ### 4. Human Start Approval
 
-NO
+YES
+
+Explicit V1-C20 local implementation and self-validation authorization was
+granted on 2026-10-06 for branch `card/v1-c20-demo-ui` from exact base
+`d0c9b9e842b04d7e62f644aaf241acf7781e3c72`. Git delivery, production
+backend/API/CORS changes, persistence, authentication, live AWS/Bedrock, and
+project-wide V1 finalization are not authorized.
 
 ### 5. Files Changed
 
-NONE
+Production backend files: NONE.
+
+Tracked candidate scope: `.gitignore`; `demo/{__init__.py,c20_backend.py}`;
+the bounded `frontend/` React/Vite project (source, typed client, tests,
+Playwright E2E/configuration, isolated mutation runner, npm manifest/lockfile,
+and run instructions); `tests/{test_architecture.py,test_c20_demo_ui.py}`; and
+C20 updates in `PROJECT_CONTROL.md`, this Evidence Map, and
+`CARD_LEARNING_AND_DECISION_LOG.md`. The bootstrap's filename/credential scans
+now prune ignored nested dependency/build/browser trees so C20 `node_modules`
+does not create false secret-filename warnings. Generated dependencies, builds, browser
+binaries/reports, downloads, caches, and TypeScript build-info are ignored.
 
 ### 6. Commands Run
 
-NONE
+- Verified clean synchronized `main` at
+  `d0c9b9e842b04d7e62f644aaf241acf7781e3c72` and created
+  `card/v1-c20-demo-ui`.
+- Pre-implementation baseline: full pytest 506 passed; architecture 77 passed;
+  Governance Harness 61 PASS / 0 FAIL; reconciliation PASS; bootstrap
+  128 PASS / 0 WARN / 0 FAIL; C17 evaluation PASS.
+- Inspected the exact C20 canonical contract, existing FastAPI/OpenAPI models,
+  provider/agent/tool/review/Excel boundaries, synthetic history, tests, and
+  delivered pre-C20 API presentation fields.
+- Installed the locked npm graph with scripts disabled; 110 packages were
+  audited with zero vulnerabilities. Ran strict TypeScript, production build,
+  Vitest, isolated mutations, real Chromium success/failure E2E, rendered
+  desktop/tablet review, C20 Python contracts, architecture, full pytest, and
+  C17/C18/C19 regressions.
+- Final governance/static checkpoint: reconciliation write/check PASS;
+  Governance Harness 61 PASS / 0 FAIL; bootstrap 127 PASS / one expected dirty
+  worktree WARN / 0 FAIL; pip check, Python compilation, shell syntax, bundle/
+  diff credential scan, and `git diff --check` PASS.
 
 ### 7. Focused Tests
 
-NOT_RUN
+PASS — `npm test`: 3 files / 22 tests. `tests/test_c20_demo_ui.py`: 5 passed.
+Coverage includes free-form/preset inputs, explicit hours units, multiple
+items, loading/serialization, evidence-vs-AI labels, empty/failure states,
+review denial/approval/rejection, export, error sanitization, synthetic and
+process disclosures, keyboard focus, and current OpenAPI route/request shapes.
 
 ### 8. Relevant Regression
 
-NOT_RUN
+PASS — full pytest 513 passed (baseline 506 + 5 C20 composition/contract tests
++ 2 architecture tests). Architecture 79 passed (baseline 77 + 2). C18 matrix
+2 passed. C19 focused 26 passed with 18/18 Golden steps. Exact C17/C19
+identities remained unchanged.
 
 ### 9. Card Evaluation
 
-NOT_RUN
+PASS — 2 Playwright Chromium tests ran against fresh real Vite/FastAPI
+processes. Success covered synthetic input → agent/tools/evidence → backend
+approval → genuine backend XLSX download. Failure covered real injected
+provider unavailability, HTTP 503, bounded messaging, and no draft UI.
 
 ### 10. Commercial / Data Invariants
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — explicit `hours` and `SEK` are sent. The browser derives no commercial
+or evidence truth. The backend returned `4620 SEK` for the preset
+`12×110 + 20×125 + 8×100`; typed evidence was displayed and export stayed
+locked until the backend reported approval.
 
 ### 11. AI / Provider Validation
 
-NOT_RUN / NOT_APPLICABLE_YET
+PASS — the deterministic client is injected through the real
+`BedrockConverseAdapter`; QuotationAgent schema/tool/evidence validation and its
+bounded five-tool sequence remain active. No boto client or live Bedrock is
+constructed. Provider failure remains explicit and creates no quote.
 
 ### 12. Security Validation
 
-NOT_RUN
+PASS — safe React rendering, bounded error allowlist, no browser
+storage, no raw provider/reviewer response display, `/api`-only transport, and
+no frontend Python/internal import are directly tested. Bundle/diff credential
+patterns were absent and npm audit found zero vulnerabilities.
 
 ### 13. Failures / Blockers
 
-NONE RECORDED FOR IMPLEMENTATION
+Repaired failures are preserved. Initial TypeScript/Vitest/Python focused runs
+found config, discovery, fixture, and test-construction errors; bounded fixes
+reran green. Initial Chromium launch was blocked before page execution by the
+macOS sandbox; approved elevated execution then ran the browser. The first real
+browser run passed success E2E but found `error ?? message` hid the explicit
+no-draft outcome; the banner and tests were corrected and both browser flows
+passed. Port 8000 belonged to an unrelated process, so C20 moved to 8765 and
+left it untouched. OpenAPI probe assumptions were corrected from `{quote_id}`/
+internal `Hours` to `{id}`/public `RequestHours`; the probe then exposed the
+pre-existing generic-JSON OpenAPI description for an actually-XLSX export.
+Runtime/browser XLSX proof remains authoritative and a backend metadata change
+is out of scope. Visual review prompted display-only decimal formatting; Ctrl-C
+handling was bounded at the launcher edge. No unresolved blocker remains.
 
 ### 14. Exit Gate Evidence
 
-NONE
+| C20 Exit Gate area | Direct evidence | Local result |
+| --- | --- | --- |
+| Stack/strict types/build/dependencies | lockfile, `npm ci`, typecheck, build, zero-vulnerability audit | PASS |
+| Existing API/proxy/no backend redesign | OpenAPI probe, typed `/api` client, Vite proxy, architecture tests | PASS |
+| No duplicated backend authority | source review, tests, total-substitution mutation caught | PASS |
+| Synthetic request/evidence/AI distinction | component tests, browser success, desktop/tablet render review | PASS |
+| Human approval and real Excel | composition/browser preapproval gate, backend decision, XLSX download | PASS |
+| Truthful representative failures | validation/provider/AI/evidence/review/export/network tests and provider-failure E2E | PASS |
+| Browser security/privacy | safe-render/error/storage/import tests, mutations, bundle/diff scan, npm audit | PASS |
+| Accessibility/usability/responsive | semantic controls/status/dialog, keyboard/focus tests, two viewport reviews | PASS |
+| Test/mutation/prior regressions | 22 Vitest, 2 Chromium, 11/11 applicable mutations, 513 Python, C17/C18/C19 | PASS |
+| No cloud/persistence/auth and bounded claim | injected clients, loopback only, visible disclosures, no production source | PASS |
 
-Exit Gate Status: NOT_PROVEN
+Exit Gate Status: PASS — LOCAL SELF-VALIDATION ONLY. Every C20 Exit Gate area
+has direct local evidence. Independent audit, delivery, completion, and the
+separate project-wide Final Gate audit remain pending and are not claimed.
 
 ### 15. CARD_QUALITY_GATE
 
-NOT_RUN
+PASS — narrative, decisions, alternatives, technology rationale, preserved
+failure/root-cause/fix history, tradeoffs, learning, future reminder, and
+technical evidence are current. Independent audit remains separate.
 
 ### 16. Git Evidence
 
-NOT_OBSERVED_FOR_THIS_CARD — no implementation evidence; repository state is recorded in PROJECT_CONTROL.md
+Branch `card/v1-c20-demo-ui`; exact base
+`d0c9b9e842b04d7e62f644aaf241acf7781e3c72`; nothing staged, committed,
+pushed, or delivered. Candidate identity pending the final evidence update.
 
 ### 17. Known Limitations
 
-NONE RECORDED FOR IMPLEMENTATION
+- C13 state remains process-local, single-process, and non-durable.
+- Deterministic injected provider transport is not a live-model claim.
+- One Chromium engine; no cross-browser or accessibility-certification claim.
+- Export OpenAPI metadata says generic JSON while runtime returns proven XLSX.
+- Existing Starlette/httpx TestClient deprecation warning remains unrelated.
+- Claim remains limited to a professional local synthetic demonstration.
 
 ### 18. What We Learned
 
-NOT YET RECORDED — complete only from actual implementation evidence.
+CURRENT — see the full C20 narrative in `CARD_LEARNING_AND_DECISION_LOG.md`.
 
 ### 19. Completion Evidence
 
-NONE
+Local implementation/self-validation evidence is present. Independent audit,
+Git delivery, completion reconciliation, and separate project-wide Final Gate
+audit remain NOT_RUN / NOT_AUTHORIZED.
 
 ### 20. Recommended State
 
-NOT_STARTED
+ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE
 Learning / Decision Log:
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C20
 Learning Documentation Status:
-NOT_STARTED
+CURRENT — actual implementation, choices, alternatives, dependency rationale,
+failures/root causes/fixes, tradeoffs, learning, and reminders recorded.
 
 ### Pre-C20 Canonical Remediation — Approved Contract Decisions (2026-10-05)
 
@@ -3944,14 +4033,14 @@ DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views
 | V1-C17 | Evaluation Harness | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C18 | Guardrails and Failure Handling | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
 | V1-C19 | Golden Case | COMPLETE | YES | PASS | PROVEN | PASS | PRESENT | COMPLETE |
-| V1-C20 | Demo UI | NOT_STARTED | NO | NOT_RUN | NOT_PROVEN | NOT_RUN | NONE | NOT_STARTED |
+| V1-C20 | Demo UI | ACTIVE | YES | PASS | PASS | PASS — local self-validation; independent audit pending | PRESENT | ACTIVE / IMPLEMENTED AND SELF-VALIDATED LOCALLY / UNDELIVERED / NOT COMPLETE |
 <!-- END GENERATED: CURRENT_CARD_TABLE -->
 
 ## 18. Current Summary
 
 <!-- BEGIN GENERATED: CURRENT_SUMMARY -->
 DO NOT EDIT THIS BLOCK MANUALLY. Generated by scripts/reconcile_governance_views.py.
-Project Phase: V1_C19_COMPLETE
+Project Phase: V1_C20_ACTIVE
 V1-C01: COMPLETE
 V1-C02: COMPLETE
 V1-C03: COMPLETE
@@ -3971,8 +4060,8 @@ V1-C16: COMPLETE
 V1-C17: COMPLETE
 V1-C18: COMPLETE
 V1-C19: COMPLETE
-V1-C20: NOT_AUTHORIZED / NOT_STARTED
-Active Card: NONE
+V1-C20: ACTIVE
+Active Card: V1-C20
 Completed Cards: V1-C01, V1-C02, V1-C03, V1-C04, V1-C05, V1-C06, V1-C07, V1-C08, V1-C09, V1-C10, V1-C11, V1-C12, V1-C13, V1-C14, V1-C15, V1-C16, V1-C17, V1-C18, V1-C19
 No later Card is authorized.
 Detailed technical evidence remains in the exact Card sections above; this summary is derived and non-authoritative.

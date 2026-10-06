@@ -3164,65 +3164,193 @@ An integrated representative scenario demonstrates that the independently owned 
 
 ### 4. What We Actually Built
 
-NOT YET RECORDED — complete from actual implementation experience.
+A strict React/TypeScript/Vite client now presents the existing quotation
+workflow through a typed `/api` client. It supports free-form synthetic work
+items and a clearly labeled preset, renders backend totals, comparable quotes,
+historical variance and structured RiskEvidence separately from the constrained
+agent interpretation, sends explicit approve/reject decisions, and downloads
+the real backend workbook only after approval.
+
+A non-production `demo/c20_backend.py` composition injects a deterministic
+client into the real Bedrock adapter and delegates HTTP through the real
+FastAPI application, AgentTools, QuotationAgent, LocalQuoteStore, C11 review,
+and C12 export. It binds only to loopback and contains no canned quotation,
+calculation, approval, or workbook response.
 
 ### 5. Key Design Decisions
 
-NOT YET RECORDED — complete from actual implementation experience.
+- Keep all API calls in one typed transport module and all commercial/evidence
+  values as backend-returned strings.
+- Use plain React state and CSS; no state or design framework was needed.
+- Serialize submit/review actions, disable request-changing controls in flight,
+  and retain an abort/version guard as defense in depth.
+- Use a standard-library loopback bridge because the approved Python environment
+  has no ASGI server package; the bridge forwards to a single real TestClient.
+- Use port 8765 for the C20 backend after discovery showed an unrelated user
+  process already owned port 8000; that process was preserved.
+- Format decimal strings only for display. The UI never derives totals,
+  similarity, variance, or RiskEvidence.
 
 ### 6. Why We Chose This Approach
 
-NOT YET RECORDED — complete from actual implementation experience.
+It satisfies the approved browser → Vite proxy → FastAPI topology while
+preserving every backend authority. The UI is independently understandable,
+but the real application remains the only source of quotation, evidence,
+review, and Excel behavior. The loopback composition makes the portfolio flow
+repeatable without adding a Python dependency or invoking live AWS/Bedrock.
 
 ### 7. Alternatives Considered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Using Streamlit, adding uvicorn, calling FastAPI cross-origin, creating a fake
+frontend server, copying C19 runtime code, adding a state/design framework, or
+calculating presentation totals in React were considered against the canonical
+boundary.
 
 ### 8. Why Alternatives Were Not Chosen
 
-NOT YET RECORDED — complete from actual implementation experience.
+React/Vite was the human-approved professional presentation stack. Adding
+uvicorn or CORS would expand dependencies or backend scope. A fake server or
+C19 import would not prove the real application path. Redux/design systems
+would add complexity without solving this bounded workflow. Client arithmetic
+would create a second commercial authority.
 
 ### 9. Technologies / Libraries Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+React 19.3.0, React DOM 19.3.0, TypeScript 7.0.2, Vite 8.3.3,
+`@vitejs/plugin-react` 6.1.2, Vitest 5.0.3, React Testing Library 16.3.3,
+Testing Library DOM 10.4.2/user-event 14.6.7/jest-dom 7.0.1, jsdom 30.1.2,
+and Playwright 1.63.0. Exact versions are locked by npm. Published package
+metadata reports MIT licenses except TypeScript and Playwright (Apache-2.0).
+The project-specific UI, CSS, launcher, and tests were built independently;
+no external template, component, or code fragment was adapted.
 
 ### 10. Why These Technologies Were Used
 
-NOT YET RECORDED — complete from actual implementation experience.
+They are exactly the approved C20 runtime/test toolchain. TypeScript strict
+mode checks transport/view contracts; Vitest and Testing Library verify user
+behavior and boundaries quickly; Playwright proves the real browser, proxy,
+application, approval, and binary-download flow. Plain CSS keeps visual design
+auditable and dependency scope small.
 
 ### 11. Problems Encountered
 
-NOT YET RECORDED — complete from actual implementation experience.
+Initial frontend checks exposed TypeScript config, Vitest discovery, test-path,
+and test-fixture issues. The first Playwright launch was denied by the macOS
+sandbox. The next real-browser run passed the complete success flow but found
+that the failure banner hid its explicit no-draft outcome. Port 8000 was owned
+by an unrelated local process. A new OpenAPI contract assertion twice assumed
+the wrong route/schema name and then exposed that the existing export OpenAPI
+documents generic JSON despite returning XLSX at runtime. Full-page visual
+review also showed raw backend decimal precision was too noisy for a portfolio
+view. Stopping the local launcher initially printed a TestClient shutdown
+traceback. Bootstrap's filename scan descended into the new ignored
+`node_modules` tree and produced 13 false secret warnings.
 
 ### 12. Root Cause
 
-NOT YET RECORDED — complete from actual implementation experience.
+The first group was test/config construction rather than application behavior.
+Chromium requires permissions unavailable in the default macOS sandbox. The
+banner used `error ?? message`, suppressing the outcome whenever an error was
+present. Port 8000 was never owned by C20. The OpenAPI probe confused the
+public `RequestHours` schema with internal `Hours`, and the pre-existing export
+response metadata does not describe its actual XLSX media type. Decimal strings
+were rendered verbatim, KeyboardInterrupt could reach TestClient teardown, and
+bootstrap pruned only root-level build environments rather than nested frontend
+dependency/artifact directories.
 
 ### 13. How We Fixed It
 
-NOT YET RECORDED — complete from actual implementation experience.
+Vite/Vitest and TypeScript includes were corrected, tests were scoped to real
+behavior, and the C20 Python contract probe now uses the actual `{id}` routes
+and `RequestHours`. Playwright was rerun with approved browser permission.
+The banner now renders sanitized cause plus explicit outcome, covered by unit
+and browser tests. C20 moved to loopback port 8765 without touching port 8000.
+Runtime XLSX headers/bytes remain the correctness proof; the inaccurate OpenAPI
+media description is recorded rather than repaired outside scope. Decimal
+strings receive display-only formatting. The launcher catches shutdown at the
+outer composition boundary. The bootstrap secret-name and credential scans now
+prune nested dependency/build/browser trees while retaining repository-source
+scanning; rerun returned only the expected dirty-tree warning. Every focused
+check was rerun after repair.
 
 ### 14. Validation / Evidence References
 
-NOT YET RECORDED — complete from actual implementation experience.
+See `QUOTATION_CARD_EVIDENCE_MAP.md` → V1-C20. Current direct evidence includes
+22 Vitest tests, 2 real Chromium tests, 5 C20 Python composition/contract tests,
+79 architecture tests, 513 full Python tests, and 11/11 applicable isolated
+frontend mutations caught. C17/C19 hashes remain exact and C18 remains green.
 
 ### 15. Tradeoffs and Limitations
 
-NOT YET RECORDED — complete from actual implementation experience.
+The launcher is intentionally non-production and uses one process-local store;
+restart loses state and concurrent/multi-worker reliability is not claimed.
+Its scripted provider transport is deterministic and exercises real adapter/
+agent validation, but it is not live Bedrock. The export route's generated
+OpenAPI 200 content remains generic JSON while runtime responses are correctly
+typed XLSX. Browser E2E uses one Chromium engine. Visual/accessibility evidence
+is a professional baseline, not certification. The existing Starlette/httpx
+deprecation warning remains unrelated and no dependency was added to repair it.
 
 ### 16. What We Learned
 
-NOT YET RECORDED — complete from actual implementation experience.
+A polished UI can remain thin when backend presentation contracts are explicit.
+Real-browser tests found a truthful-status defect that component coverage alone
+did not initially assert. Contract tests must distinguish internal domain
+schemas, public request schemas, generated documentation, and runtime response
+truth. Display formatting is compatible with backend authority only when it
+never becomes a calculation oracle.
 
 ### 17. What Should Be Remembered Later
 
-NOT YET RECORDED — complete from actual implementation experience.
+Do not turn the demo launcher into production infrastructure or hide the
+process-local limitation. Keep error allowlisting, safe React text rendering,
+backend-controlled review/export, synthetic disclosure, and API-only imports
+load-bearing. Port 8000 belongs to an unrelated local process at this checkpoint
+and must not be terminated for C20. Any backend/API/CORS expansion requires new
+authorization.
 
 ### 18. Impact on Later Cards
 
-NOT YET RECORDED — complete from actual implementation experience.
+C20 is the final implementation Card. Its completion will still require
+independent audit and Git delivery, followed by a separate project-wide Final
+Gate audit; this local candidate does not finalize V1.
 
 ## V1-C20 — Demo UI
+
+### C20 Implementation Activation and Inspect-First Decision (2026-10-06)
+
+Human authorization activated V1-C20 on branch `card/v1-c20-demo-ui` from
+exact base `d0c9b9e842b04d7e62f644aaf241acf7781e3c72`. Clean-main baseline
+validation reproduced 506 Python tests, 77 architecture tests, Governance
+Harness 61/0, bootstrap 128/0/0, reconciliation PASS, and C17 PASS before any
+implementation write. C01–C19 remain complete; C20 delivery and project-wide
+finalization are not authorized.
+
+Inspect-first discovery confirmed the delivered API has exactly the six
+canonical routes and additively exposes `message`, `similar_quotes`,
+`comparisons`, and `risk_evidence` from `GET /quotes/{id}`. The existing
+application factory, AgentTools, QuotationAgent, review gate, Excel exporter,
+synthetic history, and injected Bedrock client boundary are sufficient without
+changing production source, API schemas, CORS, persistence, or authority.
+
+The selected boundary is a standalone React/TypeScript/Vite presentation
+client plus a bounded non-production local composition. Because the repository
+does not declare or install an ASGI server and a new Python dependency is not
+authorized, the local launcher will use a small standard-library HTTP bridge
+that delegates requests to the real FastAPI app through one stable TestClient
+and LocalQuoteStore. It returns no canned business response and owns no
+calculation, evidence, approval, or export behavior. This keeps the runtime
+reproducible with existing Python dependencies while preserving the required
+single-process C13 limitation.
+
+Source decision: BUILD the project-specific UI and launcher independently.
+Only the explicitly authorized React/Vite/Vitest/Testing Library/Playwright
+packages are used as published dependencies; no external template, component,
+code fragment, or design artifact is adapted. The main risks to challenge are
+client-side authority drift, approval/export bypass, unsafe text rendering,
+synthetic-data ambiguity, stale/double requests, secret leakage, and false
+success states. Actual implementation, failures, fixes, tradeoffs, and
+validation evidence will be recorded after they occur.
 
 ### 1. Card
 

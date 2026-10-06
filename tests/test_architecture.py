@@ -601,3 +601,26 @@ def test_c15_deployment_composition_has_no_reverse_or_storage_dependency() -> No
     for module in PACKAGE.rglob("*.py"):
         targets = _import_targets(ast.parse(module.read_text()), _module_name(module.relative_to(PACKAGE).as_posix()), False)
         assert not any(target == "deployment" or target.startswith("deployment.") for target in targets)
+
+
+def test_c20_frontend_is_an_http_only_presentation_boundary() -> None:
+    frontend = REPOSITORY / "frontend" / "src"
+    assert frontend.is_dir()
+    sources = [
+        path for path in frontend.rglob("*")
+        if path.suffix in {".ts", ".tsx"} and ".test." not in path.name
+    ]
+    assert sources
+    for path in sources:
+        text = path.read_text(encoding="utf-8")
+        assert "ai_quotation_intelligence" not in text
+        assert "evaluation/c19" not in text
+        assert "evaluation.c19" not in text
+    assert not list(frontend.rglob("*.py"))
+
+
+def test_c20_frontend_has_no_reverse_dependency_from_production_package() -> None:
+    for module in PACKAGE.rglob("*.py"):
+        source = module.read_text(encoding="utf-8")
+        assert "frontend" not in source
+        assert "demo.c20_backend" not in source
