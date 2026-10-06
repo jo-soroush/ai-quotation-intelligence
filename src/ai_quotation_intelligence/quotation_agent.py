@@ -40,6 +40,11 @@ from ai_quotation_intelligence.domain import (
     RiskSeverity,
     RiskSuggestion,
 )
+from ai_quotation_intelligence.domain.models import (
+    HistoricalComparisonEvidence,
+    RiskEvidenceSummary,
+    SimilarQuote,
+)
 from ai_quotation_intelligence.logging_config import emit_event
 
 
@@ -266,6 +271,9 @@ class QuotationAgent:
         results: list[dict[str, object]] = []
         seen: set[tuple[str, str]] = set()
         risk_evidence: dict[str, object] = {}
+        similar_quotes: dict[str, SimilarQuote] = {}
+        comparisons: tuple[HistoricalComparisonEvidence, ...] = ()
+        risk_reports: dict[str, RiskEvidenceSummary] = {}
         for _turn in range(MAX_TOOL_CALLS + 1):
             try:
                 prompt = self._prompt(request, results)
@@ -287,7 +295,14 @@ class QuotationAgent:
 
             if isinstance(action, _FinalAction):
                 try:
-                    return self._final(request, action, risk_evidence)
+                    return self._final(
+                        request,
+                        action,
+                        risk_evidence,
+                        tuple(similar_quotes.values()),
+                        comparisons,
+                        tuple(risk_reports.values()),
+                    )
                 except Exception:
                     return self._failure(request_id, AgentResultStatus.INVALID, "Invalid final response")
             if len(results) >= MAX_TOOL_CALLS:
@@ -314,11 +329,44 @@ class QuotationAgent:
             if isinstance(output, RiskEvidenceOutput):
                 for item in output.report.evidence:
                     risk_evidence[item.evidence_id] = item
+                report = output.report
+                risk_reports[report.metric] = RiskEvidenceSummary(
+                    metric=report.metric,
+                    unit=report.unit,
+                    comparable_project_count=report.comparable_project_count,
+                    overrun_count=report.overrun_count,
+                    overrun_rate=report.overrun_rate,
+                    average_variance=report.average_variance,
+                    median_variance=report.median_variance,
+                    evidence=report.evidence,
+                    source_quote_ids=report.source_quote_ids,
+                )
+            elif isinstance(output, SimilarQuotesOutput):
+                for match in output.matches:
+                    current = similar_quotes.get(match.result.quote_id)
+                    if current is not None and current != match.result:
+                        return self._failure(request_id, AgentResultStatus.INVALID,
+                                             "Inconsistent similar quotation evidence")
+                    similar_quotes.setdefault(match.result.quote_id, match.result)
+            elif isinstance(output, ComparisonsOutput):
+                comparisons = tuple(HistoricalComparisonEvidence(
+                    quote_id=item.quote_id,
+                    source_id=item.source_id,
+                    hour_variance=item.hour_variance,
+                    cost_variance=item.cost_variance,
+                ) for item in output.comparisons)
             results.append(output.model_dump(mode="json"))
         return self._failure(request_id, AgentResultStatus.INVALID, "Tool-call limit exceeded")
 
-    def _final(self, request: AgentRequest, action: _FinalAction,
-               risk_evidence: dict[str, object]) -> AgentResult:
+    def _final(
+        self,
+        request: AgentRequest,
+        action: _FinalAction,
+        risk_evidence: dict[str, object],
+        similar_quotes: tuple[SimilarQuote, ...],
+        comparisons: tuple[HistoricalComparisonEvidence, ...],
+        risk_reports: tuple[RiskEvidenceSummary, ...],
+    ) -> AgentResult:
         request_id = request.request_id
         if any(not _safe_prose(text) for text in (
             action.narrative,
@@ -380,6 +428,9 @@ class QuotationAgent:
                 risk_suggestions=suggestions,
                 evidence_ids=action.evidence_ids,
                 message=action.narrative,
+                similar_quotes=similar_quotes,
+                historical_comparisons=comparisons,
+                risk_evidence_reports=risk_reports,
             )
             return AgentResult.model_validate(result.model_dump())
         except (ValidationError, ValueError, TypeError):

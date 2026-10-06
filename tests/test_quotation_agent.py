@@ -10,6 +10,7 @@ from ai_quotation_intelligence.agent_tools import (
     AgentTools,
     FailureCode,
     RiskEvidenceInput,
+    RiskEvidenceOutput,
     ToolFailure,
     ToolServices,
 )
@@ -79,6 +80,24 @@ class ScriptedModel:
         return BedrockResult(self.status, self.outputs.pop(0), self.response_id or request_id)
 
 
+class RecordingTools(AgentTools):
+    def __init__(self) -> None:
+        super().__init__()
+        self.calls: list[str] = []
+        self.outputs: dict[str, object] = {}
+
+    def resolve_tool(self, name: str):
+        owned = super().resolve_tool(name)
+
+        def recorded(value):
+            output = owned(value)
+            self.calls.append(name)
+            self.outputs[name] = output
+            return output
+
+        return recorded
+
+
 def test_success_uses_all_available_c09_tools_and_preserves_core_commercial_truth(agent_request: AgentRequest) -> None:
     evidence_id = risk_id()
     model = ScriptedModel(
@@ -92,7 +111,8 @@ def test_success_uses_all_available_c09_tools_and_preserves_core_commercial_trut
         }]),
     )
 
-    result = QuotationAgent(model, AgentTools()).run(agent_request)
+    tools = RecordingTools()
+    result = QuotationAgent(model, tools).run(agent_request)
 
     assert result.status is AgentResultStatus.SUCCESS
     assert result.request_id == agent_request.request_id
@@ -108,6 +128,28 @@ def test_success_uses_all_available_c09_tools_and_preserves_core_commercial_trut
     assert len(model.prompts) == 6
     assert all("validated_tool_results" in prompt for prompt in model.prompts)
     assert "get_risk_evidence" in model.prompts[-1]
+    assert tools.calls == [
+        "get_historical_quotes", "find_similar_quotes", "compare_estimate_to_actual",
+        "calculate_quote_statistics", "get_risk_evidence",
+    ]
+    similar_output = tools.outputs["find_similar_quotes"]
+    comparison_output = tools.outputs["compare_estimate_to_actual"]
+    risk_output = tools.outputs["get_risk_evidence"]
+    assert result.similar_quotes == tuple(match.result for match in similar_output.matches)
+    assert tuple((item.quote_id, item.source_id, item.hour_variance, item.cost_variance)
+                 for item in result.historical_comparisons) == tuple(
+        (item.quote_id, item.source_id, item.hour_variance, item.cost_variance)
+        for item in comparison_output.comparisons
+    )
+    assert len(result.risk_evidence_reports) == 1
+    captured_report = result.risk_evidence_reports[0]
+    assert captured_report.comparable_project_count == risk_output.report.comparable_project_count
+    assert captured_report.overrun_count == risk_output.report.overrun_count
+    assert captured_report.overrun_rate == risk_output.report.overrun_rate
+    assert captured_report.average_variance == risk_output.report.average_variance
+    assert captured_report.median_variance == risk_output.report.median_variance
+    assert captured_report.evidence == risk_output.report.evidence
+    assert captured_report.source_quote_ids == risk_output.report.source_quote_ids
 
 
 def test_c08_adapter_can_supply_text_without_native_tool_calling(agent_request: AgentRequest) -> None:
@@ -309,6 +351,39 @@ def test_malformed_tool_output_is_not_accepted(agent_request: AgentRequest) -> N
     assert result.draft_quote is None
 
 
+def test_unvalidated_typed_risk_output_is_not_promoted_to_evidence(
+    agent_request: AgentRequest,
+) -> None:
+    valid = AgentTools().get_risk_evidence(
+        RiskEvidenceInput(request_id=agent_request.request_id)
+    )
+    forged = valid.report.evidence[0].model_copy(
+        update={"source_quote_ids": ["not-a-report-source"]}
+    )
+    malformed_report = valid.report.__class__(
+        **{
+            **valid.report.__dict__,
+            "evidence": (forged, *valid.report.evidence[1:]),
+        }
+    )
+
+    class InvalidTypedRiskTools(AgentTools):
+        def get_risk_evidence(self, request: object) -> object:
+            return RiskEvidenceOutput.model_construct(
+                request_id=agent_request.request_id,
+                report=malformed_report,
+            )
+
+    result = QuotationAgent(
+        ScriptedModel(tool("get_risk_evidence"), final(evidence_ids=[forged.evidence_id])),
+        InvalidTypedRiskTools(),
+    ).run(agent_request)
+
+    assert result.status is AgentResultStatus.INVALID
+    assert result.draft_quote is None
+    assert result.risk_evidence_reports == ()
+
+
 @pytest.mark.parametrize("model", [
     ScriptedModel("{}", status=AgentResultStatus.UNAVAILABLE),
     ScriptedModel("{}", status=AgentResultStatus.INVALID),
@@ -356,6 +431,9 @@ def test_fabricated_evidence_commercial_claims_and_approval_fail(
     result = QuotationAgent(model, AgentTools()).run(agent_request)
     assert result.status is AgentResultStatus.INVALID
     assert result.draft_quote is None
+    assert result.similar_quotes == ()
+    assert result.historical_comparisons == ()
+    assert result.risk_evidence_reports == ()
 
 
 def test_prompt_injection_cannot_grant_future_tool_or_approval(agent_request: AgentRequest) -> None:

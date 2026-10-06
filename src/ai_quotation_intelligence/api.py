@@ -5,6 +5,7 @@ C12 alone renders export bytes. This module has no durable or multi-worker state
 """
 
 from datetime import datetime
+from decimal import Decimal
 from threading import RLock
 from time import monotonic_ns
 from typing import Annotated, Literal, Protocol
@@ -17,7 +18,8 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints, Validation
 
 from ai_quotation_intelligence.domain import (
     AgentRequest, AgentResult, AgentResultStatus, ApprovalDecision,
-    ApprovalStatus, DraftQuote, Hours, Money, NewQuoteRequest, QuoteItem, TimeUnit,
+    ApprovalStatus, DataOrigin, DraftQuote, Hours, Money, NewQuoteRequest,
+    QuoteItem, TimeUnit, VarianceResult,
 )
 from ai_quotation_intelligence.excel_export import ExportFailure, ExportFailureCode, export_approved_quote
 from ai_quotation_intelligence.human_review import ReviewFailure, ReviewFailureCode, ReviewSession
@@ -76,12 +78,50 @@ class AgentView(TransportModel):
     message: str | None = None
 
 
+class SimilarQuoteView(TransportModel):
+    quote_id: str
+    similarity_score: Decimal
+    matching_features: tuple[str, ...]
+
+
+class ComparisonView(TransportModel):
+    quote_id: str
+    source_id: str
+    hour_variance: VarianceResult | None = None
+    cost_variance: VarianceResult | None = None
+
+
+class RiskEvidenceView(TransportModel):
+    evidence_id: str
+    metric: str
+    observed_value: Decimal
+    unit: str
+    source_quote_ids: tuple[str, ...]
+    data_origin: DataOrigin
+
+
+class RiskEvidenceReportView(TransportModel):
+    metric: str
+    unit: str
+    comparable_project_count: int
+    overrun_count: int
+    overrun_rate: Decimal
+    average_variance: Decimal
+    median_variance: Decimal
+    evidence: tuple[RiskEvidenceView, ...]
+    source_quote_ids: tuple[str, ...]
+
+
 class QuoteView(TransportModel):
     quote_id: str
     request_id: str
     status: AgentResultStatus
     review_state: str
     draft_quote: DraftQuote
+    message: str | None = None
+    similar_quotes: tuple[SimilarQuoteView, ...] = ()
+    comparisons: tuple[ComparisonView, ...] = ()
+    risk_evidence: tuple[RiskEvidenceReportView, ...] = ()
 
 
 class DecisionView(TransportModel):
@@ -283,9 +323,45 @@ def create_app(agent: AgentRunner, *, store: LocalQuoteStore | None = None) -> F
     def get_quote(id: SafeId) -> QuoteView:
         with sessions._lock:
             current, session = sessions.current(id)
-            return QuoteView(quote_id=id, request_id=current.request_id,
-                             status=current.status, review_state=session.state.value,
-                             draft_quote=current.draft_quote.model_copy(deep=True))
+            return QuoteView(
+                quote_id=id,
+                request_id=current.request_id,
+                status=current.status,
+                review_state=session.state.value,
+                draft_quote=current.draft_quote.model_copy(deep=True),
+                message=current.message,
+                similar_quotes=tuple(SimilarQuoteView(
+                    quote_id=item.quote_id,
+                    similarity_score=item.similarity_score,
+                    matching_features=tuple(item.matching_features),
+                ) for item in current.similar_quotes),
+                comparisons=tuple(ComparisonView(
+                    quote_id=item.quote_id,
+                    source_id=item.source_id,
+                    hour_variance=(item.hour_variance.model_copy(deep=True)
+                                   if item.hour_variance is not None else None),
+                    cost_variance=(item.cost_variance.model_copy(deep=True)
+                                   if item.cost_variance is not None else None),
+                ) for item in current.historical_comparisons),
+                risk_evidence=tuple(RiskEvidenceReportView(
+                    metric=report.metric,
+                    unit=report.unit,
+                    comparable_project_count=report.comparable_project_count,
+                    overrun_count=report.overrun_count,
+                    overrun_rate=report.overrun_rate,
+                    average_variance=report.average_variance,
+                    median_variance=report.median_variance,
+                    evidence=tuple(RiskEvidenceView(
+                        evidence_id=item.evidence_id,
+                        metric=item.metric,
+                        observed_value=item.observed_value,
+                        unit=item.unit,
+                        source_quote_ids=tuple(item.source_quote_ids),
+                        data_origin=item.data_origin,
+                    ) for item in report.evidence),
+                    source_quote_ids=report.source_quote_ids,
+                ) for report in current.risk_evidence_reports),
+            )
 
     @app.post("/quotes/{id}/approve", response_model=DecisionView)
     def decide(id: SafeId, value: DecisionInput) -> DecisionView:
