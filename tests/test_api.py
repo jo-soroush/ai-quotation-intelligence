@@ -53,6 +53,27 @@ class ScriptedModel:
         return BedrockResult(AgentResultStatus.SUCCESS, json.dumps(payload), request_id)
 
 
+class PresentationModel:
+    def __init__(self) -> None:
+        self.actions_by_request: dict[str, list[dict[str, object]]] = {}
+
+    def invoke(self, prompt: str, *, request_id: str) -> BedrockResult:
+        actions = self.actions_by_request.setdefault(request_id, [
+            {"kind": "tool", "name": "find_similar_quotes", "arguments": {"limit": 2}},
+            {"kind": "tool", "name": "compare_estimate_to_actual", "arguments": {}},
+            {"kind": "tool", "name": "get_risk_evidence", "arguments": {"metric": "hours"}},
+        ])
+        if actions:
+            payload = actions.pop(0)
+        else:
+            payload = {
+                "kind": "final", "narrative": "Draft for human review.",
+                "evidence_ids": ["risk-hours-overrun-rate"], "risk_suggestions": [],
+                "missing_information": [],
+            }
+        return BedrockResult(AgentResultStatus.SUCCESS, json.dumps(payload), request_id)
+
+
 @pytest.fixture
 def live_api() -> tuple[TestClient, LocalQuoteStore, ScriptedModel]:
     model = ScriptedModel()
@@ -133,6 +154,72 @@ def test_analyze_is_not_reviewable_and_draft_is(live_api) -> None:
     assert "reviewer_id" not in view
     assert "review_session" not in view
     assert "review_record" not in view
+
+
+def test_get_quote_exposes_typed_bounded_presentation_projection() -> None:
+    client = TestClient(
+        create_app(QuotationAgent(PresentationModel(), AgentTools()), store=LocalQuoteStore()),
+        raise_server_exceptions=False,
+    )
+    posted = client.post("/quotes/draft", json=body("presentation"))
+    assert set(posted.json()) == {"request_id", "status", "quote_id", "message"}
+    quote_id = posted.json()["quote_id"]
+
+    response = client.get(f"/quotes/{quote_id}")
+    assert response.status_code == 200
+    view = response.json()
+    assert view["message"] == "Draft for human review."
+    assert len(view["similar_quotes"]) == 2
+    assert set(view["similar_quotes"][0]) == {
+        "quote_id", "similarity_score", "matching_features",
+    }
+    assert view["comparisons"]
+    assert set(view["comparisons"][0]) == {
+        "quote_id", "source_id", "hour_variance", "cost_variance",
+    }
+    hour_variance = next(item["hour_variance"] for item in view["comparisons"]
+                         if item["hour_variance"] is not None)
+    assert set(hour_variance) == {"metric", "estimated", "actual", "variance", "percentage", "unit"}
+    report = view["risk_evidence"][0]
+    assert set(report) == {
+        "metric", "unit", "comparable_project_count", "overrun_count", "overrun_rate",
+        "average_variance", "median_variance", "evidence", "source_quote_ids",
+    }
+    assert set(view["draft_quote"]["evidence_ids"]) <= {
+        item["evidence_id"] for item in report["evidence"]
+    }
+    assert all(set(item["source_quote_ids"]) <= set(report["source_quote_ids"])
+               for item in report["evidence"])
+    serialized = json.dumps(view, sort_keys=True)
+    for forbidden in ("validated_tool_results", "records", "matches", "report", "prompt", "provider"):
+        assert forbidden not in serialized
+
+
+def test_distinct_requests_do_not_mix_similar_quote_evidence() -> None:
+    model = PresentationModel()
+    client = TestClient(create_app(QuotationAgent(model, AgentTools())), raise_server_exceptions=False)
+    first_body = body("presentation-one")
+    second_body = body("presentation-two")
+    other = generate_synthetic_history()[10].quote
+    second_body["quotation_request"].update({
+        "project_name": other.project_name,
+        "currency": other.currency,
+        "requested_at": other.created_at.isoformat(),
+        "items": [{
+            "item_id": item.item_id,
+            "description": item.description,
+            "estimated_hours": item.estimated_hours.model_dump(mode="json"),
+            "hourly_rate": item.hourly_rate.model_dump(mode="json"),
+        } for item in other.items],
+    })
+    first_id = client.post("/quotes/draft", json=first_body).json()["quote_id"]
+    second_id = client.post("/quotes/draft", json=second_body).json()["quote_id"]
+
+    first = client.get(f"/quotes/{first_id}").json()
+    second = client.get(f"/quotes/{second_id}").json()
+    assert first["request_id"] == "presentation-one"
+    assert second["request_id"] == "presentation-two"
+    assert first["similar_quotes"] != second["similar_quotes"]
 
 
 @pytest.mark.parametrize("mutation", [

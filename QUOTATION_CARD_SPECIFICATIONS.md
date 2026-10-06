@@ -3282,6 +3282,44 @@ contract changes. It may inject deterministic provider behavior; it must not
 duplicate backend logic or call live cloud services. No public CLI is required.
 If the approved local topology cannot be supported by existing interfaces,
 STOP for human approval.
+
+### 32. Pre-C20 API Presentation Contract Maintenance Remediation
+
+An independent read-only implementation-readiness analysis found that the
+existing `GET /quotes/{id}` projection did not expose several already-computed
+and already-validated results needed by the C20 presentation contract. The
+human approved Option C as a separate pre-Card maintenance change. This does
+not authorize or start C20 and is a bounded exception to C20's prohibition on
+changing the backend merely for frontend convenience.
+
+The maintenance change may add backward-compatible optional typed fields to
+`AgentResult`, retain results from the current request's already-executed
+`AgentTools` calls, and add an explicit safe presentation projection to the
+existing quote-retrieval response. The bounded projection is limited to
+similar-quote identity/score/features, typed estimate-versus-actual variance,
+structured RiskEvidence statistics/provenance, and the already-stored fixed
+permitted agent message. It must not expose raw tool dictionaries, prompts,
+provider output, exceptions, credentials, reviewer identity, unrelated
+history, or confidential data.
+
+No tool may be invoked again to construct presentation data. The change may
+not add calculations, tools, routes, persistence, dependencies, CORS,
+provider/prompt/protocol changes, approval authority, or export behavior.
+Existing POST response contracts remain unchanged. Failure results contain no
+fabricated presentation evidence; stored evidence remains request-local and
+must reconcile to the validated tool outputs that produced it. `LocalQuoteStore`
+remains process-local and unchanged. C17, C18, and C19 identities and contracts
+remain regression evidence and are not modified.
+
+Required maintenance verification covers backward-compatible construction,
+typed capture, provenance/statistics reconciliation, no extra tool execution,
+failure exclusion, explicit API allowlisting, stored-message retrieval,
+cross-request isolation, unchanged POST/error/review/export contracts, and
+isolated mutation probes for identity, variance, statistics, evidence,
+provenance, request isolation, invocation count, unvalidated promotion,
+failure leakage, raw response leakage, message omission, and approval/export
+bypass. Rollback is Git-only and requires no data, cloud, or operational action.
+
 Before Card COMPLETE:
 
 CARD_LEARNING_AND_DECISION_LOG.md → V1-C20

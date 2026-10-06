@@ -3835,6 +3835,90 @@ activity occurred. Live PROJECT_CONTROL state remains untouched: Active Card
 NONE; C20 NOT_AUTHORIZED / NOT_STARTED. No implementation or validation result
 is asserted by this contract record.
 
+### Pre-C20 API Presentation Contract Remediation — Local Candidate (2026-10-06)
+
+The independently identified C20 implementation-readiness gap was confirmed:
+the existing agent computed and validated similar quotations, historical
+comparisons, and full RiskEvidence reports but discarded those typed results,
+while `AgentResult.message` was stored but omitted from `GET /quotes/{id}`.
+Human approval selected Option C: retain those already-produced results and
+expose a minimal safe projection through the existing retrieval route. This is
+a separate maintenance remediation; C20 remains NOT_AUTHORIZED / NOT_STARTED.
+
+Implementation is bounded to
+`src/ai_quotation_intelligence/{domain/models.py,quotation_agent.py,api.py}`.
+`AgentResult` now has optional tuple-backed presentation snapshots for similar
+quotes, historical comparisons, and risk-evidence summaries. Each risk summary
+reconciles count/rate/statistic values to its typed `RiskEvidence`, requires
+unique bounded provenance, and failure results reject presentation evidence.
+`QuotationAgent` captures only the current request's successfully validated
+`SimilarQuotesOutput`, `ComparisonsOutput`, and `RiskEvidenceOutput` after the
+existing single tool invocation. It neither changes the tool loop nor invokes
+a tool again. The existing final evidence-ID check remains the authority for
+model-selected evidence.
+
+`GET /quotes/{id}` additively exposes `message`, `similar_quotes`,
+`comparisons`, and `risk_evidence` through explicit typed allowlisted transport
+models. Existing quote/request/status/review/draft fields and POST response
+shapes remain unchanged. Raw tool wrappers, prompts, provider output,
+exceptions, credentials, reviewer identity, and unrelated history are not
+projected. `LocalQuoteStore`, routes, requests, review/approval, Excel,
+persistence, dependencies, CORS, provider behavior, arithmetic, and business
+authority are unchanged.
+
+Tests added only in `tests/{test_domain_models,test_quotation_agent,test_api}.py`.
+They prove additive legacy construction and JSON round-trip; typed capture is
+exactly equal to the already-executed tool outputs; the successful five-tool
+trace is unchanged and has no second invocation; malformed typed output and
+fabricated evidence fail closed; failure results contain no presentation
+snapshot; GET returns the bounded projection and stored permitted message;
+POST shape and exact route set remain stable; and distinct request evidence
+does not mix. Existing C11/C12 mutation and reconciliation tests confirm review
+and export authority remain unchanged.
+
+Observed local evidence: domain 15 passed; quotation-agent 58 passed; API 27
+passed; combined domain/agent/API/review/Excel 192 passed; full pytest 506
+passed; architecture 77 passed; C18 matrix 2 passed; C19 Golden Case 26 passed.
+C17 evaluation PASS retained dataset SHA-256
+`1e2bec2a2c58a9c0082491d8ef746da723689a7f73a9c255e47268a6a6a4cc6b`
+and report SHA-256
+`928880c6042e4ab9fa826cf1ba51b88cd2a762209c5006144c2e53f233cf832c`.
+C19 retained scenario SHA-256
+`672c675ed79c98caf0b7cccbf1ea32d908107ec7d0846f56d0c7454c5d822c1e`
+and report SHA-256
+`c3dc642907993c9658e091755893fdb2b976773bf88b0b4cd3dd9d1ec8fc0312`.
+The sole observed warning is the pre-existing Starlette/httpx TestClient
+deprecation warning.
+
+Governance Harness passed 61/0; generated-view reconciliation passed; the
+maintenance-branch bootstrap returned 127 PASS / one expected dirty-tree WARN /
+zero FAIL. `pip check`, Python compilation, shell syntax, changed-diff secret
+scan, and `git diff --check` passed. The completed-C19 final-state helper passed
+all canonical state/evidence checks and, as designed, did not return its clean-
+main PASS while this uncommitted maintenance branch was active (non-main branch,
+no upstream, dirty tree). No C19 state contradiction was found and
+`PROJECT_CONTROL.md` remains untouched.
+
+Twelve isolated source-copy mutations were executed and all were CAUGHT by
+load-bearing tests: wrong comparable identity; wrong variance; wrong risk
+statistics; fabricated evidence ID; missing source provenance; cross-request
+evidence mixing; repeated tool invocation; unvalidated typed evidence
+promotion; evidence attached to failure; raw provider field exposure; stored
+message omission; and approval/export bypass. Temporary mutation copies were
+removed and never altered the candidate. Failure injection through existing
+malformed-tool/provider/API/review/export tests remained explicit and
+sanitized. Threat/adversarial review found no new authority, raw payload
+exposure, cross-request contamination, or false-success path.
+
+Generated property testing was not used because the fixed typed invariants are
+covered directly. Fuzzing was not used because no parser was introduced.
+Differential verification was not used because there is no independent
+implementation oracle. Concurrency received existing C13 decision/isolation
+regression only; the remediation introduces no new shared state. Rollback is
+Git-only. No AWS, live Bedrock, new dependency, persistence, C17/C18/C19
+artifact change, or frontend implementation occurred. This candidate remains
+uncommitted and requires independent audit and separate delivery approval.
+
 ## 17. Current Card Table
 
 <!-- BEGIN GENERATED: CURRENT_CARD_TABLE -->

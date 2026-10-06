@@ -20,6 +20,8 @@ CurrencyCode = Annotated[
 ]
 NonNegativeDecimal = Annotated[Decimal, Field(ge=Decimal("0"))]
 UnitInterval = Annotated[Decimal, Field(ge=Decimal("0"), le=Decimal("1"))]
+FiniteDecimal = Annotated[Decimal, Field(allow_inf_nan=False)]
+NonNegativeInt = Annotated[int, Field(ge=0)]
 
 
 class DomainModel(BaseModel):
@@ -230,6 +232,58 @@ class AgentRequest(DomainModel):
     instructions: NonEmptyText | None = None
 
 
+class HistoricalComparisonEvidence(DomainModel):
+    """Traceable presentation snapshot of one validated historical comparison."""
+
+    quote_id: NonEmptyText
+    source_id: NonEmptyText
+    hour_variance: VarianceResult | None = None
+    cost_variance: VarianceResult | None = None
+
+
+class RiskEvidenceSummary(DomainModel):
+    """Bounded successful risk report retained from the deterministic owner."""
+
+    metric: NonEmptyText
+    unit: NonEmptyText
+    comparable_project_count: NonNegativeInt
+    overrun_count: NonNegativeInt
+    overrun_rate: UnitInterval
+    average_variance: FiniteDecimal
+    median_variance: FiniteDecimal
+    evidence: tuple[RiskEvidence, ...] = Field(min_length=1)
+    source_quote_ids: tuple[NonEmptyText, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_provenance_and_statistics(self) -> "RiskEvidenceSummary":
+        if self.comparable_project_count != len(self.source_quote_ids):
+            raise ValueError("comparable count must match source quote identities")
+        if len(set(self.source_quote_ids)) != len(self.source_quote_ids):
+            raise ValueError("risk source quote identities must be unique")
+        if not 0 <= self.overrun_count <= self.comparable_project_count:
+            raise ValueError("overrun count must be bounded by comparable count")
+        expected_rate = Decimal(self.overrun_count) / Decimal(self.comparable_project_count)
+        if self.overrun_rate != expected_rate:
+            raise ValueError("overrun rate must reconcile with evidence counts")
+        evidence_ids = [item.evidence_id for item in self.evidence]
+        if len(set(evidence_ids)) != len(evidence_ids):
+            raise ValueError("risk evidence identities must be unique")
+        sources = set(self.source_quote_ids)
+        if any(not set(item.source_quote_ids) <= sources for item in self.evidence):
+            raise ValueError("risk evidence sources must belong to the retained report")
+        if len({item.data_origin for item in self.evidence}) != 1:
+            raise ValueError("risk evidence must retain one data origin")
+        by_metric = {item.metric: item.observed_value for item in self.evidence}
+        expected = {
+            "overrun_rate": self.overrun_rate,
+            "average_variance": self.average_variance,
+            "median_variance": self.median_variance,
+        }
+        if by_metric != expected:
+            raise ValueError("risk statistics must reconcile with retained evidence")
+        return self
+
+
 class AgentResult(DomainModel):
     """Provider-neutral result envelope with explicit failure statuses."""
 
@@ -239,3 +293,24 @@ class AgentResult(DomainModel):
     risk_suggestions: list[RiskSuggestion] = Field(default_factory=list)
     evidence_ids: list[NonEmptyText] = Field(default_factory=list)
     message: NonEmptyText | None = None
+    similar_quotes: tuple[SimilarQuote, ...] = Field(default_factory=tuple)
+    historical_comparisons: tuple[HistoricalComparisonEvidence, ...] = Field(default_factory=tuple)
+    risk_evidence_reports: tuple[RiskEvidenceSummary, ...] = Field(default_factory=tuple)
+
+    @model_validator(mode="after")
+    def presentation_evidence_is_bounded(self) -> "AgentResult":
+        presentation = (
+            self.similar_quotes,
+            self.historical_comparisons,
+            self.risk_evidence_reports,
+        )
+        if self.status is not AgentResultStatus.SUCCESS and any(presentation):
+            raise ValueError("failure result cannot contain presentation evidence")
+        if len({item.quote_id for item in self.similar_quotes}) != len(self.similar_quotes):
+            raise ValueError("similar quotation identities must be unique")
+        comparison_ids = [(item.quote_id, item.source_id) for item in self.historical_comparisons]
+        if len(set(comparison_ids)) != len(comparison_ids):
+            raise ValueError("historical comparison identities must be unique")
+        if len({report.metric for report in self.risk_evidence_reports}) != len(self.risk_evidence_reports):
+            raise ValueError("risk report metrics must be unique")
+        return self

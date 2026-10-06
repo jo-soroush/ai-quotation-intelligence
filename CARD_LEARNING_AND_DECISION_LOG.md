@@ -3332,6 +3332,56 @@ PROJECT_CONTROL was intentionally untouched, so C20 remains NOT_AUTHORIZED /
 NOT_STARTED and Active Card remains NONE. The C20 implementation template above
 continues to say NOT YET RECORDED because no implementation learning exists yet.
 
+### Pre-C20 API Presentation Contract Remediation — Option C (2026-10-06)
+
+The implementation-readiness audit correctly distinguished a presentation-data
+gap from missing backend capability. C05–C10 already computed the relevant
+similarity, comparison, statistics, and RiskEvidence results; C13 simply had no
+safe retained projection for them, and it did not expose the agent message it
+already stored. Recomputing those values in React, adding UI-specific tools, or
+building another endpoint would have created duplicate authority or unnecessary
+surface area. The human therefore approved Option C: retain genuine validated
+results from the existing agent loop and expose an additive typed view.
+
+The narrow design keeps each owner intact. `QuotationAgent` captures successful
+typed outputs only after the existing `_invoke_tool()` validation, so the
+presentation snapshot is evidence from the same request and the same call—not a
+second calculation or a replay. Domain summaries preserve immutable tuple
+ordering and validate count/rate/statistic/provenance relationships. C13 maps
+the stored result into explicit allowlisted DTOs rather than dumping the domain
+object. This makes the forthcoming UI a consumer, not a second commercial or
+evidence system.
+
+Two test-construction issues sharpened the approach. First, a test initially
+required the full risk report's evidence IDs to equal the final draft's selected
+IDs; inspection showed the report correctly contains all three canonical
+statistics while the model may select a supported subset. The assertion was
+corrected to require subset resolution. Second, an initial AgentResult
+cross-field assignment validator caused existing C11/C12 adversarial tests to
+fail before their established stale-result/export boundaries could evaluate
+deliberate mutations. That validator was removed; construction-time risk-summary
+integrity and the existing agent evidence-ID validation remain, preserving the
+older mutable-model behavior and C11/C12 authority. These were candidate/test
+design corrections, not pre-existing product defects.
+
+Verification demonstrated why the explicit projection matters. Focused domain,
+agent, and API suites prove exact typed retention, no repeated tools, stored
+message retrieval, stable POST contracts, failure exclusion, and request
+isolation. Existing review/Excel suites pass unchanged. Twelve isolated
+source-level mutations were all caught, including wrong values/identities,
+fabricated or cross-request evidence, raw leakage, omitted message, and approval
+or export bypass. Full and prior-Card regressions preserve C17/C19 identities
+and C18 guardrails.
+
+Tradeoff: the process-local store now retains more synthetic typed evidence per
+successful draft, and comparison projection may contain the bounded canonical
+history result set. It remains ephemeral, single-process, non-durable, and not
+multi-worker safe. No claim about production persistence follows. Future C20
+work should consume these fields as read-only presentation data, clearly
+separate deterministic evidence from the fixed agent narrative, and must not
+request another backend expansion without fresh approval. C20 itself remains
+NOT_AUTHORIZED / NOT_STARTED; this maintenance candidate does not activate it.
+
 ## Post-C06 Full-Project Audit and Systemic Repair
 
 The independent full-project audit found three defects before V1-C07. The C01
