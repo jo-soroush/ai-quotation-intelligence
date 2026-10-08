@@ -4218,11 +4218,18 @@ historical C15 deployment and C16 observability records above.
 
 ## 19. Final V1 Project-Wide Exit Gate Reconciliation — Phase 1 Candidate
 
-Candidate state: **READY_FOR_INDEPENDENT_FINAL_AUDIT**. This is an evidence
-reconciliation, not formal Final Gate closure. C01–C20 remain COMPLETE / DELIVERED;
-Active Card is NONE; Project V1 remains NOT_FINALIZED. Formal closure requires
-independent final audit, separate Git delivery authorization, delivery, and
-the authorized post-delivery project-state reconciliation.
+Candidate state: **INDEPENDENTLY AUDITED — PASS** — project-wide Final Gate
+reconciliation only; formal V1 closure remains separate and not yet completed.
+C01–C20 remain COMPLETE / DELIVERED; Active Card is NONE; Project V1 remains
+NOT_FINALIZED. Formal closure still requires separate Git delivery
+authorization, delivery, and the authorized post-delivery project-state
+reconciliation.
+
+The independently audited artifact is the twelve-row reconciliation delivered
+by PR #64 (merge `eea2a69c23fc7ea2526aebc0150beb410c9a8a83`), with
+disposition **INDEPENDENTLY AUDITED — PASS**; subsequent corroborating
+repository context is `main` at `312c2c20049265c15875f71351a418ddf7ad76f0`
+after PR #65 and PR #66.
 
 The canonical gate is the twelve-line checklist under `### Final Gate` in
 `AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md` §1294. Wording below is reproduced
