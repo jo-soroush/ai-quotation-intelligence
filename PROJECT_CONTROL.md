@@ -50,7 +50,7 @@ Never invent convenient state.
 Project: AI Quotation Intelligence System
 Target: V1
 Project Phase: V1_C20_COMPLETE
-Project V1 Finalization: NOT_FINALIZED — the Final Gate reconciliation audit is recorded as INDEPENDENTLY AUDITED — PASS in QUOTATION_CARD_EVIDENCE_MAP.md §19; separate Git delivery authorization, delivery, and post-delivery project-state reconciliation remain pending
+Project V1 Finalization: NOT_FINALIZED — the independent Final Gate reconciliation audit is recorded as PASS in QUOTATION_CARD_EVIDENCE_MAP.md §19 and was delivered via PR #67. Formal V1 closure preparation is authorized for this first closure-delivery candidate; separate Git delivery authorization and delivery remain pending. Only a subsequent post-delivery project-state reconciliation, after this candidate actually merges, may record FINALIZED.
 Governance: COMPLETE
 Strict Governance Audit: PASS
 Learning Governance Integration: COMPLETE
@@ -155,7 +155,7 @@ Completion Reconciliation: DELIVERED via PR #62; FINAL_CARD_STATE_CONSISTENCY_GA
 
 Safe Checkpoint:
 
-V1-C01 through V1-C20 are COMPLETE and DELIVERED. C20 implementation PR #61 merged at `4a3781beb01e4db00e6ff6bda673911011de2cf3`; its outcome reconciliation was delivered through PR #62, merge `ca0e30bb795db866927335e569cc967921bbae63`. The final C20 runtime consistency gate passed 29/29 on synchronized clean main. Project V1 remains NOT_FINALIZED; the separate project-wide Final Gate audit is being reconciled in the current candidate and requires independent audit and approved delivery.
+V1-C01 through V1-C20 are COMPLETE and DELIVERED. C20 implementation PR #61 merged at `4a3781beb01e4db00e6ff6bda673911011de2cf3`; its outcome reconciliation was delivered through PR #62, merge `ca0e30bb795db866927335e569cc967921bbae63`. The final C20 runtime consistency gate passed 29/29 on synchronized clean main. The independent Final Gate reconciliation audit PASS is recorded and was delivered via PR #67. Project V1 remains NOT_FINALIZED; formal closure preparation is authorized for this closure-delivery candidate, which still requires separate Git delivery approval and delivery. A later post-delivery project-state reconciliation, after this candidate actually merges, is the only step that may record FINALIZED.
 V1-C01 baseline implementation, validation, human-approved Git delivery, PR #1, governance hardening PR #2, and merge remain complete historical evidence.
 FINAL_CARD_STATE_CONSISTENCY_GATE: PASS — V1-C20 COMPLETE, 29/29 assertions on synchronized clean main after PR #62.
 
@@ -308,7 +308,7 @@ V1-C01 start authorization was consumed by completion. Being next in sequence do
 
 V1-C01 through V1-C20 implementation and delivery are complete in this candidate.
 
-Current project-wide gate candidate: all twelve Roadmap Final Gate rows are reconciled in QUOTATION_CARD_EVIDENCE_MAP.md §19, where the Final Gate reconciliation audit is recorded as INDEPENDENTLY AUDITED — PASS. The AWS rows retain their report-derived, health-path-only classification. Separate Git delivery authorization, delivery, and post-delivery project-state reconciliation remain pending; Project V1 is NOT_FINALIZED. C20's historical accepted LOW OpenAPI metadata finding and INFORMATIONAL tablet screenshot observation remain non-blocking and unchanged.
+Current project-wide gate candidate: all twelve Roadmap Final Gate rows are reconciled in QUOTATION_CARD_EVIDENCE_MAP.md §19, where the Final Gate reconciliation audit is recorded as INDEPENDENTLY AUDITED — PASS and its evidence record was delivered via PR #67. The AWS rows retain their report-derived, health-path-only classification. Formal closure preparation is authorized for this first closure-delivery candidate; its separate Git delivery approval and delivery remain pending. A subsequent post-delivery project-state reconciliation, after the actual merge, is required before any FINALIZED state may be recorded. Project V1 is NOT_FINALIZED. C20's historical accepted LOW OpenAPI metadata finding and INFORMATIONAL tablet screenshot observation remain non-blocking and unchanged.
 
 Resolved migration blockers:
 
@@ -473,7 +473,7 @@ Governance migration validation is not V1 implementation evidence.
 ## 16. Checkpoint State
 
 ```
-Checkpoint Type: FINAL_V1_PROJECT_WIDE_GATE_RECONCILIATION_CANDIDATE
+Checkpoint Type: FINAL_V1_CLOSURE_DELIVERY_CANDIDATE
 Governance canonical files: MIGRATED
 Historical source/template reference: NOT CANONICAL
 Legacy canonical authority: RETIRED
@@ -574,7 +574,7 @@ Git Repository: YES
 Historical C01 governance-hardening delivery: merge commit 6ed41e3be169390a98f30114973595d91250d982 via PR #2; query current Git state at runtime
 ```
 
-Safe next action: independently audit the Final V1 Project-Wide Gate reconciliation candidate. If it passes, obtain separate Git delivery approval, deliver through the canonical workflow, then conduct formal project-wide closure reconciliation. Do not mark V1 finalized before those steps.
+Safe next action: independently audit this first closure-delivery candidate. If it passes, obtain separate Git delivery approval and deliver it through the canonical workflow. Only after its actual merge may a separate post-delivery project-state reconciliation candidate record FINALIZED. Until that later candidate is delivered, Project V1 remains NOT_FINALIZED.
 
 Do not start any later Card automatically.
 
