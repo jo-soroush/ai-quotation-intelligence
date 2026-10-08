@@ -458,3 +458,220 @@ def test_mocked_agent_run_is_deterministically_repeatable(agent_request: AgentRe
     second = QuotationAgent(ScriptedModel(*actions), AgentTools()).run(agent_request)
     assert first == second
     assert first.status is AgentResultStatus.SUCCESS
+
+def test_prompt_requires_validated_risk_evidence_before_final(
+    agent_request: AgentRequest,
+) -> None:
+    model = ScriptedModel(final())
+
+    result = QuotationAgent(model, AgentTools()).run(agent_request)
+
+    assert result.status is AgentResultStatus.INSUFFICIENT_EVIDENCE
+    assert len(model.prompts) == 1
+    assert "Do not return kind=final until validated risk evidence has been obtained." in model.prompts[0]
+
+
+class AttemptRecordingTools(AgentTools):
+    def __init__(self) -> None:
+        super().__init__()
+        self.attempts: list[str] = []
+
+    def resolve_tool(self, name: str):
+        owned = super().resolve_tool(name)
+
+        def recorded(value):
+            self.attempts.append(name)
+            return owned(value)
+
+        return recorded
+
+
+def test_secondary_cost_insufficiency_can_precede_hours_grounded_final(
+    agent_request: AgentRequest,
+) -> None:
+    hours_id = risk_id()
+    model = ScriptedModel(
+        tool("get_risk_evidence"),
+        tool("get_risk_evidence", metric="cost"),
+        final(evidence_ids=[hours_id]),
+    )
+    tools = AttemptRecordingTools()
+
+    result = QuotationAgent(model, tools).run(agent_request)
+
+    assert result.status is AgentResultStatus.SUCCESS
+    assert result.draft_quote is not None
+    assert result.evidence_ids == [hours_id]
+    assert tuple(report.metric for report in result.risk_evidence_reports) == ("hours",)
+    assert all(not evidence_id.startswith("risk-cost-") for evidence_id in result.evidence_ids)
+    assert tools.attempts == ["get_risk_evidence", "get_risk_evidence"]
+    assert len(model.prompts) == 3
+    context = json.loads(model.prompts[-1].split("DATA: ", 1)[1])
+    assert context["validated_tool_results"][-1] == {
+        "kind": "tool_failure",
+        "tool": "get_risk_evidence",
+        "arguments": {"metric": "cost"},
+        "result": "insufficient_evidence",
+        "retry_allowed": False,
+    }
+    assert "An insufficient_evidence tool marker is not evidence" in model.prompts[-1]
+    assert "the exact same tool and arguments must not be requested again" in model.prompts[-1]
+
+
+def test_cost_insufficiency_without_prior_risk_evidence_stays_terminal(
+    agent_request: AgentRequest,
+) -> None:
+    model = ScriptedModel(tool("get_risk_evidence", metric="cost"), final())
+
+    result = QuotationAgent(model, AgentTools()).run(agent_request)
+
+    assert result.status is AgentResultStatus.INSUFFICIENT_EVIDENCE
+    assert result.draft_quote is None
+    assert len(model.prompts) == 1
+
+
+def test_repeated_failed_secondary_action_still_fails_before_reinvocation(
+    agent_request: AgentRequest,
+) -> None:
+    model = ScriptedModel(
+        tool("get_risk_evidence"),
+        tool("get_risk_evidence", metric="cost"),
+        tool("get_risk_evidence", metric="cost"),
+    )
+    tools = AttemptRecordingTools()
+
+    result = QuotationAgent(model, tools).run(agent_request)
+
+    assert result.status is AgentResultStatus.INVALID
+    assert result.message == "Repeated tool request"
+    assert result.draft_quote is None
+    assert tools.attempts == ["get_risk_evidence", "get_risk_evidence"]
+    assert '"retry_allowed":false' in model.prompts[-1]
+
+
+def test_failed_secondary_attempt_consumes_existing_tool_call_budget(
+    agent_request: AgentRequest,
+) -> None:
+    actions = (
+        tool("get_risk_evidence"),
+        tool("get_risk_evidence", metric="cost"),
+        tool("get_historical_quotes"),
+        tool("find_similar_quotes", limit=1),
+        tool("find_similar_quotes", limit=2),
+        tool("find_similar_quotes", limit=3),
+        tool("compare_estimate_to_actual"),
+        tool("calculate_quote_statistics", metric="hours"),
+    )
+    assert len(actions) == MAX_TOOL_CALLS + 1
+    model = ScriptedModel(*actions)
+    tools = AttemptRecordingTools()
+
+    result = QuotationAgent(model, tools).run(agent_request)
+
+    assert result.status is AgentResultStatus.INVALID
+    assert result.message == "Tool-call limit exceeded"
+    assert len(model.prompts) == MAX_TOOL_CALLS + 1
+    assert len(tools.attempts) == MAX_TOOL_CALLS
+    assert "calculate_quote_statistics" not in tools.attempts
+
+
+def test_insufficient_evidence_marker_cannot_supply_a_cost_evidence_id(
+    agent_request: AgentRequest,
+) -> None:
+    model = ScriptedModel(
+        tool("get_risk_evidence"),
+        tool("get_risk_evidence", metric="cost"),
+        final(evidence_ids=["risk-cost-overrun-rate"]),
+    )
+
+    result = QuotationAgent(model, AgentTools()).run(agent_request)
+
+    assert result.status is AgentResultStatus.INVALID
+    assert result.message == "Invalid evidence references"
+    assert result.draft_quote is None
+    assert result.risk_evidence_reports == ()
+
+
+@pytest.mark.parametrize("code, expected", [
+    (FailureCode.UNAVAILABLE, AgentResultStatus.UNAVAILABLE),
+    (FailureCode.SERVICE_FAILURE, AgentResultStatus.UNAVAILABLE),
+    (FailureCode.INVALID_INPUT, AgentResultStatus.INVALID),
+    (FailureCode.INVALID_OUTPUT, AgentResultStatus.INVALID),
+])
+def test_other_secondary_tool_failures_remain_terminal(
+    agent_request: AgentRequest, code: FailureCode, expected: AgentResultStatus,
+) -> None:
+    class FailingSecondaryTools(AgentTools):
+        def get_risk_evidence(self, request: RiskEvidenceInput) -> RiskEvidenceOutput:
+            if request.metric == "cost":
+                raise ToolFailure(code, "get_risk_evidence", request.request_id)
+            return super().get_risk_evidence(request)
+
+    model = ScriptedModel(
+        tool("get_risk_evidence"),
+        tool("get_risk_evidence", metric="cost"),
+        final(evidence_ids=[risk_id()]),
+    )
+
+    result = QuotationAgent(model, FailingSecondaryTools()).run(agent_request)
+
+    assert result.status is expected
+    assert result.draft_quote is None
+    assert len(model.prompts) == 2
+
+
+@pytest.mark.parametrize("malformed", [
+    '{"kind":"get_risk_evidence","arguments":{}}',
+    '{"name":"get_risk_evidence","arguments":{}}',
+])
+def test_alternate_tool_action_layout_remains_invalid(
+    agent_request: AgentRequest, malformed: str,
+) -> None:
+    tools = AttemptRecordingTools()
+
+    result = QuotationAgent(ScriptedModel(malformed), tools).run(agent_request)
+
+    assert result.status is AgentResultStatus.INVALID
+    assert result.draft_quote is None
+    assert tools.attempts == []
+
+
+def test_prompt_shows_concrete_tool_and_final_schemas(
+    agent_request: AgentRequest,
+) -> None:
+    prompt = QuotationAgent._prompt(agent_request, [])
+
+    assert "The literal value of 'kind' must always be exactly 'tool' or 'final'." in prompt
+    assert "the tool identifier belongs only in the separate 'name' field, never in 'kind'" in prompt
+    assert "Do not invent alternative field layouts." in prompt
+    assert '{"kind":"tool","name":"get_historical_quotes","arguments":{}}' in prompt
+    assert '{"kind":"tool","name":"get_risk_evidence","arguments":{"metric":"hours"}}' in prompt
+    final_example = (
+        '{"kind":"final","narrative":"Draft for human review.",'
+        '"evidence_ids":["<VALIDATED_EVIDENCE_ID>"],'
+        '"risk_suggestions":[{"severity":"unknown",'
+        '"evidence_ids":["<VALIDATED_EVIDENCE_ID>"]}],"missing_information":[]}'
+    )
+    assert final_example in prompt
+    assert json.loads(final_example)["kind"] == "final"
+    assert "the angle-bracket ID is schematic, not evidence to copy" in prompt
+    assert "Replace the schematic ID only with an actual ID from validated risk evidence." in prompt
+    assert "An insufficient_evidence tool marker is not evidence" in prompt
+    assert "After a tool_failure marker, the exact same tool and arguments must not be requested again." in prompt
+    assert "Choose a different valid action, or return final if at least one validated risk metric already exists." in prompt
+
+
+def test_concrete_schema_prompt_preserves_valid_tool_and_final_actions(
+    agent_request: AgentRequest,
+) -> None:
+    model = ScriptedModel(
+        tool("get_risk_evidence", metric="hours"),
+        final(evidence_ids=[risk_id()]),
+    )
+
+    result = QuotationAgent(model, AgentTools()).run(agent_request)
+
+    assert result.status is AgentResultStatus.SUCCESS
+    assert result.draft_quote is not None
+    assert result.evidence_ids == [risk_id()]
+    assert len(model.prompts) == 2
