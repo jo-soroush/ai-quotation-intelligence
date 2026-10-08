@@ -4219,17 +4219,19 @@ historical C15 deployment and C16 observability records above.
 ## 19. Final V1 Project-Wide Exit Gate Reconciliation — Phase 1 Candidate
 
 Candidate state: **INDEPENDENTLY AUDITED — PASS** — project-wide Final Gate
-reconciliation only; formal V1 closure remains separate and not yet completed.
-C01–C20 remain COMPLETE / DELIVERED; Active Card is NONE; Project V1 remains
-NOT_FINALIZED. Formal closure still requires separate Git delivery
-authorization, delivery, and the authorized post-delivery project-state
-reconciliation.
+reconciliation. C01–C20 remain COMPLETE / DELIVERED; Active Card is NONE.
+Formal closure was delivered via PR #68, and the post-delivery project-state
+reconciliation records Project V1 Finalization as FINALIZED.
 
 The independently audited artifact is the twelve-row reconciliation delivered
 by PR #64 (merge `eea2a69c23fc7ea2526aebc0150beb410c9a8a83`), with
 disposition **INDEPENDENTLY AUDITED — PASS**; subsequent corroborating
-repository context is `main` at `312c2c20049265c15875f71351a418ddf7ad76f0`
-after PR #65 and PR #66.
+repository context includes PR #65 and PR #66. The audit evidence record was
+delivered via PR #67. Formal closure was delivered via PR #68 (delivery commit
+`b31b4bd278b3af0f84829b746d06e7ae284f40ff`, merge
+`531d59a1165634962814d9a45e615f7750a0eeb3`). Post-merge verification on
+synchronized clean main passed: governance reconciliation, Governance Harness
+61/0, full pytest 528 passed, and Final Card State Consistency 29/29.
 
 The canonical gate is the twelve-line checklist under `### Final Gate` in
 `AI_QUOTATION_INTELLIGENCE_V1_ROADMAP.md` §1294. Wording below is reproduced
@@ -4277,6 +4279,7 @@ project's production-readiness claim.
   are PASS only at the health/resource scope and retain the report-derived
   classification. No full cloud quotation workflow or live Lambda Bedrock
   inference was verified. The independent Final Gate audit is complete and
-  recorded, with its evidence record delivered via PR #67. Formal closure
-  delivery and subsequent post-delivery project-state reconciliation remain
-  pending; Project V1 remains NOT_FINALIZED.
+  recorded, with its evidence record delivered via PR #67. Formal closure was
+  delivered via PR #68 and the post-delivery project-state reconciliation is
+  complete; Project V1 Finalization is FINALIZED. The bounded AWS evidence
+  classifications and all twelve row assessments remain unchanged.
