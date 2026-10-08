@@ -186,7 +186,16 @@ def build(source_root: Path, target_root: Path, completed: list[str], active: st
     if target_root.exists() and any(target_root.iterdir()):
         raise ValueError(f"fixture target is not empty: {target_root}")
     target_root.mkdir(parents=True, exist_ok=True)
-    ignore = shutil.ignore_patterns(".git", ".venv", "__pycache__", ".pytest_cache", "*.pyc")
+    ignore = shutil.ignore_patterns(
+        ".git",
+        ".venv",
+        "__pycache__",
+        ".pytest_cache",
+        "*.pyc",
+        "node_modules",
+        ".playwright-browsers",
+        "playwright-report",
+    )
     for item in source_root.iterdir():
         if item.name in {".git", ".venv", "__pycache__", ".pytest_cache"}:
             continue
