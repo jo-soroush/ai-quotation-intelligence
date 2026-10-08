@@ -66,6 +66,10 @@ Open <http://127.0.0.1:5173>. The Vite development server proxies relative `/api
 
 The UI provides free-form synthetic quotation input and a clearly marked example preset. It displays backend-returned draft values, similar quotations, comparisons, and RiskEvidence separately from the constrained AI interpretation. Approval or rejection is an explicit action sent to the backend. Excel download uses the backend export route and remains unavailable until backend approval.
 
+![Quotation Intelligence local synthetic demo](docs/images/quotation-intelligence-demo.png)
+
+*Local synthetic demo of the V1 quotation workflow; this screenshot does not depict a live Bedrock session.*
+
 ## API and component boundaries
 
 The FastAPI application exposes these six routes:
@@ -145,4 +149,4 @@ For full contracts, evidence, and rationale, see the [V1 Roadmap](AI_QUOTATION_I
 
 ## Project status
 
-C01–C20 are recorded complete and delivered, with no Active Card. The separate project-wide Final V1 audit/reconciliation remains pending. This README does not declare V1 finalized or make a production-readiness claim.
+C01–C20 are recorded complete and delivered, with no Active Card. Project V1 has been formally finalized and closed. The V1 scope is frozen, with no active Card or V2 work. This README does not claim production readiness.
