@@ -1,18 +1,36 @@
 # AI Quotation Intelligence
 
-AI Quotation Intelligence is a local-first V1 system for preparing evidence-backed quotation drafts from historical quotation and outcome data. Deterministic application code owns commercial values and evidence; a bounded AI agent can interpret validated evidence and propose an unapproved draft; a human makes the approval or rejection decision.
+AI Quotation Intelligence is a local-first quotation system that turns synthetic historical quotation and outcome data into evidence-backed draft proposals. Deterministic application code owns commercial values and evidence; a bounded AI agent interprets validated evidence; a human makes the approval or rejection decision.
 
-> **Portfolio demo: synthetic data only.** The React interface runs locally against the existing FastAPI application with a scripted provider client. It is not a production SaaS, and it does not make live Bedrock calls.
+![Quotation Intelligence local synthetic demo](docs/images/quotation-intelligence-demo.png)
 
-## What V1 delivers
+*Local synthetic demo of the V1 quotation workflow; this screenshot is not a live Bedrock session.*
 
-The delivered Cards C01–C20 establish a complete bounded workflow:
+> **Portfolio system, not a production service.** The default local demo uses synthetic data and a deterministic scripted provider, needs no AWS credentials, and makes no live Bedrock calls. The V1 scope is formally finalized and frozen; this README does not claim production readiness.
 
-- Typed quotation and outcome models, explicit units and currency, synthetic history, deterministic quote calculation and reconciliation.
-- Historical estimate-versus-actual comparison, similar-quotation retrieval, and traceable risk statistics with source evidence.
-- A provider-isolated Amazon Bedrock Converse adapter, five fixed agent tools, and bounded quotation-agent orchestration with schema, tool, and evidence validation.
-- Human review with explicit approve/reject transitions, followed by backend-gated Excel generation and reconciliation.
-- A FastAPI application, an isolated S3 storage adapter, AWS deployment and CloudWatch structured events, offline evaluation and guardrail programs, an end-to-end Golden Case, and a local React/TypeScript demo UI.
+## What it does
+
+The delivered Cards C01–C20 establish an end-to-end, bounded quotation workflow:
+
+- Creates draft quotations from explicit work items, estimated hours, rates, currency, and request time.
+- Calculates commercial values deterministically in the Python Core; the model cannot set rates or totals.
+- Retrieves comparable synthetic history and estimate-versus-actual evidence, then grounds risk suggestions in traceable `RiskEvidence`.
+- Uses a bounded agent with five controlled tools and a strict structured-response protocol; malformed or unsupported output fails closed.
+- Requires a human to explicitly approve or reject the draft. The backend permits a reconciled Excel export only after approval.
+- Includes a FastAPI backend, a React + TypeScript + Vite local UI, a provider-isolated Amazon Bedrock Converse adapter, and bounded AWS deployment/CloudWatch components.
+
+```text
+Quotation request
+  → deterministic Core calculations
+  → agent + five controlled tools
+  → evidence-grounded draft
+  → human review: approve or reject
+  → backend-gated Excel export (approval only)
+```
+
+The five tools retrieve historical quotations, find similar quotations, calculate deterministic statistics, compare estimates with actual outcomes, and obtain validated risk evidence. The agent can interpret evidence and draft advisory narrative; it cannot invent evidence, perform authoritative commercial arithmetic, approve a quotation, or finalize it.
+
+## Architecture at a glance
 
 The principal system boundaries are:
 
@@ -36,7 +54,7 @@ QuotationAgent --> provider contract --> Bedrock adapter
 
 The UI talks to HTTP contracts only. It does not import backend code or calculate authoritative totals, similarity, variance, or risk statistics. The model cannot set rates or totals, invent historical evidence, or approve a quote. Its permitted interpretation is deliberately constrained and validated.
 
-## Local demo
+## Run the local demo
 
 Requirements: Python 3.13 or newer, Node.js/npm versions compatible with the committed lockfile, and the repository files. The demo is synthetic and local; no AWS credentials are needed.
 
@@ -66,9 +84,9 @@ Open <http://127.0.0.1:5173>. The Vite development server proxies relative `/api
 
 The UI provides free-form synthetic quotation input and a clearly marked example preset. It displays backend-returned draft values, similar quotations, comparisons, and RiskEvidence separately from the constrained AI interpretation. Approval or rejection is an explicit action sent to the backend. Excel download uses the backend export route and remains unavailable until backend approval.
 
-![Quotation Intelligence local synthetic demo](docs/images/quotation-intelligence-demo.png)
+## Manual live Bedrock validation
 
-*Local synthetic demo of the V1 quotation workflow; this screenshot does not depict a live Bedrock session.*
+Separately from the credential-free scripted local demo, the quotation-agent path was manually validated against Amazon Bedrock using Amazon Nova Micro (`amazon.nova-micro-v1:0`) in `us-east-1`. In the successful live run, the model selected `get_risk_evidence(metric="hours")`, received validated risk evidence, and returned a grounded final response referencing validated evidence IDs; the quotation draft API request completed successfully. This was a manual live validation run—not the default local demo, not the deployed Lambda/runtime configuration, and not a production-readiness claim. The deployed non-production Lambda role was verified without Bedrock invocation permission; see [PROJECT_CONTROL.md §13](PROJECT_CONTROL.md#13-aws-state) for bounded AWS evidence and limitations.
 
 ## API and component boundaries
 
@@ -85,7 +103,7 @@ The FastAPI application exposes these six routes:
 
 Public quotation inputs require explicit hour units, rates, currency, items, and request time. The API validates requests and returns typed responses; commercial calculations and evidence remain owned by backend components. The agent's fixed tool set is `get_historical_quotes`, `find_similar_quotes`, `calculate_quote_statistics`, `compare_estimate_to_actual`, and `get_risk_evidence`.
 
-Amazon Bedrock is the implemented provider integration. Repository evidence records a successful historical Python Converse smoke test with Amazon Nova Micro. That adapter smoke test is distinct from the local UI, which uses an injected scripted provider, and from the deployed AWS health check, which does not exercise quotation inference.
+Amazon Bedrock is the implemented provider integration. The repository records both a successful Python Converse smoke test and the separate manual live quotation-agent validation described above. These are distinct from the local UI, which uses an injected scripted provider, and from the deployed AWS health check, which does not exercise quotation inference.
 
 ## Tests and evaluations
 
@@ -124,7 +142,9 @@ npm run test:mutations
 
 The Playwright flow uses the local frontend and backend. Browser installation is needed only for the browser tests. Generated build output, dependencies, browser binaries, reports, downloads, and caches are not source artifacts.
 
-Recorded delivery evidence includes 513 passing Python tests, 79 architecture tests, 61 Governance Harness checks with no failures, 22 frontend tests, two real Chromium E2E tests, and 11 of 11 applicable UI mutation probes caught. C17 and C19 are deterministic offline regression programs; C18 owns the separate 15-state guardrail matrix. These are recorded project results, not a promise that every environment will produce the same timings or tooling output. See the Evidence Map for the detailed evidence and identities.
+Current clean-main verification run on 2026-10-11: **528 Python tests passed**, **79 architecture tests passed**, **Governance Harness 61 PASS / 0 FAIL**, governance-view reconciliation PASS, and the C20 Final Card State Consistency Gate **29/29 PASS**. The architecture count is included in, not added to, the full Python test count.
+
+Separately recorded final-delivery frontend evidence: **22 Vitest tests passed**, **2 real Chromium E2E tests passed**, **11/11 applicable UI mutation probes caught**, with strict TypeScript typecheck and production build passing. Those frontend checks were not rerun during the 2026-10-11 README review. C17 and C19 are deterministic offline regression programs; C18 owns the separate 15-state guardrail matrix. See the Evidence Map for detailed evidence and identities; counts from distinct suites are not summed into a combined total.
 
 ## AWS deployment and observability
 
